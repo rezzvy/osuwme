@@ -1,0 +1,59 @@
+<div
+  id="text-editor-toolbar"
+  class="position-sticky top-0 z-3 d-flex flex-column flex-sm-row align-items-sm-start align-items-center justify-content-sm-between flex-wrap gap-3 mb-2"
+>
+  <div class="link-form d-none bg-white bg-opacity-25 p-1 rounded-1">
+    <div class="input-group input-group-sm">
+      <input type="text" class="form-control modal-box" placeholder="Link" />
+      <div class="input-group-text">
+        <button class="btn btn-dark btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Save Link">
+          <i class="fa fa-save fa-fw"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column flex-sm-row align-items-sm-start align-items-center flex-wrap gap-0 gap-sm-3">
+    <div class="text-center">
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Bold">
+        <i class="fa fa-bold fa-fw"></i>
+      </button>
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Italic">
+        <i class="fa fa-italic fa-fw"></i>
+      </button>
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Strikethrough">
+        <i class="fa fa-strikethrough fa-fw"></i>
+      </button>
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Underline">
+        <i class="fa fa-underline fa-fw"></i>
+      </button>
+    </div>
+
+    <div class="text-center">
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Link">
+        <i class="fa fa-link fa-fw"></i>
+      </button>
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Inline Code">
+        <i class="fa fa-code fa-fw"></i>
+      </button>
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Spoiler">
+        <i class="fa fa-warning fa-fw"></i>
+      </button>
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Clear Format">
+        <i class="fa fa-trash fa-fw"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <button id="text-editor-color-picker"></button>
+    <select class="form-select form-select-sm">
+      <option value="fs-tiny">Tiny</option>
+      <option value="fs-small">Small</option>
+      <option value="fs-normal">Normal</option>
+      <option value="fs-large">Large</option>
+    </select>
+  </div>
+</div>
+
+<div id="text-editor" class="modal-box rounded-2 mt-2"></div>

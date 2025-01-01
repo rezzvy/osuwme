@@ -1,0 +1,193 @@
+/* =========================================
+   Imports
+   ========================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("./imports/classes.css");
+@import url("./imports/lib-rewrite.css");
+
+/* =========================================
+   Global Styles
+   ========================================= */
+body {
+  overflow-x: hidden;
+  font-family: "Inter", serif;
+  background: #282024;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* =========================================
+   Layout Sections
+   ========================================= */
+header {
+  background: #2d1f24 url(../assets/triangles.png) left bottom / cover no-repeat;
+}
+
+main #canvas {
+  position: relative;
+  color: #fff;
+  background: #382e32;
+}
+
+footer {
+  background: #221c1f;
+}
+
+/* =========================================
+   Modal Styles
+   ========================================= */
+#text-editor-toolbar {
+  background: #42353c;
+}
+
+#text-editor-toolbar .link-form {
+  position: absolute;
+  width: 200px;
+  max-width: 100%;
+  top: 100%;
+  left: 145px;
+  z-index: 100;
+}
+
+/* =========================================
+   Spacing Preview
+   ========================================= */
+#spacing-preview-br-wrapper {
+  --spacing-level: 5;
+  position: relative;
+  text-align: center;
+  height: calc(var(--spacing-level) * 17px);
+  overflow: hidden;
+}
+
+#spacing-preview-br-wrapper ._br::before {
+  content: "Spacing";
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  word-break: break-all;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: rgba(255, 255, 255, 0.25);
+  transform: translate(-50%, -50%);
+}
+
+/* =========================================
+   Image Map Editor
+   ========================================= */
+#imgmap-edit-container {
+  max-width: 100%;
+  width: max-content;
+  height: max-content;
+  position: relative;
+  margin: auto;
+  overflow: hidden;
+}
+
+#imgmap-edit-container .imgmap-edit-item {
+  display: block;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px dashed white;
+  box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.25);
+  width: 80px;
+  height: 80px;
+  top: 10px;
+  left: 10px;
+  text-align: center;
+  overflow: hidden;
+}
+
+#imgmap-edit-container .imgmap-edit-item::before {
+  content: attr(data-title);
+}
+
+/* =========================================
+   Element List Section
+   ========================================= */
+#element-list-section {
+  --menu-pinned-spacing: 16px;
+  transition: padding 0.25s ease-in-out;
+}
+
+#element-list-section.pinned {
+  position: sticky;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  bottom: var(--menu-pinned-spacing);
+  padding: var(--menu-pinned-spacing);
+  width: calc(100% - var(--menu-pinned-spacing) * 2);
+  margin: auto;
+  border-radius: var(--bs-border-radius);
+  z-index: 5;
+}
+
+#element-list-section.pinned h2 {
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+#element-list-section #canvas-element-list {
+  min-height: 69px;
+}
+
+/* =========================================
+   Canvas Item
+   ========================================= */
+.canvas-item {
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+.canvas-item:not(:first-of-type, :last-of-type) {
+  border-bottom: 0;
+}
+
+.canvas-item ._edit {
+  background: #282024;
+}
+
+.canvas-item ._edit input {
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.canvas-item ._edit button[data-bs-toggle="collapse"]::after {
+  font-family: "FontAwesome";
+  content: "\f070";
+  opacity: 0.75;
+}
+
+.canvas-item:has(> ._content.show) > ._edit button[data-bs-toggle="collapse"]::after {
+  content: "\f06e";
+  opacity: 1;
+}
+
+/* =========================================
+   View Mode
+   ========================================= */
+body.view-mode .canvas-item {
+  border: unset;
+}
+
+body.view-mode .canvas-item ._edit,
+body.view-mode #element-list-section {
+  display: none !important;
+  pointer-events: none;
+}
+
+body.view-mode .canvas-item ._content {
+  padding: 0 !important;
+}
+
+/* =========================================
+   Media Queries
+   ========================================= */
+@media (max-width: 575px) {
+  #text-editor-toolbar .link-form {
+    top: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

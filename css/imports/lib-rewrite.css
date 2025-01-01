@@ -1,0 +1,191 @@
+/* =========================================
+   General Styles
+   ========================================= */
+.container {
+  max-width: 1000px;
+  padding: 0;
+}
+
+p,
+.h2,
+.h6,
+ul,
+blockquote {
+  margin: 0;
+}
+
+code {
+  all: unset;
+  font-family: inherit;
+  font-size: inherit;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   Link Styles
+   ========================================= */
+a {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================
+   Button Styles
+   ========================================= */
+.btn-dark {
+  --bs-btn-bg: #1c1719;
+  --bs-btn-border-color: transparent !important;
+}
+
+.btn-outline-light {
+  --bs-btn-border-color: transparent;
+}
+
+/* =========================================
+   Overflow Styles
+   ========================================= */
+.overflow-auto {
+  scrollbar-color: hsla(0, 0%, 100%, 0.5) hsla(0, 0%, 100%, 0.025);
+  scrollbar-width: thin;
+}
+
+.overflow-auto::-webkit-scrollbar {
+  background-color: hsla(0, 0%, 100%, 0.025);
+  -webkit-border-radius: 100px;
+  width: 10px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {
+  background: hsla(0, 0%, 100%, 0.5);
+  background-clip: padding-box;
+  border: 2px solid hsla(0, 0%, 100%, 0);
+  -webkit-border-radius: 100px;
+  min-height: 10px;
+}
+
+/* =========================================
+   Form Styles
+   ========================================= */
+.form-control {
+  --bs-body-bg: rgba(255, 255, 255, 0.125);
+  --bs-body-color: var(--bs-light);
+  border-color: transparent;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: transparent;
+  outline: 0;
+  box-shadow: unset;
+}
+
+.form-check-input:checked {
+  background-color: #ff66ab;
+  border-color: #ff66ab;
+}
+
+.form-check-input:not(:checked):focus,
+.form-select:focus {
+  border-color: #fff;
+}
+
+.form-check-input:focus {
+  box-shadow: unset;
+}
+
+.form-switch .form-check-input:not(:checked):focus {
+  --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23ff69b4'/%3e%3c/svg%3e");
+}
+
+.form-check.form-switch > * {
+  cursor: pointer;
+}
+
+.form-control-plaintext {
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  line-height: inherit;
+  color: inherit;
+  background-color: transparent;
+  border: unset;
+  border-width: unset;
+}
+
+/* =========================================
+   Dropdown Styles
+   ========================================= */
+.dropdown-menu {
+  --bs-dropdown-font-size: inherit;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #ff66ab;
+}
+
+/* =========================================
+   Tooltip Styles
+   ========================================= */
+.tooltip {
+  pointer-events: none;
+}
+
+/* =========================================
+   Modal Styles
+   ========================================= */
+.modal {
+  --bs-modal-bg: #42353c;
+  --bs-border-color: transparent;
+}
+
+.btn-close {
+  --bs-btn-close-color: #fff;
+  --bs-btn-close-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+}
+
+/* =========================================
+   Input Group Styles
+   ========================================= */
+.input-group-text {
+  padding: 0 !important;
+  color: inherit;
+  --bs-tertiary-bg: #42353c;
+}
+
+/* =========================================
+   Color Picker Styles
+   ========================================= */
+.pickr .pcr-button {
+  height: 1.5em;
+  width: 1.5em;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* =========================================
+   Quill Editor Styles
+   ========================================= */
+.ql-editor {
+  min-height: 300px;
+  padding: 1rem;
+}
+
+.ql-editor:focus-visible {
+  outline: unset;
+}
+
+/* =========================================
+   Media Queries
+   ========================================= */
+@media (min-width: 576px) {
+  .modal-dialog {
+    --bs-modal-width: 800px;
+    padding: 0 0.5rem;
+  }
+}

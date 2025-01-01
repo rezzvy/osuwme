@@ -1,0 +1,312 @@
+/* =========================================
+   Utility Classes
+   ========================================= */
+.min-100-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.min-height-300 {
+  min-height: 300px;
+}
+
+.max-height-300 {
+  max-height: 300px;
+}
+
+/* =========================================
+   Background Colors
+   ========================================= */
+.bg-darkest {
+  background: #42353c;
+}
+
+/* =========================================
+   Text Colors
+   ========================================= */
+.text-pink {
+  color: #ff66ab;
+}
+
+/* =========================================
+   Section Heading Styles
+   ========================================= */
+.section-heading {
+  border-bottom: 1px solid #ff66ab;
+  border-radius: 0.5px;
+}
+
+.section-heading h2 {
+  display: inline-block;
+  position: relative;
+}
+
+.section-heading h2::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  left: 0;
+  bottom: -2px;
+  background: #ff66ab;
+  border-radius: 999px;
+}
+
+/* =========================================
+   Modal Styles
+   ========================================= */
+.modal-box {
+  background: #382e32 !important;
+}
+
+/* =========================================
+   Placeholder Styles
+   ========================================= */
+.ph {
+  position: relative;
+}
+
+.ph::before {
+  content: "x";
+  font-size: 2.5em;
+  visibility: hidden;
+}
+
+.ph.no-center::after {
+  top: 0;
+  left: 0;
+  transform: unset;
+}
+
+.ph::after {
+  font-family: "FontAwesome";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 2.5em;
+  z-index: 1;
+}
+
+.ph.ph-img::after {
+  content: "\f03e";
+}
+
+.ph.ph-audio::after {
+  content: "\f001";
+}
+
+.ph.ph-youtube::after {
+  content: "\f16a";
+}
+
+.ph.ph-list::after {
+  content: "\f03a";
+}
+
+.ph.ph-map::after {
+  content: "\f279";
+}
+
+.ph.ph-center::after {
+  content: "\f037";
+}
+
+.ph.ph-spacing::after {
+  content: "\f07d";
+}
+
+.ph.ph-notice::after {
+  content: "\f1b2";
+}
+
+.ph.ph-spoilerbox::after {
+  content: "\f0d7";
+}
+
+.ph.ph-quote::after {
+  content: "\f10e";
+}
+
+._resizer {
+  width: 12px;
+  height: 12px;
+  background-color: #ff66ab;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  clip-path: polygon(0 100%, 100% 0%, 100% 100%, 0% 100%);
+  cursor: nwse-resize;
+}
+
+/* =========================================
+   OSU Styles
+   ========================================= */
+.osu-style a {
+  color: rgb(217, 166, 189);
+  font-weight: 400;
+}
+
+.osu-style .fs-tiny {
+  font-size: 50%;
+}
+
+.osu-style .fs-small {
+  font-size: 85%;
+}
+
+.osu-style .fs-normal {
+  font-size: 100%;
+}
+
+.osu-style .fs-large {
+  font-size: 150%;
+}
+
+.osu-style details summary {
+  color: rgb(217, 166, 189);
+  font-weight: 700;
+  display: flex;
+  gap: 14px;
+}
+
+.osu-style details summary::before {
+  content: "\f0da";
+  font-family: "FontAwesome";
+  color: #fff;
+}
+
+.osu-style details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.osu-style details .spoilerbox-content {
+  padding-left: 20px;
+  margin-top: 0px;
+}
+
+.osu-style code {
+  display: block;
+  font-family: var(--bs-font-monospace);
+  background: rgb(42, 34, 38);
+  border-radius: 4px;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+.osu-style code.inline {
+  display: inline;
+  padding: 1px 4px;
+  white-space: unset;
+}
+
+.osu-style .spoiler {
+  background-color: #000 !important;
+  color: #000 !important;
+}
+
+.osu-style blockquote {
+  border: none;
+  color: rgb(240, 219, 228);
+  font-size: inherit;
+  padding: 0 0 0 20px;
+  position: relative;
+}
+
+.osu-style blockquote ._source {
+  color: #fff;
+  margin-bottom: 10px;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.osu-style blockquote::before {
+  background-color: rgb(240, 219, 228);
+  border-radius: 100px;
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 2px;
+}
+
+.osu-style ul {
+  padding-left: 20px;
+}
+
+.osu-style ul.ol {
+  list-style: decimal;
+}
+
+.osu-style .heading {
+  color: rgb(224, 184, 202);
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.osu-style .notice {
+  background: rgb(42, 34, 38);
+  border: 2px solid rgb(112, 92, 101);
+  margin: 0;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  min-height: 20px;
+  padding: 19px;
+}
+
+.osu-style .costum-audio {
+  background: rgb(84, 69, 76);
+  display: flex;
+  align-items: center;
+  height: 40px;
+  max-width: 520px;
+  padding: 5px 10px;
+  width: 100%;
+  gap: 15px;
+  overflow: hidden;
+}
+
+.osu-style .costum-audio ._track {
+  background: rgb(28, 23, 25);
+  height: 2px;
+  flex: 1;
+}
+
+.osu-style .imgmap-container {
+  width: max-content;
+  height: max-content;
+  max-width: 100%;
+  position: relative;
+}
+
+.osu-style .imgmap-container a {
+  display: block;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  top: 0;
+  left: 0;
+}
+
+.osu-style iframe {
+  max-width: 425px;
+  aspect-ratio: 16 / 9;
+  display: block;
+  width: 100%;
+}
+
+body.view-mode .osu-style .heading,
+body.view-mode .osu-style details .spoilerbox-content {
+  margin-top: 10px;
+}
+
+body.view-mode .osu-style ul,
+body.view-mode .osu-style code {
+  margin-bottom: 10px;
+}
+
+body.view-mode .osu-style blockquote {
+  margin-bottom: 20px;
+}
