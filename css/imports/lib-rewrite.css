@@ -184,7 +184,7 @@ a {
    Media Queries
    ========================================= */
 @media (min-width: 576px) {
-  .modal-dialog {
+  .modal-dialog.modal-lg {
     --bs-modal-width: 800px;
     padding: 0 0.5rem;
   }

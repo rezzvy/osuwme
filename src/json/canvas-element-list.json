@@ -18,7 +18,7 @@
     "skeletonPath": "./src/skeleton/list.html"
   },
   "heading": {
-    "tooltipTitle": "heading",
+    "tooltipTitle": "Heading",
     "icon": "fa-header",
     "modalPath": "./src/modal/heading.html",
     "skeletonPath": "./src/skeleton/heading.html"
