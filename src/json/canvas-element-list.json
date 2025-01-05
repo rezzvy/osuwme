@@ -3,76 +3,89 @@
     "tooltipTitle": "Quote",
     "icon": "fa-quote-right",
     "modalPath": "./src/modal/quote.html",
-    "skeletonPath": "./src/skeleton/quote.html"
+    "skeletonPath": "./src/skeleton/quote.html",
+    "editable": true
   },
   "imgmap": {
     "tooltipTitle": "Image Map",
     "icon": "fa-map",
     "modalPath": "./src/modal/imgmap.html",
-    "skeletonPath": "./src/skeleton/imgmap.html"
+    "skeletonPath": "./src/skeleton/imgmap.html",
+    "editable": true
   },
   "list": {
     "tooltipTitle": "List",
     "icon": "fa-list",
     "modalPath": "./src/modal/list.html",
-    "skeletonPath": "./src/skeleton/list.html"
+    "skeletonPath": "./src/skeleton/list.html",
+    "editable": true
   },
   "heading": {
     "tooltipTitle": "Heading",
     "icon": "fa-header",
     "modalPath": "./src/modal/heading.html",
-    "skeletonPath": "./src/skeleton/heading.html"
+    "skeletonPath": "./src/skeleton/heading.html",
+    "editable": true
   },
   "text": {
     "tooltipTitle": "Text",
     "icon": "fa-paragraph",
     "modalPath": "./src/modal/text.html",
-    "skeletonPath": "./src/skeleton/text.html"
+    "skeletonPath": "./src/skeleton/text.html",
+    "editable": true
   },
   "image": {
     "tooltipTitle": "Image",
     "icon": "fa-picture-o",
     "modalPath": "./src/modal/image.html",
-    "skeletonPath": "./src/skeleton/image.html"
+    "skeletonPath": "./src/skeleton/image.html",
+    "editable": true
   },
   "audio": {
     "tooltipTitle": "Audio",
     "icon": "fa-music",
     "modalPath": "./src/modal/audio.html",
-    "skeletonPath": "./src/skeleton/audio.html"
+    "skeletonPath": "./src/skeleton/audio.html",
+    "editable": true
   },
   "youtube": {
     "tooltipTitle": "Video",
     "icon": "fa-youtube-play",
     "modalPath": "./src/modal/youtube.html",
-    "skeletonPath": "./src/skeleton/youtube.html"
+    "skeletonPath": "./src/skeleton/youtube.html",
+    "editable": true
   },
   "notice": {
     "tooltipTitle": "Notice",
     "icon": "fa-cube",
-    "skeletonPath": "./src/skeleton/notice.html"
+    "skeletonPath": "./src/skeleton/notice.html",
+    "editable": false
   },
   "center": {
     "tooltipTitle": "Center Block",
     "icon": "fa-align-center",
-    "skeletonPath": "./src/skeleton/center.html"
+    "skeletonPath": "./src/skeleton/center.html",
+    "editable": false
   },
   "spoilerbox": {
     "tooltipTitle": "Spoiler Box",
     "icon": "fa-caret-down",
     "modalPath": "./src/modal/spoilerbox.html",
-    "skeletonPath": "./src/skeleton/spoilerbox.html"
+    "skeletonPath": "./src/skeleton/spoilerbox.html",
+    "editable": true
   },
   "codeblock": {
     "tooltipTitle": "Code Block",
     "icon": "fa-code",
     "modalPath": "./src/modal/codeblock.html",
-    "skeletonPath": "./src/skeleton/codeblock.html"
+    "skeletonPath": "./src/skeleton/codeblock.html",
+    "editable": true
   },
   "spacing": {
     "tooltipTitle": "Spacing",
     "icon": "fa-arrows-v",
     "modalPath": "./src/modal/spacing.html",
-    "skeletonPath": "./src/skeleton/spacing.html"
+    "skeletonPath": "./src/skeleton/spacing.html",
+    "editable": true
   }
 }

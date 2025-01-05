@@ -14,6 +14,26 @@
   max-height: 300px;
 }
 
+.center-content {
+  position: relative;
+}
+
+.center-content > :first-child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+body.select-costum ::selection {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.resizeable {
+  resize: both;
+  overflow: auto;
+}
+
 /* =========================================
    Background Colors
    ========================================= */
@@ -64,29 +84,24 @@
    ========================================= */
 .ph {
   position: relative;
+  text-align: center;
 }
 
-.ph::before {
-  content: "x";
-  font-size: 2.5em;
-  visibility: hidden;
+.ph.no-center {
+  text-align: start;
 }
 
-.ph.no-center::after {
-  top: 0;
-  left: 0;
-  transform: unset;
-}
-
-.ph::after {
-  font-family: "FontAwesome";
+.ph.ph-absolute-center::after {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.ph::after {
+  font-family: "FontAwesome";
   color: rgba(255, 255, 255, 0.25);
   font-size: 2.5em;
-  z-index: 1;
 }
 
 .ph.ph-img::after {
@@ -148,19 +163,23 @@
   font-weight: 400;
 }
 
-.osu-style .fs-tiny {
+.osu-style .fs-tiny,
+.ql-size-fs-tiny {
   font-size: 50%;
 }
 
-.osu-style .fs-small {
+.osu-style .fs-small,
+.ql-size-fs-small {
   font-size: 85%;
 }
 
-.osu-style .fs-normal {
+.osu-style .fs-normal,
+.ql-size-fs-normal {
   font-size: 100%;
 }
 
-.osu-style .fs-large {
+.osu-style .fs-large,
+.ql-size-fs-large {
   font-size: 150%;
 }
 
@@ -215,6 +234,7 @@
 }
 
 .osu-style blockquote ._source {
+  text-align: start;
   color: #fff;
   margin-bottom: 10px;
   font-weight: 700;
@@ -230,6 +250,10 @@
   position: absolute;
   top: 0;
   width: 2px;
+}
+
+.osu-style ul li::before {
+  content: attr(data-title);
 }
 
 .osu-style ul {

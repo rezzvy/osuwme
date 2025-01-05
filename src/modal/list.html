@@ -1,19 +1,10 @@
 <div>
-  <button class="btn btn-light btn-sm fw-bold w-100">Add List</button>
+  <button id="add-list-btn" class="btn btn-light btn-sm fw-bold w-100">Add List</button>
+
+  <div class="form-check form-switch d-flex align-items-center gap-2 m-0 p-0 mt-2">
+    <input id="ordered-list-check" class="form-check-input fs-4 m-0 p-0" type="checkbox" role="switch" checked />
+    <label class="form-check-label" for="ordered-list-check">Ordered List</label>
+  </div>
 </div>
 
-<div class="modal-box ph ph-list p-3 rounded-2 mt-3 min-height-300">
-  <!-- <div class="input-group input-group-sm gap-1">
-    <div class="input-group-text">
-      <button class="btn btn-outline-light btn-sm">
-        <i class="fa fa-arrows fa-fw"></i>
-      </button>
-    </div>
-    <input type="text" class="form-control rounded-2" placeholder="Title" />
-    <div class="input-group-text">
-      <button class="btn btn-outline-light btn-sm">
-        <i class="fa fa-trash fa-fw"></i>
-      </button>
-    </div>
-  </div> -->
-</div>
+<div class="modal-box ph ph-absolute-center ph-list p-3 rounded-2 mt-3 min-height-300" data-drop></div>

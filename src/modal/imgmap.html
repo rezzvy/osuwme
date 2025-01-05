@@ -2,16 +2,16 @@
   <div class="input-group-text">
     <i class="fa fa-picture-o fa-fw"></i>
   </div>
-  <input type="text" class="form-control rounded-2" placeholder="Image Link" />
+  <input type="text" class="form-control rounded-2" placeholder="Image Link" id="imgmap-link-input" />
   <div class="input-group-text">
-    <button class="btn btn-light btn-sm">
+    <button class="btn btn-light btn-sm" id="imgmap-link-submit-btn">
       <i class="fa fa-send fa-fw"></i>
     </button>
   </div>
 </div>
 
 <div class="mt-2">
-  <button class="btn btn-outline-light btn-sm fw-bold w-100"><i class="fa fa-plus fa-fw"></i> Add Item</button>
+  <button class="btn btn-outline-light btn-sm fw-bold w-100" id="add-imgmap-item-btn"><i class="fa fa-plus fa-fw"></i> Add Item</button>
 </div>
 
 <div class="d-flex flex-column flex-sm-row gap-1 position-sticky top-0 z-3 bg-darkest mt-1 mb-2">
@@ -19,46 +19,42 @@
     <div class="input-group-text">
       <i class="fa fa-info fa-fw"></i>
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Title" />
+    <input type="text" class="form-control rounded-2" placeholder="Title" id="imgmap-title-input-item" autocomplete="off" />
   </div>
 
   <div class="input-group input-group-sm gap-1">
     <div class="input-group-text">
       <i class="fa fa-link fa-fw"></i>
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Link" />
+    <input type="text" class="form-control rounded-2" placeholder="Link" id="imgmap-link-input-item" autocomplete="off" />
   </div>
 
   <div class="input-group input-group-sm gap-1">
     <div class="input-group-text">
       <i class="fa fa-arrows-h fa-fw"></i>
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Width" />
+    <input type="text" class="form-control rounded-2" placeholder="Width" id="imgmap-width-input-item" autocomplete="off" />
   </div>
 
   <div class="input-group input-group-sm gap-1">
     <div class="input-group-text">
       <i class="fa fa-arrows-v fa-fw"></i>
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Height" />
+    <input type="text" class="form-control rounded-2" placeholder="Height" id="imgmap-height-input-item" autocomplete="off" />
   </div>
 
   <div class="flex-shrink-0">
-    <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Duplicate">
+    <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" id="imgmap-duplicate-btn" data-bs-title="Duplicate">
       <i class="fa fa-copy fa-fw"></i>
     </button>
-    <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Remove">
+    <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" id="imgmap-remove-btn" data-bs-title="Remove">
       <i class="fa fa-trash fa-fw"></i>
     </button>
   </div>
 </div>
 
-<div class="modal-box ph ph-map p-3 rounded-2 min-height-300">
-  <div id="imgmap-edit-container">
-    <img src="https://thesun.my/binrepository/1453823613-af9b764f682f0444aed3613f1c4e873e_1018816_20200314112217.jpg" alt="Editable Map" />
-
-    <a class="imgmap-edit-item" data-title="Untitled">
-      <div class="_resizer"></div>
-    </a>
+<div class="modal-box ph ph-absolute-center ph-map p-3 rounded-2 min-height-300">
+  <div id="imgmap-edit-container" class="d-none">
+    <img class="pe-none" />
   </div>
 </div>

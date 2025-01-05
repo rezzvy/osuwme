@@ -18,134 +18,147 @@
 
     <link rel="stylesheet" href="./css/main.css" />
   </head>
-  <body class="d-flex flex-column gap-3 min-100-dvh small text-light text-opacity-75">
-    <header class="py-3">
-      <div class="container px-3">
-        <div class="d-flex justify-content-md-between align-items-center flex-column flex-md-row gap-1 gap-md-0">
-          <div class="d-flex align-items-end gap-0 gap-md-2">
-            <h1 class="text-lowercase h2 fw-bold text-light">OSUW<span class="text-pink">me</span></h1>
-            <p class="lead d-none d-md-block text-light text-opacity-50 fst-italic">bbcode builder for osu!</p>
-          </div>
+  <body class="small text-light text-opacity-75">
+    <div id="app-wrapper" class="d-flex flex-column gap-3 min-100-dvh">
+      <header class="py-3">
+        <div class="container px-3">
+          <div class="d-flex justify-content-md-between align-items-center flex-column flex-md-row gap-1 gap-md-0">
+            <div class="d-flex align-items-end gap-0 gap-md-2">
+              <h1 class="text-lowercase h2 fw-bold text-light">OSUW<span class="text-pink">me</span></h1>
+              <p class="lead d-none d-md-block text-light text-opacity-50 fst-italic">bbcode builder for osu!</p>
+            </div>
 
-          <nav>
-            <ul class="list-unstyled m-0 d-flex gap-2 gap-md-3 align-items-center flex-wrap justify-content-center text-center">
-              <li>
-                <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">
-                  <i class="fa fa-info-circle fa-fw"></i> Getting Started
-                </a>
-              </li>
-              <li>
-                <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">
-                  <i class="fa fa-github fa-fw"></i> Source Code
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </header>
-
-    <main class="container px-3 flex-fill d-flex flex-column gap-2">
-      <section>
-        <h2 class="visually-hidden">Menu</h2>
-
-        <div class="d-flex justify-content-sm-between align-items-sm-center flex-column-reverse gap-1 flex-sm-row">
-          <div class="form-check form-switch m-0 p-0 d-flex gap-2 align-items-center">
-            <input id="canvas-mode-switch" class="form-check-input m-0 p-0 fs-4" type="checkbox" role="switch" checked />
-            <label class="form-check-label" for="canvas-mode-switch">Edit Mode</label>
-          </div>
-
-          <div class="d-flex gap-1 flex-grow-1 flex-sm-grow-0">
-            <div class="dropdown">
-              <button class="btn btn-light btn-sm" data-bs-toggle="dropdown">
-                <i class="fa fa-bars fa-fw fa-lg"></i>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="javascript:void(0)">Import</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0)">Export</a></li>
+            <nav>
+              <ul class="list-unstyled m-0 d-flex gap-2 gap-md-3 align-items-center flex-wrap justify-content-center text-center">
+                <li>
+                  <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">
+                    <i class="fa fa-info-circle fa-fw"></i> Getting Started
+                  </a>
+                </li>
+                <li>
+                  <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">
+                    <i class="fa fa-github fa-fw"></i> Source Code
+                  </a>
+                </li>
               </ul>
-            </div>
-
-            <button class="btn btn-light btn-sm fw-bold flex-grow-1 flex-sm-grow-0">Get Code</button>
+            </nav>
           </div>
         </div>
-      </section>
+      </header>
 
-      <section id="canvas" class="d-flex flex-column flex-fill rounded-2 osu-style">
-        <h2 class="visually-hidden">Canvas</h2>
-        <div class="_resizer"></div>
-        <div id="canvas-wrapper" class="flex-fill p-3"></div>
-      </section>
+      <main class="container px-3 flex-fill d-flex flex-column gap-2">
+        <section>
+          <h2 class="visually-hidden">Menu</h2>
 
-      <section id="element-list-section">
-        <div class="section-heading mb-2">
-          <h2 class="text-light h6 fw-bold px-3 pb-1">Elements</h2>
-        </div>
-
-        <ul class="list-unstyled m-0 d-flex gap-1 overflow-auto" id="canvas-element-list">
-          <!-- This section is dynamically generated -->
-        </ul>
-      </section>
-    </main>
-
-    <footer class="py-3">
-      <div class="container px-3">
-        <p>
-          Made with <i class="fa fa-heart fa-fw"></i> by
-          <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">Muhammad Reza Fahlevi</a>
-        </p>
-      </div>
-    </footer>
-
-    <div id="modal-edit" class="modal" data-bs-backdrop="static" data-bs-focus="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header px-3 pt-3 pb-0">
-            <div class="section-heading">
-              <h2 class="text-light h6 fw-bold px-3 pb-1">Edit</h2>
+          <div class="d-flex justify-content-sm-between align-items-sm-center flex-column-reverse gap-1 flex-sm-row">
+            <div class="form-check form-switch m-0 p-0 d-flex gap-2 align-items-center">
+              <input id="canvas-mode-switch" class="form-check-input m-0 p-0 fs-4" type="checkbox" role="switch" checked />
+              <label class="form-check-label" for="canvas-mode-switch">Edit Mode</label>
             </div>
-            <button class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div id="modal-edit-body" class="modal-body p-3">
-            <p class="alert alert-danger p-2 mb-3 d-none"><i class="fa fa-warning fa-fw"></i> Something is wrong!</p>
 
+            <div class="d-flex gap-1 flex-grow-1 flex-sm-grow-0">
+              <div class="dropdown">
+                <button class="btn btn-light btn-sm" data-bs-toggle="dropdown">
+                  <i class="fa fa-bars fa-fw fa-lg"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="javascript:void(0)">Import</a></li>
+                  <li><a class="dropdown-item" href="javascript:void(0)">Export</a></li>
+                </ul>
+              </div>
+
+              <button class="btn btn-light btn-sm fw-bold flex-grow-1 flex-sm-grow-0">Get Code</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="canvas" class="d-flex flex-column flex-fill rounded-2 osu-style resizeable">
+          <h2 class="visually-hidden">Canvas</h2>
+          <div id="canvas-wrapper" class="flex-fill p-3"></div>
+        </section>
+
+        <section id="element-list-section">
+          <div class="section-heading mb-2">
+            <h2 class="text-light h6 fw-bold px-3 pb-1">Elements</h2>
+          </div>
+
+          <ul class="list-unstyled m-0 d-flex gap-1 overflow-auto" id="canvas-element-list">
             <!-- This section is dynamically generated -->
-          </div>
-          <div class="modal-footer px-3 pt-0 pb-3">
-            <button class="btn btn-dark btn-sm w-75 mx-auto" data-bs-toggle="tooltip" data-bs-title="Save">
-              <i class="fa fa-save fa-fw"></i>
-            </button>
-          </div>
+          </ul>
+        </section>
+      </main>
+
+      <footer class="py-3">
+        <div class="container px-3">
+          <p>
+            Made with <i class="fa fa-heart fa-fw"></i> by
+            <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">Muhammad Reza Fahlevi</a>
+          </p>
         </div>
-      </div>
+      </footer>
     </div>
 
-    <div id="getcode-modal" class="modal" data-bs-backdrop="static" data-bs-focus="false">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header pt-3 pb-0 px-3">
-            <div class="section-heading">
-              <h2 class="h6 fw-bold text-light px-3 pb-1">Get Code</h2>
-            </div>
-            <button class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div id="modal-edit-body" class="modal-body p-3">
-            <p class="alert alert-success p-2 mb-3 d-none"><i class="fa fa-info-circle fa-fw"></i> Successfully copied to clipboard!</p>
-
-            <div class="modal-box rounded-2">
-              <textarea class="form-control-plaintext overflow-auto p-3 min-height-300" placeholder="Output" readonly></textarea>
+    <div id="modal-wrapper">
+      <div id="audio-modal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body p-3">
+              <audio controls class="w-100" id="audio-modal-preview"></audio>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div class="modal-footer pb-3 pt-0 px-3 gap-2">
-            <button class="btn btn-outline-light btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Download As Text">
-              <i class="fa fa-download fa-fw"></i>
-            </button>
+      <div id="modal-edit" class="modal" data-bs-backdrop="static" data-bs-focus="false">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header px-3 pt-3 pb-0">
+              <div class="section-heading">
+                <h2 class="text-light h6 fw-bold px-3 pb-1">Edit</h2>
+              </div>
+              <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div id="modal-edit-body" class="modal-body p-3">
+              <p id="modal-edit-alert" class="alert alert-danger p-2 mb-3 d-none"><i class="fa fa-warning fa-fw"></i> <span>N/A</span></p>
 
-            <button class="btn btn-dark btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Copy to Clipboard">
-              <i class="fa fa-clipboard fa-fw"></i>
-            </button>
+              <!-- This section is dynamically generated -->
+            </div>
+            <div class="modal-footer px-3 pt-0 pb-3">
+              <button id="modal-edit-save" class="btn btn-dark btn-sm w-75 mx-auto" data-bs-toggle="tooltip" data-bs-title="Save">
+                <i class="fa fa-save fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="getcode-modal" class="modal" data-bs-backdrop="static" data-bs-focus="false">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header pt-3 pb-0 px-3">
+              <div class="section-heading">
+                <h2 class="h6 fw-bold text-light px-3 pb-1">Get Code</h2>
+              </div>
+              <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-3">
+              <p class="alert alert-success p-2 mb-3 d-none"><i class="fa fa-info-circle fa-fw"></i> Successfully copied to clipboard!</p>
+
+              <div class="modal-box rounded-2">
+                <textarea class="form-control-plaintext overflow-auto p-3 min-height-300" placeholder="Output" readonly></textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer pb-3 pt-0 px-3 gap-2">
+              <button class="btn btn-outline-light btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Download As Text">
+                <i class="fa fa-download fa-fw"></i>
+              </button>
+
+              <button class="btn btn-dark btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Copy to Clipboard">
+                <i class="fa fa-clipboard fa-fw"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

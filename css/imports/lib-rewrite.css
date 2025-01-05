@@ -21,6 +21,10 @@ code {
   box-sizing: border-box;
 }
 
+i.fa {
+  pointer-events: none;
+}
+
 /* =========================================
    Link Styles
    ========================================= */
@@ -71,6 +75,12 @@ a {
   --bs-body-bg: rgba(255, 255, 255, 0.125);
   --bs-body-color: var(--bs-light);
   border-color: transparent;
+}
+
+.form-control:disabled {
+  background-color: var(--bs-body-bg);
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .form-control::placeholder {
@@ -178,6 +188,12 @@ a {
 
 .ql-editor:focus-visible {
   outline: unset;
+}
+
+.ql-active {
+  color: #fff !important;
+  background: #ff66ab !important;
+  border-color: transparent !important;
 }
 
 /* =========================================

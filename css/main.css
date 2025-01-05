@@ -26,9 +26,13 @@ header {
 }
 
 main #canvas {
+  min-width: 25%;
+  max-width: 100%;
+  width: 100%;
   position: relative;
   color: #fff;
   background: #382e32;
+  margin: auto;
 }
 
 footer {
@@ -54,20 +58,21 @@ footer {
 /* =========================================
    Spacing Preview
    ========================================= */
-#spacing-preview-br-wrapper {
-  --spacing-level: 5;
+#spacing-preview {
+  --spacing-level: 1;
   position: relative;
   text-align: center;
   height: calc(var(--spacing-level) * 17px);
   overflow: hidden;
 }
 
-#spacing-preview-br-wrapper ._br::before {
+#spacing-preview::before {
   content: "Spacing";
   text-transform: uppercase;
   letter-spacing: 10px;
   word-break: break-all;
   position: absolute;
+  font-size: 12px;
   top: 50%;
   left: 50%;
   color: rgba(255, 255, 255, 0.25);
@@ -86,6 +91,10 @@ footer {
   overflow: hidden;
 }
 
+#imgmap-edit-container img {
+  user-select: none;
+}
+
 #imgmap-edit-container .imgmap-edit-item {
   display: block;
   position: absolute;
@@ -98,10 +107,16 @@ footer {
   left: 10px;
   text-align: center;
   overflow: hidden;
+  cursor: grab;
+}
+
+#imgmap-edit-container .imgmap-edit-item.active {
+  background-color: rgba(255, 0, 144, 0.5);
 }
 
 #imgmap-edit-container .imgmap-edit-item::before {
   content: attr(data-title);
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* =========================================
