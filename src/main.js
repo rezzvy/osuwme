@@ -438,6 +438,7 @@ function spacingOnOpen() {
 function spacingOnSave() {
   const spacingLevel = modalSaveCurrentRender.querySelector('[type="number"]').value;
   modalSaveTarget.querySelector(".spacing-item").dataset.spacingLevel = spacingLevel;
+  modalSaveTarget.querySelector(".spacing-item").style.setProperty("--spacing-level", spacingLevel);
 }
 
 function codeblockOnOpen() {
@@ -1416,7 +1417,7 @@ mation.ignoreSelectors = ["summary", "._duration", "blockquote > ._source"];
 mation.register([
   {
     selector: ".spacing-item",
-    format: (api) => `%SPCITM%`.repeat(parseInt(api.node.dataset.spacingLevel)),
+    format: (api) => `%SPCITM%`.repeat(parseInt(api.node.dataset.spacingLevel) - 1),
   },
   {
     selector: "p",
@@ -1579,4 +1580,42 @@ document.getElementById("getcode-btn-modal").addEventListener("click", (e) => {
   codeOutputTextArea.value = cleanedContent;
 
   getCodeModal.show();
+});
+
+document.getElementById("canvas-mode-switch").addEventListener("input", (e) => {
+  document.body.classList.toggle("view-mode", !e.target.checked);
+});
+
+document.getElementById("import-project-btn").addEventListener("click", (e) => {
+  document.getElementById("import-project-input").click();
+});
+
+document.getElementById("export-project-btn").addEventListener("click", (e) => {
+  const content = canvasElement.innerHTML;
+
+  const blob = new Blob([content], { type: "text/html" });
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "osuwme-project.html";
+
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById("import-project-input").addEventListener("input", (e) => {
+  const file = e.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const content = event.target.result;
+
+      canvasElement.innerHTML = content;
+    };
+
+    reader.readAsText(file);
+  }
 });

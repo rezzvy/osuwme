@@ -321,6 +321,15 @@ body.select-costum ::selection {
   width: 100%;
 }
 
+body.view-mode .osu-style .spacing-item {
+  display: block !important;
+  height: calc(var(--spacing-level) * 17px);
+}
+
+body.view-mode .osu-style .spacing-item::after {
+  all: unset;
+}
+
 body.view-mode .osu-style .heading,
 body.view-mode .osu-style details .spoilerbox-content {
   margin-top: 10px;
@@ -333,4 +342,8 @@ body.view-mode .osu-style code {
 
 body.view-mode .osu-style blockquote {
   margin-bottom: 20px;
+}
+
+body.view-mode .ph {
+  display: none;
 }
