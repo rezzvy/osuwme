@@ -7,6 +7,7 @@ const modalRenderLargeList = ["imgmap", "text", "codeblock", "image"];
 const modalSaveButton = document.getElementById("modal-edit-save");
 const modalEditAlert = document.getElementById("modal-edit-alert");
 
+const getCodeModal = new bootstrap.Modal("#getcode-modal");
 const audioModal = new bootstrap.Modal("#audio-modal");
 
 new bootstrap.Tooltip(document.querySelector("main"), {
@@ -1121,6 +1122,8 @@ function imgmapEditEventHandler() {
 
     a.style.width = "15%";
     a.style.height = "15%";
+    a.style.top = "0%";
+    a.style.left = "0%";
 
     imageMapContainer.appendChild(a);
   });
@@ -1399,3 +1402,181 @@ function handleMouseUp() {
 document.addEventListener("mousedown", handleMouseDown);
 document.addEventListener("mousemove", handleMouseMove);
 document.addEventListener("mouseup", handleMouseUp);
+
+function rgbToHex(rgbString) {
+  const [r, g, b] = rgbString.match(/\d+/g).map(Number);
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
+
+const codeOutputTextArea = document.getElementById("code-output-textarea");
+const mation = new MationHTML();
+
+mation.ignoreSelectors = ["summary", "._duration", "blockquote > ._source"];
+
+mation.register([
+  {
+    selector: ".spacing-item",
+    format: (api) => `%SPCITM%`.repeat(parseInt(api.node.dataset.spacingLevel)),
+  },
+  {
+    selector: "p",
+    format: (api) => `%NL%${api.content}%NL%`,
+  },
+  {
+    selector: ".notice",
+    format: (api) => `[notice]${api.content}[/notice]%NL%`,
+  },
+  {
+    selector: "center",
+    format: (api) => `[centre]${api.content}[/centre]%NL%`,
+  },
+  {
+    selector: "iframe",
+    format: (api) => `%NL%[youtube[${api.node.dataset.videoId}[/youtube]%NL%`,
+  },
+  {
+    selector: ".play-audio-btn",
+    format: (api) => `%NL%[audio]${api.node.dataset.audioUrl}[/audio]%NL%`,
+  },
+  {
+    selector: "img",
+    format: (api) => `%NL%[img]${api.node.src}[/img]%NL%`,
+  },
+  {
+    selector: ".heading",
+    format: (api) => `%NL%[heading]${api.content}[/heading]%NL%`,
+  },
+  {
+    selector: "strong",
+    format: (api) => `%ES%[b]${api.content}[/b]%ES%`,
+  },
+  {
+    selector: "em",
+    format: (api) => `%ES%[i]${api.content}[/i]%ES%`,
+  },
+  {
+    selector: "s",
+    format: (api) => `%ES%[s]${api.content}[/s]%ES%`,
+  },
+  {
+    selector: "u",
+    format: (api) => `%ES%[u]${api.content}[/u]%ES%`,
+  },
+  {
+    selector: ".spoiler",
+    format: (api) => `%ES%[spoiler]${api.content}[/spoiler]%ES%`,
+  },
+  {
+    selector: "code",
+    format: (api) => {
+      if (api.node.classList.contains("inline")) {
+        return `%ES%[c]${api.content}[/c]%ES%`;
+      }
+
+      return `%NL%[code]${api.content}[/code]%NL%`;
+    },
+  },
+  {
+    selector: ".imgmap-container",
+    format: (api) => `[imagemap]%NL%${api.content}[/imagemap]`,
+  },
+  {
+    selector: ".imgmap-container > img",
+    format: (api) => `${api.node.src}%NL%`,
+  },
+  {
+    selector: "ul",
+    format: (api) => {
+      const isOrdered = api.node.classList.contains("ol");
+
+      if (isOrdered) {
+        return `[list=1]%NL%${api.content}[/list]`;
+      }
+
+      return `[list]%NL%${api.content}[/list]`;
+    },
+  },
+  {
+    selector: "li",
+    format: (api) => `[*]${api.node.dataset.title} ${api.content}%NL%`,
+  },
+  {
+    selector: "a",
+    format: (api) => {
+      if (api.node.parentElement.classList.contains("imgmap-container")) {
+        const width = api.node.style.width.replace("%", "");
+        const height = api.node.style.height.replace("%", "");
+        const top = api.node.style.top.replace("%", "");
+        const left = api.node.style.left.replace("%", "");
+        const title = api.node.dataset.bsTitle;
+        const link = api.node.href;
+
+        return `${left} ${top} ${width} ${height} ${link} ${title}%NL%`;
+      }
+
+      return `%ES%[url=${api.node.href}]${api.content}[/url]%ES%`;
+    },
+  },
+  {
+    selector: '[style*="color:"]',
+    format: (api) => `%ES%[color=${rgbToHex(api.node.style.color)}]${api.content}[/color]%ES%`,
+  },
+  {
+    selector: '[class^="ql-size-fs-"]',
+    format: (api) => {
+      const className = api.node.className.split(" ");
+      const sizeMaps = {
+        "ql-size-fs-tiny": `[size=50]`,
+        "ql-size-fs-small": `[size=85]`,
+        "ql-size-fs-normal": `[size=100]`,
+        "ql-size-fs-large": `[size=150]`,
+      };
+
+      return `%ES%${sizeMaps[className[className.length - 1]]}${api.content}[/size]%ES%`;
+    },
+  },
+  {
+    selector: "blockquote",
+    format: (api) => {
+      const hasSource = api.node.dataset.includeSource;
+      const sourceTitle = api.node.dataset.source;
+
+      if (hasSource === "true") {
+        return `%NL%[quote=${sourceTitle}]${api.content}[/quote]%NL%`;
+      }
+
+      return `%NL%[quote]${api.content}[/quote]%NL%`;
+    },
+  },
+  {
+    selector: "details",
+    format: (api) => {
+      const title = api.node.dataset.title;
+      const isBox = api.node.dataset.box;
+
+      if (isBox === "true") {
+        return `%NL%[box=${title}]%NL%${api.content}[/box]%NL%`;
+      }
+
+      return `%NL%[spoilerbox]%NL%${api.content}[/spoilerbox]%NL%`;
+    },
+  },
+]);
+
+mation.noRuleFallback = (api) => {
+  return api.content;
+};
+
+document.getElementById("getcode-btn-modal").addEventListener("click", (e) => {
+  const content = canvasElement.innerHTML;
+  let cleanedContent = mation
+    .convert(content)
+    .replace(/%NL%/g, "\n")
+    .replace(/%ES%/g, " ")
+    .replace(/^[\s]*\r?\n/gm, "")
+    .replace(/%SPCITM%/g, "\n");
+
+  codeOutputTextArea.value = cleanedContent;
+
+  getCodeModal.show();
+});
