@@ -32,6 +32,7 @@ export default class View {
     this.expandAllCanvasButton = document.getElementById("expand-all-canvas-btn");
     this.canvasMenuStickySwitch = document.getElementById("canvas-menu-sticky-switch");
     this.resetCanvasSizeButton = document.getElementById("reset-canvas-size-btn");
+    this.clearCanvasButton = document.getElementById("clear-canvas-btn");
 
     this.editModeSwitch = document.getElementById("canvas-mode-switch");
 

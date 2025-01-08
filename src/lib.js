@@ -29,7 +29,7 @@ export default function initLibraries(controller) {
     },
     {
       selector: "center",
-      format: (api) => `[centre]${api.content}[/centre]%NL%`,
+      format: (api) => `[centre]${api.content}[/centre]`,
     },
     {
       selector: "iframe",
@@ -79,7 +79,7 @@ export default function initLibraries(controller) {
     },
     {
       selector: ".imgmap-container",
-      format: (api) => `[imagemap]%NL%${api.content}[/imagemap]`,
+      format: (api) => `%NL%[imagemap]%NL%${api.content}[/imagemap]%NL%`,
     },
     {
       selector: ".imgmap-container > img",
@@ -116,7 +116,7 @@ export default function initLibraries(controller) {
           return `${left} ${top} ${width} ${height} ${link} ${title}%NL%`;
         }
 
-        const renderableAsProfile = link.match(/^https:\/\/osu\.ppy\.sh\/users\/([a-zA-Z\s-]+)$/);
+        const renderableAsProfile = link.match(/^https:\/\/osu\.ppy\.sh\/users\/([a-zA-Z][a-zA-Z0-9\s-_]*[a-zA-Z])$/);
         if (renderableAsProfile) {
           return `[profile]${renderableAsProfile[1]}[/profile]`;
         }
@@ -172,6 +172,10 @@ export default function initLibraries(controller) {
 
         return `%NL%[spoilerbox]%NL%${api.content}[/spoilerbox]%NL%`;
       },
+    },
+    {
+      selector: '[data-spacing="%SPCITM%"]',
+      format: (api) => `%SPCITM%`,
     },
   ]);
 

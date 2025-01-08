@@ -150,6 +150,12 @@ export default class Controller {
       this.view.canvas.style.cssText = "";
     });
 
+    this.view.clearCanvasButton.addEventListener("click", (e) => {
+      const confirmDialog = confirm("Are you sure?");
+
+      if (confirmDialog) this.view.canvasElement.innerHTML = "";
+    });
+
     window.addEventListener("beforeunload", (e) => {
       this.model.saveLatestCanvasContent(this.view.canvasElement.innerHTML);
     });
@@ -664,6 +670,8 @@ export default class Controller {
         const textEditorContent = currentEdit.modal.querySelector(".ql-editor");
         const emptyElements = textEditorContent.querySelectorAll("p");
         emptyElements.forEach((element) => {
+          const br = element.querySelector("br");
+          if (br) br.dataset.spacing = "%SPCITM%";
           if (element.innerHTML.trim() === "") element.remove();
         });
 
