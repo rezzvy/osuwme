@@ -6,6 +6,7 @@ export default class View {
     this.canvasElementListContainer = document.getElementById("canvas-element-list");
     this.canvasElementListModalBody = document.getElementById("modal-edit-body");
     this.canvasElement = document.getElementById("canvas-wrapper");
+    this.canvas = document.getElementById("canvas");
     this.canvasModalEdit = new bootstrap.Modal("#modal-edit");
 
     this.audioModal = new bootstrap.Modal("#audio-modal");
@@ -27,12 +28,20 @@ export default class View {
     this.importProjectButton = document.getElementById("import-project-btn");
     this.importProjectFileInput = document.getElementById("import-project-input");
     this.exportProjectButton = document.getElementById("export-project-btn");
+    this.collapseAllCanvasButton = document.getElementById("collapse-all-canvas-btn");
+    this.expandAllCanvasButton = document.getElementById("expand-all-canvas-btn");
+    this.canvasMenuStickySwitch = document.getElementById("canvas-menu-sticky-switch");
+    this.resetCanvasSizeButton = document.getElementById("reset-canvas-size-btn");
 
     this.editModeSwitch = document.getElementById("canvas-mode-switch");
+
+    this.isMenuSticky = true;
   }
 
   initializeStickyMenu() {
     const updateStickyState = () => {
+      if (!this.isMenuSticky) return;
+
       const element = document.getElementById("element-list-section");
 
       const elementBottom = element.offsetTop + element.offsetHeight + 16;
@@ -42,10 +51,20 @@ export default class View {
     };
 
     window.addEventListener("scroll", (e) => {
+      if (!this.isMenuSticky) return;
+
       updateStickyState();
     });
 
     new ResizeObserver(updateStickyState).observe(this.canvasElement);
+  }
+
+  collapseAllCanvasItem(boolean) {
+    const elements = document.querySelectorAll(".canvas-item .collapse");
+
+    elements.forEach((element) => {
+      element.classList.toggle("show", !boolean);
+    });
   }
 
   renderClipboardAlert(boolean) {

@@ -173,6 +173,10 @@ body.select-costum ::selection {
   gap: 14px;
 }
 
+.osu-style center details summary {
+  justify-content: center;
+}
+
 .osu-style details summary::before {
   content: "\f0da";
   font-family: "FontAwesome";
@@ -327,6 +331,10 @@ body.view-mode .osu-style blockquote {
   margin-bottom: 20px;
 }
 
-body.view-mode .ph {
-  display: none;
+body.view-mode .ph::after {
+  all: unset;
+}
+
+body.view-mode .collapse {
+  display: block !important;
 }

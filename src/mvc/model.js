@@ -76,7 +76,6 @@ export default class Model {
     return this.mation
       .convert(html)
       .replace(/%NL%/g, "\n")
-      .replace(/%ES%/g, " ")
       .replace(/^\s+/gm, "")
       .replace(/^[\s]*\r?\n/gm, "")
       .replace(/%SPCITM%/g, "\n");

@@ -69,11 +69,12 @@ export default class Controller {
     });
 
     this.view.copyBBCodeToClipboard.addEventListener("click", (e) => {
-      const content = this.view.codeOutputTextArea.value;
+      const content = this.view.codeOutputTextArea;
 
-      navigator.clipboard.writeText(content).then(() => {
+      content.select();
+      if (document.execCommand("copy")) {
         this.view.renderClipboardAlert(true);
-      });
+      }
     });
 
     this.view.downloadBBCodeAsTextButton.addEventListener("click", () => {
@@ -126,6 +127,25 @@ export default class Controller {
 
     this.view.editModeSwitch.addEventListener("click", (e) => {
       document.body.classList.toggle("view-mode", !e.target.checked);
+    });
+
+    this.view.expandAllCanvasButton.addEventListener("click", (e) => {
+      this.view.collapseAllCanvasItem(false);
+    });
+
+    this.view.collapseAllCanvasButton.addEventListener("click", (e) => {
+      this.view.collapseAllCanvasItem(true);
+    });
+
+    this.view.canvasMenuStickySwitch.addEventListener("input", (e) => {
+      const element = document.getElementById("element-list-section");
+      element.classList.toggle("pinned", e.target.checked);
+
+      this.view.isMenuSticky = e.target.checked;
+    });
+
+    this.view.resetCanvasSizeButton.addEventListener("click", (e) => {
+      this.view.canvas.style.cssText = "";
     });
   }
 
@@ -296,11 +316,14 @@ export default class Controller {
       save: () => {
         const currentEdit = this.model.currentEdit;
         const spoilerboxElement = currentEdit.target.querySelector("details");
+        const spoilerboxTitle = spoilerboxElement.querySelector("summary");
+
         const useBoxInput = currentEdit.modal.querySelector('input[type="checkbox"]');
         const titleInput = currentEdit.modal.querySelector('input[type="text"]');
 
         spoilerboxElement.dataset.box = useBoxInput.checked;
         spoilerboxElement.dataset.title = titleInput.value;
+        spoilerboxTitle.textContent = useBoxInput.checked ? titleInput.value : "Spoiler";
       },
       modalEvents: () => {
         const wrapper = document.querySelector('[data-edit="spoilerbox"]');
@@ -623,6 +646,11 @@ export default class Controller {
         const currentEdit = this.model.currentEdit;
 
         const textEditorContent = currentEdit.modal.querySelector(".ql-editor");
+        const emptyElements = textEditorContent.querySelectorAll("p");
+        emptyElements.forEach((element) => {
+          if (element.innerHTML.trim() === "") element.remove();
+        });
+
         currentEdit.target.innerHTML = textEditorContent.innerHTML;
       },
     });

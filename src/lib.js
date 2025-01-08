@@ -13,9 +13,10 @@ export default function initLibraries(controller) {
       selector: ".spacing-item",
       format: (api) => `%SPCITM%`.repeat(parseInt(api.node.dataset.spacingLevel) - 1),
     },
+
     {
       selector: "p",
-      format: (api) => `%NL%${api.content}%NL%`,
+      format: (api) => `${api.content}%NL%`,
     },
     {
       selector: ".notice",
@@ -43,29 +44,29 @@ export default function initLibraries(controller) {
     },
     {
       selector: "strong",
-      format: (api) => `%ES%[b]${api.content}[/b]%ES%`,
+      format: (api) => `[b]${api.content}[/b]`,
     },
     {
       selector: "em",
-      format: (api) => `%ES%[i]${api.content}[/i]%ES%`,
+      format: (api) => `[i]${api.content}[/i]`,
     },
     {
       selector: "s",
-      format: (api) => `%ES%[s]${api.content}[/s]%ES%`,
+      format: (api) => `[s]${api.content}[/s]`,
     },
     {
       selector: "u",
-      format: (api) => `%ES%[u]${api.content}[/u]%ES%`,
+      format: (api) => `[u]${api.content}[/u]`,
     },
     {
       selector: ".spoiler",
-      format: (api) => `%ES%[spoiler]${api.content}[/spoiler]%ES%`,
+      format: (api) => `[spoiler]${api.content}[/spoiler]`,
     },
     {
       selector: "code",
       format: (api) => {
         if (api.node.classList.contains("inline")) {
-          return `%ES%[c]${api.content}[/c]%ES%`;
+          return `[c]${api.content}[/c]`;
         }
 
         return `%NL%[code]${api.content}[/code]%NL%`;
@@ -109,12 +110,12 @@ export default function initLibraries(controller) {
           return `${left} ${top} ${width} ${height} ${link} ${title}%NL%`;
         }
 
-        return `[url=${api.node.href}]${api.content}[/url]%ES%`;
+        return `[url=${api.node.href}]${api.content}[/url]`;
       },
     },
     {
       selector: '[style*="color:"]',
-      format: (api) => `%ES%[color=${controller.model.rgbToHex(api.node.style.color)}]${api.content}[/color]%ES%`,
+      format: (api) => `[color=${controller.model.rgbToHex(api.node.style.color)}]${api.content}[/color]`,
     },
     {
       selector: '[style*="font-size:"]',
@@ -127,7 +128,7 @@ export default function initLibraries(controller) {
           "150%": `[size=150]`,
         };
 
-        return `%ES%${sizeMaps[size]}${api.content}[/size]%ES%`;
+        return `${sizeMaps[size]}${api.content}[/size]`;
       },
     },
     {
