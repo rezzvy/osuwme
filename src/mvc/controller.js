@@ -6,6 +6,8 @@ export default class Controller {
 
   async init() {
     await this.getCanvasElementList();
+    await this.getCanvasTemplates();
+
     this.initializeModalEditHandlers();
     this.renderLatestCanvasContent();
 
@@ -100,6 +102,7 @@ export default class Controller {
           const isValid = this.model.checkHTMLFormat(content);
 
           if (isValid) {
+            this.view.toggleCanvasPlaceHolder(false);
             this.view.canvasElement.innerHTML = content;
           } else {
             alert("We can't process this file because it does not contain a recognized format.");
@@ -153,7 +156,24 @@ export default class Controller {
     this.view.clearCanvasButton.addEventListener("click", (e) => {
       const confirmDialog = confirm("Are you sure?");
 
-      if (confirmDialog) this.view.canvasElement.innerHTML = "";
+      if (confirmDialog) {
+        this.view.canvasElement.innerHTML = "";
+        this.view.toggleCanvasPlaceHolder(true);
+      }
+    });
+
+    this.view.canvasTemplatesModalBody.addEventListener("click", async (e) => {
+      if (e.target.dataset.action !== "render") return;
+
+      if (this.view.canvasElement.children.length !== 0) {
+        const confirmDialog = confirm("Existing Canvas will be wiped, continue?");
+        if (!confirmDialog) return;
+      }
+
+      const content = await this.model.fetchData(e.target.dataset.templatePath, "text");
+      this.view.canvasElement.innerHTML = content;
+      this.view.canvasTemplatesModal.hide();
+      this.view.toggleCanvasPlaceHolder(false);
     });
 
     window.addEventListener("beforeunload", (e) => {
@@ -189,6 +209,7 @@ export default class Controller {
     const skeleton = this.model.getCanvasElementSkeleton(btn.dataset.key);
 
     this.view.appendItemToCanvas(skeleton, btn.dataset.key, btn.dataset.editable);
+    this.view.toggleCanvasPlaceHolder(false);
   }
 
   canvasItemEditHandler(e) {
@@ -227,6 +248,7 @@ export default class Controller {
     if (content) {
       this.view.toggleContainerPlaceholder(content);
     }
+    this.view.toggleCanvasPlaceHolder(this.view.canvasElement.children.length === 0);
   }
 
   renderLatestCanvasContent() {
@@ -234,7 +256,23 @@ export default class Controller {
 
     if (content) {
       this.view.canvasElement.innerHTML = content;
+      this.view.toggleCanvasPlaceHolder(false);
     }
+  }
+
+  async getCanvasTemplates() {
+    const data = await this.model.fetchData("./src/json/canvas-templates.json", "json");
+
+    const element = [];
+
+    for (const key in data) {
+      const { title, des, templatePath } = data[key];
+      element.push(this.view.generateCanvasTemplateItem(title, des, templatePath));
+    }
+
+    this.view.canvasTemplatesModalBody.innerHTML = element.join("");
+
+    return true;
   }
 
   async getCanvasElementList() {

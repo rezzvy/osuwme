@@ -1,0 +1,12 @@
+{
+  "one": {
+    "title": "Kumi Lone Wolf",
+    "des": "Personal BBCode made by Kumi Lone Wolf",
+    "templatePath": "./src/templates/kumi_lone_wolf.html"
+  },
+  "two": {
+    "title": "peppy",
+    "des": "Peppy's osu! userpage BBCode",
+    "templatePath": "./src/templates/peppy.html"
+  }
+}

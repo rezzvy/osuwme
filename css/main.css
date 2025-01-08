@@ -180,6 +180,16 @@ footer {
 }
 
 /* =========================================
+   Canvas Wrapper Placeholder
+   ========================================= */
+#canvas-wrapper-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* =========================================
    View Mode
    ========================================= */
 body.view-mode .canvas-item {

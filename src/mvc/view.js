@@ -3,11 +3,14 @@ export default class View {
     this.main = document.querySelector("main");
     this.modalWrapper = document.querySelector("#modal-wrapper");
 
+    this.canvasPlaceholder = document.getElementById("canvas-wrapper-placeholder");
     this.canvasElementListContainer = document.getElementById("canvas-element-list");
     this.canvasElementListModalBody = document.getElementById("modal-edit-body");
     this.canvasElement = document.getElementById("canvas-wrapper");
     this.canvas = document.getElementById("canvas");
     this.canvasModalEdit = new bootstrap.Modal("#modal-edit");
+    this.canvasTemplatesModal = new bootstrap.Modal("#templates-modal");
+    this.canvasTemplatesModalBody = document.getElementById("templates-modal-body");
 
     this.audioModal = new bootstrap.Modal("#audio-modal");
     this.audioModalPreview = document.getElementById("audio-modal-preview");
@@ -126,6 +129,10 @@ export default class View {
     if (currentActive) currentActive.classList.remove("active");
   }
 
+  toggleCanvasPlaceHolder(boolean) {
+    this.canvasPlaceholder.classList.toggle("d-none", !boolean);
+  }
+
   toggleActiveImageMapItem(element, container) {
     const itemElement = element;
     this.clearActiveImageMapItem(container);
@@ -222,6 +229,19 @@ export default class View {
 
   generateListItem(title, content) {
     return `<li data-title="${title}" data-drop>${content}</li>`;
+  }
+
+  generateCanvasTemplateItem(title, des, templatePath) {
+    return `
+      <div class="d-flex flex-wrap align-items-center justify-content-between p-3 rounded-2 modal-box gap-3">
+        <div class="flex-fill">
+          <h3 class="h5 mb-0 text-light">${title}</h3>
+          <p class="m-0">${des}</p>
+        </div>
+
+        <button class="btn btn-light btn-sm fw-bold" data-template-path="${templatePath}" data-action="render">Edit This Template</button>
+      </div>
+    `;
   }
 
   generateListItemEdit(obj = { title: "", content: "" }) {

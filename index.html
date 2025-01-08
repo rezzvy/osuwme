@@ -36,7 +36,7 @@
                   </a>
                 </li>
                 <li>
-                  <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">
+                  <a class="link-light link-opacity-75 link-opacity-100-hover" href="https://github.com/rezzvy/osuwme">
                     <i class="fa fa-github fa-fw"></i> Source Code
                   </a>
                 </li>
@@ -62,6 +62,7 @@
                   <i class="fa fa-bars fa-fw fa-lg"></i>
                 </button>
                 <ul class="dropdown-menu">
+                  <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#templates-modal">Templates</button></li>
                   <li><button class="dropdown-item" id="import-project-btn">Import</button></li>
                   <li><button class="dropdown-item" id="export-project-btn">Export</button></li>
 
@@ -93,6 +94,19 @@
 
         <section id="canvas" class="d-flex flex-column flex-fill rounded-2 resizeable overflow-auto">
           <h2 class="visually-hidden">Canvas</h2>
+          <div id="canvas-wrapper-placeholder" class="font-monospace text-center pt-4 px-2">
+            <h3 class="h5 text-light text-opacity-75">⸜(｡˃ ᵕ ˂ )⸝♡</h3>
+            <p class="text-light text-opacity-50">
+              Start adding elements, or load templates
+              <a
+                href="javascript:void(0)"
+                class="text-decoration-underline link-light link-opacity-75 link-opacity-100-hover"
+                data-bs-toggle="modal"
+                data-bs-target="#templates-modal"
+                >here</a
+              >
+            </p>
+          </div>
           <div id="canvas-wrapper" class="flex-fill p-3"></div>
         </section>
 
@@ -117,7 +131,7 @@
         <div class="container px-3">
           <p>
             Made with <i class="fa fa-heart fa-fw"></i> by
-            <a class="link-light link-opacity-75 link-opacity-100-hover" href="javascript:void(0)">Muhammad Reza Fahlevi</a>
+            <a class="link-light link-opacity-75 link-opacity-100-hover" href="https://github.com/rezzvy">Muhammad Reza Fahlevi</a>
           </p>
         </div>
       </footer>
@@ -130,6 +144,21 @@
             <div class="modal-body p-3">
               <audio controls class="w-100" id="audio-modal-preview"></audio>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="templates-modal" class="modal" data-bs-backdrop="static" data-bs-focus="false">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header pt-3 pb-0 px-3">
+              <div class="section-heading">
+                <h2 class="h6 fw-bold text-light px-3 pb-1">Templates</h2>
+              </div>
+              <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div id="templates-modal-body" class="modal-body p-3 d-flex flex-column gap-2"></div>
           </div>
         </div>
       </div>
