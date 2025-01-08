@@ -72,7 +72,7 @@
           </div>
         </section>
 
-        <section id="canvas" class="d-flex flex-column flex-fill rounded-2 osu-style resizeable">
+        <section id="canvas" class="d-flex flex-column flex-fill rounded-2 resizeable overflow-auto">
           <h2 class="visually-hidden">Canvas</h2>
           <div id="canvas-wrapper" class="flex-fill p-3"></div>
         </section>
@@ -118,10 +118,12 @@
               </div>
               <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div id="modal-edit-body" class="modal-body p-3">
+            <div class="modal-body p-3">
               <p id="modal-edit-alert" class="alert alert-danger p-2 mb-3 d-none"><i class="fa fa-warning fa-fw"></i> <span>N/A</span></p>
 
-              <!-- This section is dynamically generated -->
+              <div id="modal-edit-body">
+                <!-- This section is dynamically generated -->
+              </div>
             </div>
             <div class="modal-footer px-3 pt-0 pb-3">
               <button id="modal-edit-save" class="btn btn-dark btn-sm w-75 mx-auto" data-bs-toggle="tooltip" data-bs-title="Save">
@@ -143,7 +145,9 @@
             </div>
 
             <div class="modal-body p-3">
-              <p class="alert alert-success p-2 mb-3 d-none"><i class="fa fa-info-circle fa-fw"></i> Successfully copied to clipboard!</p>
+              <p id="clipboard-alert" class="alert alert-success p-2 mb-3 d-none">
+                <i class="fa fa-info-circle fa-fw"></i> Successfully copied to clipboard!
+              </p>
 
               <div class="modal-box rounded-2">
                 <textarea
@@ -156,11 +160,16 @@
             </div>
 
             <div class="modal-footer pb-3 pt-0 px-3 gap-2">
-              <button class="btn btn-outline-light btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Download As Text">
+              <button
+                id="download-as-text"
+                class="btn btn-outline-light btn-sm flex-fill mx-auto"
+                data-bs-toggle="tooltip"
+                data-bs-title="Download As Text"
+              >
                 <i class="fa fa-download fa-fw"></i>
               </button>
 
-              <button class="btn btn-dark btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Copy to Clipboard">
+              <button id="copy-to-clipboard" class="btn btn-dark btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Copy to Clipboard">
                 <i class="fa fa-clipboard fa-fw"></i>
               </button>
             </div>

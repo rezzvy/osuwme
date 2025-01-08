@@ -31,7 +31,10 @@ body.select-costum ::selection {
 
 .resizeable {
   resize: both;
-  overflow: auto;
+}
+
+.resize-cursor {
+  cursor: nwse-resize !important;
 }
 
 /* =========================================
@@ -159,28 +162,8 @@ body.select-costum ::selection {
    OSU Styles
    ========================================= */
 .osu-style a {
-  color: rgb(217, 166, 189);
+  color: rgb(217, 166, 189) !important;
   font-weight: 400;
-}
-
-.osu-style .fs-tiny,
-.ql-size-fs-tiny {
-  font-size: 50%;
-}
-
-.osu-style .fs-small,
-.ql-size-fs-small {
-  font-size: 85%;
-}
-
-.osu-style .fs-normal,
-.ql-size-fs-normal {
-  font-size: 100%;
-}
-
-.osu-style .fs-large,
-.ql-size-fs-large {
-  font-size: 150%;
 }
 
 .osu-style details summary {
