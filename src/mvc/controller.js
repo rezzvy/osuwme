@@ -7,10 +7,12 @@ export default class Controller {
   async init() {
     await this.getCanvasElementList();
     this.initializeModalEditHandlers();
+    this.renderLatestCanvasContent();
 
     this.view.initializeTooltip(this.view.main);
     this.view.initializeTooltip(this.view.modalWrapper);
     this.view.initializeStickyMenu();
+    this.view.removeTempElements(this.view.canvasElementListContainer);
 
     this.view.canvasElement.addEventListener("click", (e) => {
       if (e.target.dataset.action === "edit") {
@@ -147,6 +149,10 @@ export default class Controller {
     this.view.resetCanvasSizeButton.addEventListener("click", (e) => {
       this.view.canvas.style.cssText = "";
     });
+
+    window.addEventListener("beforeunload", (e) => {
+      this.model.saveLatestCanvasContent(this.view.canvasElement.innerHTML);
+    });
   }
 
   canvasModalEditOnOpen(e) {
@@ -216,6 +222,14 @@ export default class Controller {
     }
   }
 
+  renderLatestCanvasContent() {
+    const content = this.model.getLatestCanvasContent();
+
+    if (content) {
+      this.view.canvasElement.innerHTML = content;
+    }
+  }
+
   async getCanvasElementList() {
     const data = await this.model.fetchData("./src/json/canvas-element-list.json", "json");
 
@@ -237,6 +251,8 @@ export default class Controller {
 
     this.view.canvasElementListContainer.innerHTML = buttonTempContainer.innerHTML;
     this.view.canvasElementListModalBody.innerHTML = modalTempContainer.innerHTML;
+
+    return true;
   }
 
   initializeModalEditHandlers() {

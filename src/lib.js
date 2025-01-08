@@ -99,18 +99,29 @@ export default function initLibraries(controller) {
     {
       selector: "a",
       format: (api) => {
+        const link = controller.model.isValidURL(api.node.href) ? decodeURIComponent(api.node.href) : "https://google.com";
+
         if (api.node.parentElement.classList.contains("imgmap-container")) {
           const width = api.node.style.width.replace("%", "");
           const height = api.node.style.height.replace("%", "");
           const top = api.node.style.top.replace("%", "");
           const left = api.node.style.left.replace("%", "");
           const title = api.node.dataset.bsTitle;
-          const link = api.node.href;
 
           return `${left} ${top} ${width} ${height} ${link} ${title}%NL%`;
         }
 
-        return `[url=${api.node.href}]${api.content}[/url]`;
+        const renderableAsProfile = link.match(/^https:\/\/osu\.ppy\.sh\/users\/([a-zA-Z\s-]+)$/);
+        if (renderableAsProfile) {
+          return `[profile]${renderableAsProfile[1]}[/profile]`;
+        }
+
+        const renderableAsEmail = link.startsWith("mailto:");
+        if (renderableAsEmail) {
+          return `[email=${link.substring(7)}]${api.content}[/email]`;
+        }
+
+        return `[url=${link}]${api.content}[/url]`;
       },
     },
     {
@@ -257,21 +268,42 @@ export default function initLibraries(controller) {
   });
 
   controller.model.quill.on("text-change", function () {
+    const linkFormCostum = document.querySelector(".link-form");
+    linkFormCostum.classList.toggle("d-none", true);
+
     const isEmpty = controller.model.quill.getText().trim() === "";
     controller.view.disableButton(isEmpty, controller.view.modalEditSaveButton);
   });
 
+  controller.model.quill.root.addEventListener("click", function (event) {
+    const linkFormCostum = document.querySelector(".link-form");
+    const saveButton = linkFormCostum.querySelector("button");
+    const a = event.target.closest("a");
+    linkFormCostum.classList.toggle("d-none", !a);
+    if (!a) return;
+
+    const inputLink = linkFormCostum.querySelector('input[type="text"]');
+    inputLink.value = a.href;
+
+    saveButton.onclick = () => {
+      a.href = inputLink.value;
+      linkFormCostum.classList.toggle("d-none", true);
+    };
+  });
+
   controller.model.quill.getModule("toolbar").addHandler("link", (value) => {
+    const linkFormCostum = document.querySelector(".link-form");
+    const inputLink = linkFormCostum.querySelector('input[type="text"]');
+    const saveButton = linkFormCostum.querySelector("button");
+    inputLink.value = "";
+
     if (value) {
       const range = controller.model.quill.getSelection();
       if (range && range.length !== 0) {
-        const linkFormCostum = document.querySelector(".link-form");
         linkFormCostum.classList.toggle("d-none", false);
 
-        linkFormCostum.querySelector("button").onclick = () => {
-          const val = linkFormCostum.querySelector('input[type="text"]').value;
-
-          controller.model.quill.format("link", val);
+        saveButton.onclick = () => {
+          controller.model.quill.format("link", inputLink.value);
           linkFormCostum.classList.toggle("d-none", true);
         };
       }

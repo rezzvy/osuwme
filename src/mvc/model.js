@@ -65,6 +65,14 @@ export default class Model {
     this._currentEdit.modal = obj.modal;
   }
 
+  saveLatestCanvasContent(content) {
+    localStorage.setItem("latestCanvasContent", content);
+  }
+
+  getLatestCanvasContent() {
+    return localStorage.getItem("latestCanvasContent") || null;
+  }
+
   generateBlob(blobType, content) {
     const blob = new Blob([content], { type: blobType });
     return URL.createObjectURL(blob);

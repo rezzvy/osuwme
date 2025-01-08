@@ -67,6 +67,17 @@ export default class View {
     });
   }
 
+  removeTempElements(replacement) {
+    const placeholders = document.querySelectorAll(".placeholder-container");
+
+    placeholders.forEach((element) => {
+      element.remove();
+    });
+
+    console.log(replacement);
+    replacement.classList.toggle("d-none", false);
+  }
+
   renderClipboardAlert(boolean) {
     this.clipboardAlert.classList.toggle("d-none", !boolean);
   }
