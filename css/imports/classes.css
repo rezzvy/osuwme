@@ -44,6 +44,10 @@ body.select-costum ::selection {
   background: #42353c;
 }
 
+.bg-body {
+  background: #282024 !important;
+}
+
 /* =========================================
    Text Colors
    ========================================= */
@@ -165,8 +169,10 @@ body.select-costum ::selection {
   color: rgb(217, 166, 189) !important;
 }
 
-.osu-style strong a {
-  font-weight: 700;
+.osu-style strong a,
+.osu-style a[href*="https://osu.ppy.sh/users/"]
+{
+  font-weight: 700 !important;
 }
 
 .osu-style details summary {
