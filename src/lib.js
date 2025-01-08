@@ -160,7 +160,7 @@ export default function initLibraries(controller) {
         const sourceTitle = api.node.dataset.source;
 
         if (hasSource === "true") {
-          return `%NL%[quote=${sourceTitle}]${api.content}[/quote]%NL%`;
+          return `%NL%[quote="${sourceTitle}"]${api.content}[/quote]%NL%`;
         }
 
         return `%NL%[quote]${api.content}[/quote]%NL%`;
@@ -277,9 +277,19 @@ export default function initLibraries(controller) {
   });
 
   controller.model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
-    var plaintext = node.innerText;
     var Delta = Quill.import("delta");
-    return new Delta().insert(plaintext);
+
+    if (node.tagName === "IMG") {
+      return new Delta().insert({ image: node.getAttribute("src") });
+    }
+
+    if (node.tagName === "A") {
+      const href = node.getAttribute("href");
+      const text = node.innerText || href;
+      return new Delta().insert(text, { link: href });
+    }
+
+    return new Delta().insert(node.innerText || "");
   });
 
   controller.model.quill.on("text-change", function () {

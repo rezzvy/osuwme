@@ -717,6 +717,11 @@ export default class Controller {
 
         this.view.disableButton(false, this.view.modalEditSaveButton);
       },
+      close: () => {
+        if (!this.model.quill) return;
+
+        this.model.quill.history.clear();
+      },
       save: () => {
         const currentEdit = this.model.currentEdit;
 
