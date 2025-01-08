@@ -203,7 +203,8 @@ export default class Controller {
   }
 
   canvasItemDuplicateHandler(e) {
-    const copiedElement = e.target.closest(".canvas-item").cloneNode(true);
+    const originalElement = e.target.closest(".canvas-item");
+    const copiedElement = originalElement.cloneNode(true);
     const uniqueID = "CANVAS" + Date.now();
 
     const collapseBtn = copiedElement.querySelector('[data-bs-toggle="collapse"]');
@@ -212,7 +213,7 @@ export default class Controller {
     const collapseContent = copiedElement.querySelector("._content");
     collapseContent.id = uniqueID;
 
-    e.target.closest(".canvas-item").parentElement.appendChild(copiedElement);
+    originalElement.parentElement.insertBefore(copiedElement, originalElement.nextSibling);
   }
 
   canvasItemRemoveHandler(e) {
