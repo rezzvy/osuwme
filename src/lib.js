@@ -41,7 +41,13 @@ export default function initLibraries(controller) {
     },
     {
       selector: "img",
-      format: (api) => `%NL%[img]${api.node.src}[/img]%NL%`,
+      format: (api) => {
+        if (api.node.parentElement.tagName === "A" || api.node.parentElement.tagName === "P") {
+          return `[img]${api.node.src}[/img]`;
+        }
+
+        return `%NL%[img]${api.node.src}[/img]%NL%`;
+      },
     },
     {
       selector: ".heading",
@@ -279,9 +285,6 @@ export default function initLibraries(controller) {
   controller.model.quill.on("text-change", function () {
     const linkFormCostum = document.querySelector(".link-form");
     linkFormCostum.classList.toggle("d-none", true);
-
-    const isEmpty = controller.model.quill.getText().trim() === "";
-    controller.view.disableButton(isEmpty, controller.view.modalEditSaveButton);
   });
 
   controller.model.quill.root.addEventListener("click", function (event) {
