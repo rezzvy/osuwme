@@ -86,7 +86,7 @@ export default class Model {
       .replace(/%NL%/g, "\n")
       .replace(/^\s+/gm, "")
       .replace(/^[\s]*\r?\n/gm, "")
-      .replace(/%SPCITM%/g, "\n");
+      .replace(/%SPCITM%\s*/g, "\n");
   }
 
   checkHTMLFormat(string) {

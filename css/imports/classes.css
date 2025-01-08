@@ -163,7 +163,10 @@ body.select-costum ::selection {
    ========================================= */
 .osu-style a {
   color: rgb(217, 166, 189) !important;
-  font-weight: 400;
+}
+
+.osu-style strong a {
+  font-weight: 700;
 }
 
 .osu-style details summary {

@@ -11,7 +11,12 @@ export default function initLibraries(controller) {
   controller.model.mation.register([
     {
       selector: ".spacing-item",
-      format: (api) => `%SPCITM%`.repeat(parseInt(api.node.dataset.spacingLevel) - 1),
+      format: (api) => {
+        const value = parseInt(api.node.dataset.spacingLevel);
+        const level = value > 0 ? value : 1;
+
+        return `%SPCITM%`.repeat(level);
+      },
     },
 
     {

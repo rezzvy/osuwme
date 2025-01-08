@@ -74,7 +74,6 @@ export default class View {
       element.remove();
     });
 
-    console.log(replacement);
     replacement.classList.toggle("d-none", false);
   }
 
