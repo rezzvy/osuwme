@@ -200,10 +200,6 @@ export default class View {
     this.canvasElement.appendChild(div);
   }
 
-  generateTempContainer() {
-    return document.createElement("div");
-  }
-
   generateOutputImageMapItem(link, style, title) {
     const a = document.createElement("a");
     a.href = link;

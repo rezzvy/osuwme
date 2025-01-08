@@ -240,24 +240,38 @@ export default class Controller {
   async getCanvasElementList() {
     const data = await this.model.fetchData("./src/json/canvas-element-list.json", "json");
 
-    const buttonTempContainer = this.view.generateTempContainer();
-    const modalTempContainer = this.view.generateTempContainer();
+    const buttonPromises = [];
+    const modalPromises = [];
+    const skeletonPromises = [];
+
     for (const key in data) {
-      buttonTempContainer.innerHTML += this.view.generateCanvasElementListButton(key, data[key]);
+      buttonPromises.push(this.view.generateCanvasElementListButton(key, data[key]));
 
       if (data[key].modalPath) {
-        const content = await this.model.fetchData(data[key].modalPath, "text");
-        modalTempContainer.innerHTML += this.view.generateCanvasElementListModal(key, content);
+        modalPromises.push(
+          (async () => {
+            const content = await this.model.fetchData(data[key].modalPath, "text");
+            return this.view.generateCanvasElementListModal(key, content);
+          })()
+        );
       }
 
       if (data[key].skeletonPath) {
-        const content = await this.model.fetchData(data[key].skeletonPath, "text");
-        this.model.registerCanvasElementSkeleton(key, content);
+        skeletonPromises.push(
+          (async () => {
+            const content = await this.model.fetchData(data[key].skeletonPath, "text");
+            this.model.registerCanvasElementSkeleton(key, content);
+          })()
+        );
       }
     }
 
-    this.view.canvasElementListContainer.innerHTML = buttonTempContainer.innerHTML;
-    this.view.canvasElementListModalBody.innerHTML = modalTempContainer.innerHTML;
+    const buttons = (await Promise.all(buttonPromises)).join("");
+    const modals = (await Promise.all(modalPromises)).join("");
+    await Promise.all(skeletonPromises);
+
+    this.view.canvasElementListContainer.innerHTML = buttons;
+    this.view.canvasElementListModalBody.innerHTML = modals;
 
     return true;
   }
