@@ -7,6 +7,7 @@ export default class Controller {
   async init() {
     await this.getCanvasElementList();
     await this.getCanvasTemplates();
+    this.view.disableEvents(false);
 
     this.initializeModalEditHandlers();
     this.renderLatestCanvasContent();
@@ -170,10 +171,19 @@ export default class Controller {
         if (!confirmDialog) return;
       }
 
+      const text = e.target.textContent;
+      e.target.textContent = "Please Wait";
+
+      this.view.disableEvents(true);
       const content = await this.model.fetchData(e.target.dataset.templatePath, "text");
-      this.view.canvasElement.innerHTML = content;
-      this.view.canvasTemplatesModal.hide();
-      this.view.toggleCanvasPlaceHolder(false);
+      e.target.textContent = "Loaded";
+      setTimeout(() => {
+        e.target.textContent = text;
+        this.view.canvasTemplatesModal.hide();
+        this.view.toggleCanvasPlaceHolder(false);
+        this.view.disableEvents(false);
+        this.view.canvasElement.innerHTML = content;
+      }, 1000);
     });
 
     window.addEventListener("beforeunload", (e) => {
@@ -1122,7 +1132,8 @@ export default class Controller {
               imgMapItemWidthInput,
               imgMapItemHeightInput,
               duplicateButton,
-              removeButton
+              removeButton,
+              this.view.modalEditSaveButton
             );
           }
 

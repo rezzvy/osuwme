@@ -112,6 +112,10 @@ export default class View {
     }
   }
 
+  disableEvents(boolean) {
+    document.body.classList.toggle("pe-none", boolean);
+  }
+
   disableButton(boolean, ...buttons) {
     for (const button of buttons) {
       button.classList.toggle("pe-none", boolean);

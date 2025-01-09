@@ -122,7 +122,7 @@ export default function initLibraries(controller) {
           return `${left} ${top} ${width} ${height} ${link} ${title}%NL%`;
         }
 
-        const renderableAsProfile = link.match(/^https:\/\/osu\.ppy\.sh\/users\/([a-zA-Z][a-zA-Z0-9\s-_]*[a-zA-Z])$/);
+        const renderableAsProfile = link.match(/^https:\/\/osu\.ppy\.sh\/users\/([a-zA-Z][a-zA-Z0-9\s-_]*[a-zA-Z0-9])$/);
         if (renderableAsProfile) {
           return `[profile]${renderableAsProfile[1]}[/profile]`;
         }
@@ -298,8 +298,17 @@ export default function initLibraries(controller) {
   });
 
   controller.model.quill.root.addEventListener("click", function (event) {
+    const color = event.target.style.color;
+
+    if (color !== "") {
+      controller.model.pickr.setColor(color);
+    } else {
+      controller.model.pickr.setColor("rgb(255, 255, 255)");
+    }
+
     const linkFormCostum = document.querySelector(".link-form");
     const saveButton = linkFormCostum.querySelector("button");
+
     const a = event.target.closest("a");
     linkFormCostum.classList.toggle("d-none", !a);
     if (!a) return;

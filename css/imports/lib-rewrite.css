@@ -25,6 +25,13 @@ i.fa {
   pointer-events: none;
 }
 
+.pe-none button,
+.pe-none a,
+.pe-none input {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
+}
+
 /* =========================================
    Link Styles
    ========================================= */

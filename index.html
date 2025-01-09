@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" href="./css/main.css" />
   </head>
-  <body class="small text-light text-opacity-75">
+  <body class="small text-light text-opacity-75 pe-none">
     <div id="app-wrapper" class="d-flex flex-column gap-3 min-100-dvh">
       <header class="py-3">
         <div class="container px-3">
@@ -68,16 +68,16 @@
 
                   <li class="mt-2 border">
                     <div class="text-center small text-pink">Canvas Action</div>
-                    <button class="dropdown-item" id="expand-all-canvas-btn">Expand All Item</button>
-                    <button class="dropdown-item" id="collapse-all-canvas-btn">Collapse All Item</button>
-                    <button class="dropdown-item" id="clear-canvas-btn">Clear All Item</button>
-                    <button class="dropdown-item" id="reset-canvas-size-btn">Reset Size</button>
+                    <button class="canvas-action dropdown-item" id="expand-all-canvas-btn">Expand All Item</button>
+                    <button class="canvas-action dropdown-item" id="collapse-all-canvas-btn">Collapse All Item</button>
+                    <button class="canvas-action dropdown-item" id="clear-canvas-btn">Clear All Item</button>
+                    <button class="canvas-action dropdown-item" id="reset-canvas-size-btn">Reset Size</button>
                   </li>
 
                   <li>
                     <div class="text-center small text-pink">Preferences</div>
 
-                    <div class="dropdown-item">
+                    <div class="canvas-action dropdown-item">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="canvas-menu-sticky-switch" checked />
                         <label class="form-check-label" for="canvas-menu-sticky-switch"> Sticky Menu</label>

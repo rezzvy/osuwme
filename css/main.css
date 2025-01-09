@@ -206,6 +206,11 @@ body.view-mode .canvas-item ._content {
   padding: 0 !important;
 }
 
+body.view-mode .canvas-action {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
+}
+
 /* =========================================
    Media Queries
    ========================================= */
