@@ -105,6 +105,7 @@ export default class Controller {
           if (isValid) {
             this.view.toggleCanvasPlaceHolder(false);
             this.view.canvasElement.innerHTML = content;
+            this.view.clearActiveTooltips();
           } else {
             alert("We can't process this file because it does not contain a recognized format.");
           }
@@ -212,6 +213,8 @@ export default class Controller {
       target: "",
       modal: "",
     };
+
+    this.view.clearActiveTooltips();
   }
 
   canvasElementListButtonHandler(e) {

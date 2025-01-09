@@ -63,6 +63,15 @@ export default class View {
     new ResizeObserver(updateStickyState).observe(this.canvasElement);
   }
 
+  clearActiveTooltips() {
+    const tooltips = document.querySelectorAll(".tooltip.bs-tooltip-auto.fade.show");
+    if (tooltips.length === 0) return;
+    
+    tooltips.forEach((tooltip) => {
+      tooltip.remove();
+    });
+  }
+
   collapseAllCanvasItem(boolean) {
     const elements = document.querySelectorAll(".canvas-item .collapse");
 
