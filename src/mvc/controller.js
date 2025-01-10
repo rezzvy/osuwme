@@ -29,6 +29,10 @@ export default class Controller {
       if (e.target.dataset.action === "remove") {
         return this.canvasItemRemoveHandler(e);
       }
+
+      if (e.target.classList.contains("play-audio-btn") && e.target.dataset.event === "true") {
+        return this.playAudioPlayerHandler(e);
+      }
     });
 
     this.view.canvasElementListContainer.addEventListener("click", (e) => {
@@ -190,6 +194,14 @@ export default class Controller {
     window.addEventListener("beforeunload", (e) => {
       this.model.saveLatestCanvasContent(this.view.canvasElement.innerHTML);
     });
+  }
+
+  playAudioPlayerHandler(e) {
+    const audio = document.getElementById("audio-modal-preview");
+
+    this.view.audioModal.show();
+    audio.src = e.target.dataset.audioUrl;
+    audio.play();
   }
 
   canvasModalEditOnOpen(e) {
@@ -558,14 +570,6 @@ export default class Controller {
           playButton.dataset.event = "true";
           playButton.removeAttribute("data-bs-title");
           playButton.removeAttribute("data-bs-toggle");
-
-          playButton.addEventListener("click", (e) => {
-            const audio = document.getElementById("audio-modal-preview");
-
-            this.view.audioModal.show();
-            audio.src = playButton.dataset.audioUrl;
-            audio.play();
-          });
         }
 
         playButton.dataset.audioUrl = modalAudio.src;

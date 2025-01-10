@@ -81,8 +81,10 @@ export default class Model {
   convertToBBCode(html) {
     if (this.mation === "") return;
 
+    const content = html.replace(/\s{2,}/g, "").replace(/>\s+</g, "><");
+
     return this.mation
-      .convert(html)
+      .convert(content)
       .replace(/%NL%/g, "\n")
       .replace(/^\s+/gm, "")
       .replace(/^[\s]*\r?\n/gm, "")

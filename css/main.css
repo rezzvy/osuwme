@@ -206,7 +206,13 @@ body.view-mode .canvas-item ._content {
   padding: 0 !important;
 }
 
-body.view-mode .canvas-action {
+body.view-mode .canvas-action#expand-all-canvas-btn,
+body.view-mode .canvas-action#collapse-all-canvas-btn,
+body.view-mode .canvas-action#clear-canvas-btn,
+body.view-mode .canvas-action:has(#canvas-menu-sticky-switch),
+body:has(#canvas-wrapper:empty) .canvas-action#clear-canvas-btn,
+body:has(#canvas-wrapper:empty) .canvas-action#expand-all-canvas-btn,
+body:has(#canvas-wrapper:empty) .canvas-action#collapse-all-canvas-btn {
   pointer-events: none !important;
   opacity: 0.5 !important;
 }

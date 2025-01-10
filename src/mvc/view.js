@@ -66,7 +66,7 @@ export default class View {
   clearActiveTooltips() {
     const tooltips = document.querySelectorAll(".tooltip.bs-tooltip-auto.fade.show");
     if (tooltips.length === 0) return;
-    
+
     tooltips.forEach((tooltip) => {
       tooltip.remove();
     });
@@ -103,7 +103,7 @@ export default class View {
   }
 
   setOutputCode(content) {
-    this.codeOutputTextArea.value = content;
+    this.codeOutputTextArea.value = content.trim();
   }
 
   setButtonLoadingState(boolean, button) {

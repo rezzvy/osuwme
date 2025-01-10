@@ -12,8 +12,22 @@ export default function initLibraries(controller) {
     {
       selector: ".spacing-item",
       format: (api) => {
+        const container = api.node.closest(".canvas-item");
+        const prevContainer = container.previousElementSibling;
+        const nextContainer = container.nextElementSibling;
+
         const value = parseInt(api.node.dataset.spacingLevel);
-        const level = value > 0 ? value : 1;
+        let level = value > 0 ? value : 1;
+
+        if (prevContainer && nextContainer) {
+          if (prevContainer.querySelector("ul") && nextContainer.querySelector("ul")) {
+            level += 1;
+          }
+
+          if (prevContainer.querySelector("blockquote") && nextContainer.querySelector("blockquote")) {
+            level += 1;
+          }
+        }
 
         return `%SPCITM%`.repeat(level);
       },
@@ -23,35 +37,39 @@ export default function initLibraries(controller) {
       selector: "p",
       format: (api) => `${api.content}%NL%`,
     },
+
     {
       selector: ".notice",
       format: (api) => `[notice]${api.content}[/notice]%NL%`,
     },
     {
       selector: "center",
-      format: (api) => `[centre]${api.content}[/centre]`,
+      format: (api) => {
+        return `[centre]${api.content}[/centre]`;
+      },
     },
     {
       selector: "iframe",
-      format: (api) => `%NL%[youtube]${api.node.dataset.videoId}[/youtube]%NL%`,
+      format: (api) => `[youtube]${api.node.dataset.videoId}[/youtube]`,
     },
     {
       selector: ".play-audio-btn",
-      format: (api) => `%NL%[audio]${api.node.dataset.audioUrl}[/audio]%NL%`,
+      format: (api) => `[audio]${api.node.dataset.audioUrl ? api.node.dataset.audioUrl : "about:blank"}[/audio]`,
     },
     {
       selector: "img",
       format: (api) => {
-        if (api.node.parentElement.tagName === "A" || api.node.parentElement.tagName === "P") {
+        const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S"];
+        if (inline.includes(api.node.parentElement.tagName)) {
           return `[img]${api.node.src}[/img]`;
         }
 
-        return `%NL%[img]${api.node.src}[/img]%NL%`;
+        return `[img]${api.node.src}[/img]%NL%`;
       },
     },
     {
       selector: ".heading",
-      format: (api) => `%NL%[heading]${api.content}[/heading]%NL%`,
+      format: (api) => `[heading]${api.content}[/heading]%NL%`,
     },
     {
       selector: "strong",
@@ -80,12 +98,12 @@ export default function initLibraries(controller) {
           return `[c]${api.content}[/c]`;
         }
 
-        return `%NL%[code]${api.content}[/code]%NL%`;
+        return `[code]${api.content}[/code]%NL%`;
       },
     },
     {
       selector: ".imgmap-container",
-      format: (api) => `%NL%[imagemap]%NL%${api.content}[/imagemap]%NL%`,
+      format: (api) => `[imagemap]%NL%${api.content}[/imagemap]%NL%`,
     },
     {
       selector: ".imgmap-container > img",
@@ -97,15 +115,19 @@ export default function initLibraries(controller) {
         const isOrdered = api.node.classList.contains("ol");
 
         if (isOrdered) {
-          return `[list=1]%NL%${api.content}[/list]`;
+          return `[list=1]%NL%${api.content}[/list]%NL%`;
         }
 
-        return `[list]%NL%${api.content}[/list]`;
+        return `[list]%NL%${api.content}[/list]%NL%`;
       },
     },
     {
       selector: "li",
-      format: (api) => `[*]${api.node.dataset.title} ${api.content}%NL%`,
+      format: (api) => {
+        const content = api.node.dataset.title.trim() ? "%NL%" + api.content : api.content;
+
+        return `[*]${api.node.dataset.title} ${content}`;
+      },
     },
     {
       selector: "a",
@@ -160,10 +182,10 @@ export default function initLibraries(controller) {
         const sourceTitle = api.node.dataset.source;
 
         if (hasSource === "true") {
-          return `%NL%[quote="${sourceTitle}"]${api.content}[/quote]%NL%`;
+          return `[quote="${sourceTitle}"]${api.content}[/quote]%NL%`;
         }
 
-        return `%NL%[quote]${api.content}[/quote]%NL%`;
+        return `[quote]${api.content}[/quote]%NL%`;
       },
     },
     {
@@ -173,10 +195,10 @@ export default function initLibraries(controller) {
         const isBox = api.node.dataset.box;
 
         if (isBox === "true") {
-          return `%NL%[box=${title}]%NL%${api.content}[/box]%NL%`;
+          return `[box=${title}]${api.content}[/box]%NL%`;
         }
 
-        return `%NL%[spoilerbox]%NL%${api.content}[/spoilerbox]%NL%`;
+        return `[spoilerbox]${api.content}[/spoilerbox]%NL%`;
       },
     },
     {
@@ -378,6 +400,8 @@ export default function initLibraries(controller) {
   });
 
   controller.model.pickr.on("change", (color) => {
+    if (!controller.latestSelection) return;
+
     const hexColor = color.toHEXA().toString();
     document.querySelector(".pcr-button").style.setProperty("--pcr-color", hexColor);
 

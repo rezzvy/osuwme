@@ -1,12 +1,12 @@
 {
   "one": {
     "title": "Kumi Lone Wolf",
-    "des": "Personal BBCode made by Kumi Lone Wolf",
+    "des": "Personal BBCode made by <a href='https://osu.ppy.sh/users/8804560' class='text-decoration-underline'>Kumi Lone Wolf</a>",
     "templatePath": "./src/templates/kumi_lone_wolf.html"
   },
   "two": {
     "title": "peppy",
-    "des": "Peppy's osu! userpage BBCode",
+    "des": "<a href='https://osu.ppy.sh/users/2' class='text-decoration-underline'>Peppy's</a> osu! userpage BBCode",
     "templatePath": "./src/templates/peppy.html"
   }
 }
