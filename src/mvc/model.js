@@ -91,6 +91,10 @@ export default class Model {
       .replace(/%SPCITM%\s*/g, "\n");
   }
 
+  isMobileDevice() {
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  }
+
   checkHTMLFormat(string) {
     const content = string;
     const parser = new DOMParser();

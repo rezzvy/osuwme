@@ -177,10 +177,12 @@ export default class View {
     if (content) content.classList.toggle("ph", content && content.children.length === 0);
   }
 
-  initializeTooltip(parentElement) {
+  initializeTooltip(parentElement, isMobile = false) {
+    let trigger = isMobile ? "focus" : "hover";
+
     return new bootstrap.Tooltip(parentElement, {
       selector: '[data-bs-toggle="tooltip"]',
-      trigger: "hover",
+      trigger: trigger,
     });
   }
 

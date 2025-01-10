@@ -12,8 +12,8 @@ export default class Controller {
     this.initializeModalEditHandlers();
     this.renderLatestCanvasContent();
 
-    this.view.initializeTooltip(this.view.main);
-    this.view.initializeTooltip(this.view.modalWrapper);
+    this.view.initializeTooltip(this.view.main, this.model.isMobileDevice());
+    this.view.initializeTooltip(this.view.modalWrapper, this.model.isMobileDevice());
     this.view.initializeStickyMenu();
     this.view.initializeTemplateOpenAnchor();
     this.view.removeTempElements(this.view.canvasElementListContainer);
@@ -1194,12 +1194,17 @@ export default class Controller {
           );
         });
 
-        document.addEventListener("mousemove", (e) => {
+        const isMobile = this.model.isMobileDevice();
+
+        document.addEventListener(`${isMobile ? "touchmove" : "mousemove"}`, (e) => {
           const imagemap = this.model.imagemap;
           if (!imagemap.activeBox) return;
 
-          const deltaX = e.clientX - imagemap.startX;
-          const deltaY = e.clientY - imagemap.startY;
+          const clientX = isMobile ? e.touches[0].clientX : e.clientX;
+          const clientY = isMobile ? e.touches[0].clientY : e.clientY;
+
+          const deltaX = clientX - imagemap.startX;
+          const deltaY = clientY - imagemap.startY;
 
           if (imagemap.isResizing) {
             const data = this.model.calcImgMapResizingData({
@@ -1227,7 +1232,7 @@ export default class Controller {
           imagemap.activeBox.style.left = data.left + "%";
         });
 
-        document.addEventListener("mousedown", (e) => {
+        document.addEventListener(`${isMobile ? "touchstart" : "mousedown"}`, (e) => {
           const itemElement = e.target.closest(".imgmap-edit-item");
           if (!itemElement) return;
           e.preventDefault();
@@ -1241,8 +1246,8 @@ export default class Controller {
           this.model.imagemap = {
             workingElement: itemElement,
             activeBox: itemElement,
-            startY: e.clientY,
-            startX: e.clientX,
+            startY: isMobile ? e.touches[0].clientY : e.clientY,
+            startX: isMobile ? e.touches[0].clientX : e.clientX,
             initialX: itemElement.offsetLeft,
             initialY: itemElement.offsetTop,
             initialWidth: itemElement.offsetWidth,
@@ -1253,7 +1258,7 @@ export default class Controller {
           if (this.model.imagemap.isResizing) this.model.imagemap.activeBox.classList.add("resize-cursor");
         });
 
-        document.addEventListener("mouseup", (e) => {
+        document.addEventListener(`${isMobile ? "touchend" : "mouseup"}`, (e) => {
           if (this.model.imagemap.isResizing) this.model.imagemap.activeBox.classList.remove("resize-cursor");
 
           this.model.imagemap = {
