@@ -28,7 +28,7 @@ i.fa {
 .pe-none button,
 .pe-none a,
 .pe-none input {
-  pointer-events: none !important;
+  pointer-events: none;
   opacity: 0.5 !important;
 }
 

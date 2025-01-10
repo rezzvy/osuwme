@@ -42,6 +42,14 @@ export default class View {
     this.isMenuSticky = true;
   }
 
+  initializeTemplateOpenAnchor() {
+    const el = document.querySelector("#template-open-anchor");
+
+    el.dataset.bsTarget = "#templates-modal";
+    el.dataset.bsToggle = "modal";
+    el.classList.add("pe-auto");
+  }
+
   initializeStickyMenu() {
     const updateStickyState = () => {
       if (!this.isMenuSticky) return;
@@ -176,7 +184,7 @@ export default class View {
     });
   }
 
-  appendItemToCanvas(content, key, isEditable) {
+  generateCanvasItem(content, key, isEditable) {
     const div = document.createElement("div");
     const uniqueID = "CANVAS" + Date.now();
     div.classList.add("canvas-item", "osu-style");
@@ -217,7 +225,11 @@ export default class View {
   </div>
   `;
 
-    this.canvasElement.appendChild(div);
+    return div;
+  }
+
+  appendItemToCanvas(element) {
+    this.canvasElement.appendChild(element);
   }
 
   generateOutputImageMapItem(link, style, title) {
@@ -235,7 +247,7 @@ export default class View {
 
   generateCanvasElementListButton(key, data) {
     return `
-  <button class="btn btn-dark py-3 px-5" data-bs-toggle="tooltip" data-bs-title="${data.tooltipTitle}" data-key="${key}" data-editable="${data.editable}">
+  <button class="canvas-element-list-btn btn btn-dark py-3 px-5" data-action="move" data-bs-toggle="tooltip" data-bs-title="${data.tooltipTitle}" data-key="${key}" data-editable="${data.editable}">
       <i class="fa ${data.icon} fa-fw fa-lg"></i>
   </button>`;
   }

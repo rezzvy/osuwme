@@ -212,12 +212,16 @@ export default function initLibraries(controller) {
        ========================================= */
   controller.model.drake = dragula({
     isContainer: (el) => {
-      return el.hasAttribute("data-drop") || el === document.querySelector("#canvas-wrapper");
+      return el.hasAttribute("data-drop") || el.matches("#canvas-wrapper") || el.matches("#canvas-element-list");
     },
     moves: (el, source, handle) => {
       return handle.closest('[data-action="move"]');
     },
     accepts: (el, target) => {
+      if (target.matches("#canvas-element-list")) {
+        return false;
+      }
+
       if (el.querySelector("center") && target.closest("center")) {
         return false;
       }
@@ -233,9 +237,31 @@ export default function initLibraries(controller) {
       return true;
     },
     revertOnSpill: true,
+    copy: (el, source) => {
+      if (source.matches("#canvas-element-list")) {
+        return true;
+      }
+
+      return false;
+    },
+  });
+
+  controller.model.drake.on("shadow", (el, container, source) => {
+    el.style.dispay = "block";
+    el.style.width = "100%";
   });
 
   controller.model.drake.on("drop", (el, target, source, sibling) => {
+    if (el.matches(".canvas-element-list-btn")) {
+      const canvasSkeleton = controller.canvasElementListButtonHandler(el, false);
+
+      target.insertBefore(canvasSkeleton, sibling);
+
+      el.remove();
+
+      controller.view.toggleCanvasPlaceHolder(false);
+    }
+
     if (target.classList.contains("ph")) {
       target.classList.remove("ph");
     }
@@ -383,12 +409,12 @@ export default function initLibraries(controller) {
   });
 
   controller.model.pickr.on("show", (color) => {
-    controller.latestSelection = controller.model.quill.getSelection();
+    controller.model.latestSelection = controller.model.quill.getSelection();
 
     const hexColor = color.toHEXA().toString();
     document.body.classList.add("select-costum");
 
-    const range = controller.latestSelection;
+    const range = controller.model.latestSelection;
     if (range) {
       controller.model.quill.formatText(range.index, range.length, "color", hexColor);
     }
@@ -396,16 +422,16 @@ export default function initLibraries(controller) {
 
   controller.model.pickr.on("hide", () => {
     document.body.classList.remove("select-costum");
-    controller.latestSelection = null;
+    controller.model.latestSelection = null;
   });
 
   controller.model.pickr.on("change", (color) => {
-    if (!controller.latestSelection) return;
+    if (!controller.model.latestSelection) return;
 
     const hexColor = color.toHEXA().toString();
     document.querySelector(".pcr-button").style.setProperty("--pcr-color", hexColor);
 
-    const range = controller.latestSelection ? controller.latestSelection : controller.model.quill.getSelection();
+    const range = controller.model.latestSelection ? controller.model.latestSelection : controller.model.quill.getSelection();
     if (range) {
       controller.model.quill.formatText(range.index, range.length, "color", hexColor);
     }

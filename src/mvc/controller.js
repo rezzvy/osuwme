@@ -15,6 +15,7 @@ export default class Controller {
     this.view.initializeTooltip(this.view.main);
     this.view.initializeTooltip(this.view.modalWrapper);
     this.view.initializeStickyMenu();
+    this.view.initializeTemplateOpenAnchor();
     this.view.removeTempElements(this.view.canvasElementListContainer);
 
     this.view.canvasElement.addEventListener("click", (e) => {
@@ -38,7 +39,7 @@ export default class Controller {
     this.view.canvasElementListContainer.addEventListener("click", (e) => {
       if (!e.target.dataset.key) return;
 
-      this.canvasElementListButtonHandler(e);
+      this.canvasElementListButtonHandler(e.target);
     });
 
     this.view.canvasModalEdit._element.addEventListener("show.bs.modal", (e) => {
@@ -229,12 +230,18 @@ export default class Controller {
     this.view.clearActiveTooltips();
   }
 
-  canvasElementListButtonHandler(e) {
-    const btn = e.target;
+  canvasElementListButtonHandler(el, autoAppend = true) {
+    const btn = el;
     const skeleton = this.model.getCanvasElementSkeleton(btn.dataset.key);
+    const element = this.view.generateCanvasItem(skeleton, btn.dataset.key, btn.dataset.editable);
 
-    this.view.appendItemToCanvas(skeleton, btn.dataset.key, btn.dataset.editable);
-    this.view.toggleCanvasPlaceHolder(false);
+    if (autoAppend) {
+      this.view.appendItemToCanvas(element);
+      this.view.toggleCanvasPlaceHolder(false);
+      return;
+    }
+
+    return element;
   }
 
   canvasItemEditHandler(e) {
