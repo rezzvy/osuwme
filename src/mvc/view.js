@@ -242,6 +242,7 @@ export default class View {
     a.dataset.bsToggle = "tooltip";
     a.dataset.bsTitle = title;
     a.dataset.title = title;
+    a.target = "_blank";
     a.classList.add("output-imgmap-item");
 
     return a;

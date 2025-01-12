@@ -91,6 +91,43 @@ export default class Model {
       .replace(/%SPCITM%\s*/g, "\n");
   }
 
+  gradientText(text, colorStart = "#FF0000", colorEnd = "#0000FF") {
+    const colors = [];
+
+    const colorStartRgb = this.hexToRgb(colorStart);
+    const colorEndRgb = this.hexToRgb(colorEnd);
+
+    const textLength = text.length;
+
+    const rinc = (colorEndRgb.r - colorStartRgb.r) / textLength;
+    const ginc = (colorEndRgb.g - colorStartRgb.g) / textLength;
+    const binc = (colorEndRgb.b - colorStartRgb.b) / textLength;
+
+    for (let i = 0; i < textLength; i++) {
+      const r = Math.round(colorStartRgb.r + rinc * i);
+      const g = Math.round(colorStartRgb.g + ginc * i);
+      const b = Math.round(colorStartRgb.b + binc * i);
+
+      colors.push(this.rgbToHex(`rgb(${r}, ${g}, ${b})`));
+    }
+
+    return colors;
+  }
+
+  formatTextToGradient(colorStart, colorEnd) {
+    const range = this.latestSelection;
+    if (!range || !this.quill) return;
+
+    const selectedText = this.quill.getText(range.index, range.length);
+    const gradients = this.gradientText(selectedText, colorStart, colorEnd);
+
+    let colorIndex = 0;
+    for (let i = range.index; i < range.index + range.length; i++) {
+      this.quill.formatText(i, 1, "color", gradients[colorIndex]);
+      colorIndex = (colorIndex + 1) % gradients.length;
+    }
+  }
+
   isMobileDevice() {
     return "ontouchstart" in window || navigator.maxTouchPoints > 0;
   }
@@ -171,6 +208,14 @@ export default class Model {
   rgbToHex(rgbString) {
     const [r, g, b] = rgbString.match(/\d+/g).map(Number);
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  }
+
+  hexToRgb(hex) {
+    return {
+      r: parseInt(hex.substring(1, 3), 16),
+      g: parseInt(hex.substring(3, 5), 16),
+      b: parseInt(hex.substring(5, 7), 16),
+    };
   }
 
   async fetchData(url, type) {

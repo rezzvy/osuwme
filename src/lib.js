@@ -144,9 +144,8 @@ export default function initLibraries(controller) {
           return `${left} ${top} ${width} ${height} ${link} ${title}%NL%`;
         }
 
-        const renderableAsProfile = link.match(/^https:\/\/osu\.ppy\.sh\/users\/([a-zA-Z][a-zA-Z0-9\s-_]*[a-zA-Z0-9])$/);
-        if (renderableAsProfile) {
-          return `[profile]${renderableAsProfile[1]}[/profile]`;
+        if (/^https:\/\/osu\.ppy\.sh\/users\/[a-zA-Z][a-zA-Z0-9\s-_]*[a-zA-Z0-9]$/.test(link)) {
+          return `[profile]${api.content}[/profile]`;
         }
 
         const renderableAsEmail = link.startsWith("mailto:");
@@ -159,7 +158,14 @@ export default function initLibraries(controller) {
     },
     {
       selector: '[style*="color:"]',
-      format: (api) => `[color=${controller.model.rgbToHex(api.node.style.color)}]${api.content}[/color]`,
+      format: (api) => {
+        const content = api.node.textContent;
+        if (api.node.textContent.trim() === "") {
+          return " " + content;
+        }
+
+        return `[color=${controller.model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
+      },
     },
     {
       selector: '[style*="font-size:"]',
@@ -347,15 +353,18 @@ export default function initLibraries(controller) {
 
   controller.model.quill.root.addEventListener("click", function (event) {
     const color = event.target.style.color;
+    controller.model.latestSelection = null;
 
     if (color !== "") {
       controller.model.pickr.setColor(color);
-    } else {
-      controller.model.pickr.setColor("rgb(255, 255, 255)");
     }
 
     const linkFormCostum = document.querySelector(".link-form");
+    const gradientForm = document.querySelector(".gradient-form");
     const saveButton = linkFormCostum.querySelector("button");
+
+    document.getElementById("text-editor-color-gradient").dataset.open = "false";
+    gradientForm.classList.toggle("d-none", true);
 
     const a = event.target.closest("a");
     linkFormCostum.classList.toggle("d-none", !a);
@@ -389,6 +398,23 @@ export default function initLibraries(controller) {
     } else {
       controller.model.quill.format("link", false);
     }
+  });
+
+  document.getElementById("text-editor-color-gradient").addEventListener("click", (e) => {
+    document.body.classList.add("select-costum");
+
+    const gradientForm = document.querySelector(".gradient-form");
+    controller.model.latestSelection = controller.model.quill.getSelection();
+
+    const state = e.target.dataset.open === "true" ? false : true;
+    e.target.dataset.open = state;
+
+    gradientForm.classList.toggle("d-none", !state);
+
+    const colorStart = controller.model.gradientColorStart.getColor().toHEXA().toString();
+    const colorEnd = controller.model.gradientColorEnd.getColor().toHEXA().toString();
+
+    controller.model.formatTextToGradient(colorStart, colorEnd);
   });
 
   /* =========================================
@@ -426,14 +452,109 @@ export default function initLibraries(controller) {
   });
 
   controller.model.pickr.on("change", (color) => {
+    const hex = color.toHEXA().toString();
+    controller.model.pickr.getRoot().button.style.setProperty("--pcr-color", hex);
+
     if (!controller.model.latestSelection) return;
 
-    const hexColor = color.toHEXA().toString();
-    document.querySelector(".pcr-button").style.setProperty("--pcr-color", hexColor);
-
-    const range = controller.model.latestSelection ? controller.model.latestSelection : controller.model.quill.getSelection();
-    if (range) {
-      controller.model.quill.formatText(range.index, range.length, "color", hexColor);
+    for (let i = controller.model.latestSelection.index; i < controller.model.latestSelection.index + controller.model.latestSelection.length; i++) {
+      const charFormat = controller.model.quill.getFormat(i, 1);
+      if (charFormat.link) {
+        controller.model.latestSelection = null;
+        alert("Color cannot be applied while there is a link in the selected text.");
+        return;
+      }
     }
+
+    if (controller.model.latestSelection) {
+      const range = controller.model.latestSelection;
+      controller.model.quill.formatText(range.index, range.length, "color", hex);
+    }
+  });
+
+  controller.model.gradientColorStart = Pickr.create({
+    el: "#gradient-color-start",
+    theme: "nano",
+    default: "#00ECFF",
+    components: {
+      preview: true,
+      opacity: true,
+      hue: true,
+      interaction: {
+        input: true,
+      },
+    },
+  });
+
+  controller.model.gradientColorEnd = Pickr.create({
+    el: "#gradient-color-end",
+    theme: "nano",
+    default: "#FDD205",
+    components: {
+      preview: true,
+      opacity: true,
+      hue: true,
+      interaction: {
+        input: true,
+      },
+    },
+  });
+
+  controller.model.gradientColorStart.on("change", (color) => {
+    const colorStart = color.toHEXA().toString();
+    controller.model.gradientColorStart.getRoot().button.style.setProperty("--pcr-color", colorStart);
+
+    if (!controller.model.latestSelection) return;
+
+    for (let i = controller.model.latestSelection.index; i < controller.model.latestSelection.index + controller.model.latestSelection.length; i++) {
+      const charFormat = controller.model.quill.getFormat(i, 1);
+      if (charFormat.link) {
+        controller.model.latestSelection = null;
+
+        alert("Gradient color cannot be applied while there is a link in the selected text.");
+        return;
+      }
+    }
+
+    const colorEnd = controller.model.gradientColorEnd.getColor().toHEXA().toString();
+
+    controller.model.formatTextToGradient(colorStart, colorEnd);
+  });
+
+  controller.model.gradientColorStart.on("show", () => {
+    document.body.classList.add("select-costum");
+  });
+
+  controller.model.gradientColorStart.on("hide", () => {
+    document.body.classList.remove("select-costum");
+  });
+
+  controller.model.gradientColorEnd.on("change", (color) => {
+    const colorEnd = color.toHEXA().toString();
+    controller.model.gradientColorEnd.getRoot().button.style.setProperty("--pcr-color", colorEnd);
+
+    if (!controller.model.latestSelection) return;
+
+    for (let i = controller.model.latestSelection.index; i < controller.model.latestSelection.index + controller.model.latestSelection.length; i++) {
+      const charFormat = controller.model.quill.getFormat(i, 1);
+      if (charFormat.link) {
+        controller.model.latestSelection = null;
+
+        alert("Gradient color cannot be applied while there is a link in the selected text.");
+        return;
+      }
+    }
+
+    const colorStart = controller.model.gradientColorStart.getColor().toHEXA().toString();
+
+    controller.model.formatTextToGradient(colorStart, colorEnd);
+  });
+
+  controller.model.gradientColorEnd.on("show", () => {
+    document.body.classList.add("select-costum");
+  });
+
+  controller.model.gradientColorEnd.on("hide", () => {
+    document.body.classList.remove("select-costum");
   });
 }
