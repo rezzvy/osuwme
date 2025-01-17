@@ -111,11 +111,14 @@ body.select-costum ::selection {
 .ph.ph-notice::before,
 .ph.ph-center::before,
 .ph.ph-quote::before,
-.ph.ph-spoilerbox::before {
+.ph.ph-spoilerbox::before,
+.osu-style details summary:empty:not(:has(*))::after,
+.osu-style li::after {
   content: "Drop here";
   display: block;
   color: rgba(255, 255, 255, 0.25);
   letter-spacing: 6px;
+  font-weight: 400;
 }
 
 .ph::after {
@@ -189,11 +192,25 @@ body.select-costum ::selection {
   font-weight: 700 !important;
 }
 
-.osu-style details summary {
+.osu-style details summary:not(:has(*)) {
   color: rgb(217, 166, 189);
   font-weight: 700;
+}
+
+.osu-style details summary {
   display: flex;
+  align-items: start;
+  flex-wrap: wrap;
   gap: 14px;
+}
+
+.osu-style details summary > :first-of-type {
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+.osu-style details summary [data-action="duplicate"] {
+  display: none;
 }
 
 .osu-style center details summary {
@@ -201,6 +218,7 @@ body.select-costum ::selection {
 }
 
 .osu-style details summary::before {
+  flex-shrink: 0;
   content: "\f0da";
   font-family: "FontAwesome";
   color: #fff;
@@ -355,7 +373,9 @@ body.view-mode .osu-style blockquote {
 }
 
 body.view-mode .ph::after,
-body.view-mode .ph::before {
+body.view-mode .ph::before,
+body.view-mode .osu-style details summary:empty:not(:has(*))::after,
+body.view-mode .osu-style li::after {
   all: unset;
 }
 

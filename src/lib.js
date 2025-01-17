@@ -7,7 +7,7 @@ export default function initLibraries(controller) {
   ========================================= 
   */
   model.mation = new MationHTML();
-  model.mation.ignoreSelectors = ["summary", "._duration", "blockquote > ._source"];
+  model.mation.ignoreSelectors = ["._duration", "blockquote > ._source"];
   model.mation.noRuleFallback = (api) => api.content;
 
   // Spacing
@@ -31,10 +31,12 @@ export default function initLibraries(controller) {
     return `%SPCITM%`.repeat(level);
   });
 
+  // Empty Content
   model.registerBBCodeConversion("._content > p > *", (api) => {
-    if (api.node.textContent.trim() !== "") return api.content;
+    const text = api.node.textContent;
+    if (text.trim() !== "") return api.content;
 
-    return " ";
+    return "&nbsp;" + api.node.textContent;
   });
 
   // Code
@@ -52,10 +54,19 @@ export default function initLibraries(controller) {
     const isBox = api.node.dataset.box;
 
     if (isBox === "true") {
-      return `[box=${title}]${api.content}[/box]%NL%`;
+      return `[box=${title}${api.content}[/box]%NL%`;
     }
 
     return `[spoilerbox]${api.content}[/spoilerbox]%NL%`;
+  });
+
+  // Title for Spoilerbox / Box
+  model.registerBBCodeConversion("summary", (api) => {
+    if (api.node.parentElement.dataset.box === "true") {
+      return `${api.content}]`;
+    }
+
+    return "";
   });
 
   // Center
@@ -137,6 +148,14 @@ export default function initLibraries(controller) {
   });
 
   // Inline Styles
+  model.registerBBCodeConversion(".spoiler", (api) => {
+    return `[spoiler]${api.content}[/spoiler]`;
+  });
+
+  model.registerBBCodeConversion('[style*="color:"]', (api) => {
+    return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
+  });
+
   model.registerBBCodeConversion("strong", (api) => {
     return `[b]${api.content}[/b]`;
   });
@@ -151,14 +170,6 @@ export default function initLibraries(controller) {
 
   model.registerBBCodeConversion("u", (api) => {
     return `[u]${api.content}[/u]`;
-  });
-
-  model.registerBBCodeConversion(".spoiler", (api) => {
-    return `[spoiler]${api.content}[/spoiler]`;
-  });
-
-  model.registerBBCodeConversion('[style*="color:"]', (api) => {
-    return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
   });
 
   model.registerBBCodeConversion('[style*="font-size:"]', (api) => {
@@ -176,10 +187,10 @@ export default function initLibraries(controller) {
   // Link
   model.registerBBCodeConversion("a", (api) => {
     let content = api.content;
-    let link = decodeURIComponent(api.node.href);
+    let link = decodeURI(api.node.href);
 
     if (api.node.parentElement.classList.contains("imgmap-container")) {
-      link = model.isValidURL(api.node.dataset.link) ? api.node.dataset.link : "https://google.com";
+      link = model.isValidURL(api.node.dataset.link) ? encodeURI(api.node.dataset.link) : "https://google.com";
 
       const { width, height, top, left } = api.node.style;
       const title = api.node.dataset.bsTitle;
@@ -255,11 +266,13 @@ export default function initLibraries(controller) {
       const canvasItem = controller.renderToCanvas(key, editable, model.uniqueID, false);
 
       target.insertBefore(canvasItem, sibling);
+
+      if (target.matches("summary") && !model.isNodeEmpty(target, 2)) view.remove(canvasItem);
       view.remove(el);
     }
 
     if (target.classList.contains("ph")) view.toggle(target, "ph", false);
-    view.toggle(source, "ph", model.isNodeEmpty(source) && !source.matches("li"));
+    view.toggle(source, "ph", model.isNodeEmpty(source) && !source.matches("li") && !source.matches("summary"));
   });
 
   /* 

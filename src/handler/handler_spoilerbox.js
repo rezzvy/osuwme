@@ -51,7 +51,7 @@ export default class {
     const { title, box } = this.targetElement.dataset;
 
     this.view.el(this.boxTitleInput).value = title;
-    this.view.el(this.boxTitleInput).disable = box !== "true";
+    this.view.el(this.boxTitleInput).disabled = box !== "true";
     this.view.el(this.useBoxSwitch).checked = box === "true";
 
     this.view.disable(false, "#modal-edit-save");
@@ -60,6 +60,14 @@ export default class {
   save() {
     this.view.dataset(this.targetElement, "box", this.useBoxSwitch.checked);
     this.view.dataset(this.targetElement, "title", this.boxTitleInput.value);
+
+    const isDropable = !this.boxTitleInput.value && this.useBoxSwitch.checked;
+
+    if (isDropable) {
+      this.view.el(this.targetTitleElement).setAttribute("data-drop", "true");
+    } else {
+      this.view.el(this.targetTitleElement).removeAttribute("data-drop");
+    }
 
     const title = this.view.el(this.useBoxSwitch).checked ? this.boxTitleInput.value : "Spoiler";
     this.view.text(this.targetTitleElement, title);
