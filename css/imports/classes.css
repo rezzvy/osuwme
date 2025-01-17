@@ -26,7 +26,7 @@
 }
 
 body.select-costum ::selection {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
 }
 
 .resizeable {
@@ -37,8 +37,9 @@ body.select-costum ::selection {
   cursor: nwse-resize !important;
 }
 
- 
-
+[data-action="move"] {
+  touch-action: none;
+}
 /* =========================================
    Background Colors
    ========================================= */
@@ -107,6 +108,16 @@ body.select-costum ::selection {
   transform: translate(-50%, -50%);
 }
 
+.ph.ph-notice::before,
+.ph.ph-center::before,
+.ph.ph-quote::before,
+.ph.ph-spoilerbox::before {
+  content: "Drop here";
+  display: block;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 6px;
+}
+
 .ph::after {
   font-family: "FontAwesome";
   color: rgba(255, 255, 255, 0.25);
@@ -173,7 +184,7 @@ body.select-costum ::selection {
 }
 
 .osu-style strong a,
-.osu-style a[href*="https://osu.ppy.sh/users/"]
+.osu-style a[href*="https://osu.ppy.sh/users/"]:not([href*="https://osu.ppy.sh/users/0"]):not([href*="https://osu.ppy.sh/users/1"]):not([href*="https://osu.ppy.sh/users/2"]):not([href*="https://osu.ppy.sh/users/3"]):not([href*="https://osu.ppy.sh/users/4"]):not([href*="https://osu.ppy.sh/users/5"]):not([href*="https://osu.ppy.sh/users/6"]):not([href*="https://osu.ppy.sh/users/7"]):not([href*="https://osu.ppy.sh/users/8"]):not([href*="https://osu.ppy.sh/users/9"])
 {
   font-weight: 700 !important;
 }
@@ -343,7 +354,8 @@ body.view-mode .osu-style blockquote {
   margin-bottom: 20px;
 }
 
-body.view-mode .ph::after {
+body.view-mode .ph::after,
+body.view-mode .ph::before {
   all: unset;
 }
 

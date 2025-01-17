@@ -7,7 +7,7 @@ const model = new Model();
 const view = new View();
 const controller = new Controller(model, view);
 
-document.addEventListener("DOMContentLoaded", async (e) => {
+document.addEventListener("DOMContentLoaded", async () => {
   await controller.init();
   initLibraries(controller);
 });

@@ -62,7 +62,7 @@
                   <i class="fa fa-bars fa-fw fa-lg"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#templates-modal">Templates</button></li>
+                  <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-template">Templates</button></li>
                   <li><button class="dropdown-item" id="import-project-btn">Import</button></li>
                   <li><button class="dropdown-item" id="export-project-btn">Export</button></li>
 
@@ -87,21 +87,30 @@
                 </ul>
               </div>
 
-              <button id="getcode-btn-modal" class="btn btn-light btn-sm fw-bold flex-grow-1 flex-sm-grow-0">Get Code</button>
+              <button
+                id="getcode-btn-modal"
+                class="btn btn-light btn-sm fw-bold flex-grow-1 flex-sm-grow-0"
+                data-bs-toggle="modal"
+                data-bs-target="#getcode-modal"
+              >
+                Get Code
+              </button>
             </div>
           </div>
         </section>
 
         <section id="canvas" class="d-flex flex-column flex-fill rounded-2 resizeable overflow-auto">
           <h2 class="visually-hidden pe-none">Canvas</h2>
-          <div id="canvas-wrapper-placeholder" class="pe-none font-monospace text-center pt-4 px-2">
+          <div id="canvas-wrapper-ph" class="pe-none font-monospace text-center pt-4 px-2">
             <h3 class="h5 text-light text-opacity-75">⸜(｡˃ ᵕ ˂ )⸝♡</h3>
             <p class="text-light text-opacity-50">
               Start adding elements, or load templates
               <a
                 id="template-open-anchor"
                 href="javascript:void(0)"
-                class="text-decoration-underline link-light link-opacity-75 link-opacity-100-hover"
+                class="text-decoration-underline link-light link-opacity-75 link-opacity-100-hover pe-auto"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-template"
                 >here</a
               >
             </p>
@@ -147,7 +156,7 @@
         </div>
       </div>
 
-      <div id="templates-modal" class="modal" data-bs-backdrop="static" data-bs-focus="false">
+      <div id="modal-template" class="modal" data-bs-backdrop="static" data-bs-focus="false">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header pt-3 pb-0 px-3">
@@ -157,7 +166,7 @@
               <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div id="templates-modal-body" class="modal-body p-3 d-flex flex-column gap-2"></div>
+            <div id="modal-template-body" class="modal-body p-3 d-flex flex-column gap-2"></div>
           </div>
         </div>
       </div>

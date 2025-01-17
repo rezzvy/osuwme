@@ -1,264 +1,388 @@
 export default class View {
   constructor() {
-    this.main = document.querySelector("main");
-    this.modalWrapper = document.querySelector("#modal-wrapper");
+    // Modals
+    this.modalEdit = new bootstrap.Modal("#modal-edit");
+    this.modalTemplate = new bootstrap.Modal("#modal-template");
+    this.modalAudioPlayer = new bootstrap.Modal("#audio-modal");
 
-    this.canvasPlaceholder = document.getElementById("canvas-wrapper-placeholder");
-    this.canvasElementListContainer = document.getElementById("canvas-element-list");
-    this.canvasElementListModalBody = document.getElementById("modal-edit-body");
-    this.canvasElement = document.getElementById("canvas-wrapper");
-    this.canvas = document.getElementById("canvas");
-    this.canvasModalEdit = new bootstrap.Modal("#modal-edit");
-    this.canvasTemplatesModal = new bootstrap.Modal("#templates-modal");
-    this.canvasTemplatesModalBody = document.getElementById("templates-modal-body");
-
-    this.audioModal = new bootstrap.Modal("#audio-modal");
-    this.audioModalPreview = document.getElementById("audio-modal-preview");
-
-    this.modalEditSaveButton = document.getElementById("modal-edit-save");
-    this.modalEditAlert = document.getElementById("modal-edit-alert");
-
-    this.getCodeModal = new bootstrap.Modal("#getcode-modal");
-    this.getCodeButton = document.getElementById("getcode-btn-modal");
-
-    this.codeOutputTextArea = document.getElementById("code-output-textarea");
-
-    this.downloadBBCodeAsTextButton = document.getElementById("download-as-text");
-
-    this.clipboardAlert = document.getElementById("clipboard-alert");
-    this.copyBBCodeToClipboard = document.getElementById("copy-to-clipboard");
-
-    this.importProjectButton = document.getElementById("import-project-btn");
+    // File Input
     this.importProjectFileInput = document.getElementById("import-project-input");
-    this.exportProjectButton = document.getElementById("export-project-btn");
-    this.collapseAllCanvasButton = document.getElementById("collapse-all-canvas-btn");
-    this.expandAllCanvasButton = document.getElementById("expand-all-canvas-btn");
-    this.canvasMenuStickySwitch = document.getElementById("canvas-menu-sticky-switch");
-    this.resetCanvasSizeButton = document.getElementById("reset-canvas-size-btn");
-    this.clearCanvasButton = document.getElementById("clear-canvas-btn");
 
-    this.editModeSwitch = document.getElementById("canvas-mode-switch");
+    // Canvas Wrapper
+    this.canvasWrapperElement = document.getElementById("canvas-wrapper");
 
+    // Caches
+    this.caches = {};
+
+    // Sticky Element List Button
+    this.menuStickyContainer = document.getElementById("element-list-section");
     this.isMenuSticky = true;
+
+    this.isUpdating = false;
   }
 
-  initializeTemplateOpenAnchor() {
-    const el = document.querySelector("#template-open-anchor");
-
-    el.dataset.bsTarget = "#templates-modal";
-    el.dataset.bsToggle = "modal";
-    el.classList.add("pe-auto");
+  // Initialize the View
+  init(isMobile) {
+    this.remove(".placeholder-container");
+    this.toggle("body", "pe-none", false);
+    this.toggle("#canvas-element-list", "d-none", false);
+    this.initializeTooltip(`${isMobile ? "focus" : "hover"}`, "main", "#modal-wrapper");
+    this.initializeStickyMenu();
   }
 
+  // Initialize sticky menu behavior on scroll and resize
   initializeStickyMenu() {
     const updateStickyState = () => {
       if (!this.isMenuSticky) return;
 
-      const element = document.getElementById("element-list-section");
-
+      const element = this.menuStickyContainer;
       const elementBottom = element.offsetTop + element.offsetHeight + 16;
       const viewportBottom = window.innerHeight + window.scrollY - 16;
 
-      element.classList.toggle("pinned", elementBottom >= viewportBottom);
+      this.toggle(element, "pinned", elementBottom >= viewportBottom);
+      this.isUpdating = false;
     };
 
-    window.addEventListener("scroll", (e) => {
-      if (!this.isMenuSticky) return;
+    const onScroll = () => {
+      if (!this.isMenuSticky || this.isUpdating) return;
 
-      updateStickyState();
-    });
+      this.isUpdating = true;
+      requestAnimationFrame(updateStickyState);
+    };
 
-    new ResizeObserver(updateStickyState).observe(this.canvasElement);
+    this.on(window, "scroll", onScroll);
+    new ResizeObserver(updateStickyState).observe(this.canvasWrapperElement);
   }
 
-  clearActiveTooltips() {
-    const tooltips = document.querySelectorAll(".tooltip.bs-tooltip-auto.fade.show");
-    if (tooltips.length === 0) return;
+  /* 
+  =========================================
+     Helper
+  ========================================= 
+  */
 
-    tooltips.forEach((tooltip) => {
-      tooltip.remove();
-    });
+  // Get one or multiple elements, or return the provided element
+  _target(target, parent = document, scope = "one", cache = false) {
+    if (typeof target === "string") {
+      if (target in this.caches) return this.caches[target];
+
+      const element = scope === "one" ? parent?.querySelector(target) : parent?.querySelectorAll(target);
+      if (cache) this.caches[target] = element;
+      return element;
+    }
+
+    return target;
   }
 
-  collapseAllCanvasItem(boolean) {
-    const elements = document.querySelectorAll(".canvas-item .collapse");
+  /* 
+  =========================================
+     Utils
+  ========================================= 
+  */
 
-    elements.forEach((element) => {
-      element.classList.toggle("show", !boolean);
-    });
+  // Get or set inner HTML content of a target element
+  html(target, content) {
+    const targetElement = this._target(target);
+    if (content === undefined) return targetElement.innerHTML;
+
+    targetElement.innerHTML = content;
   }
 
-  removeTempElements(replacement) {
-    const placeholders = document.querySelectorAll(".placeholder-container");
+  // Get or set text content of a target element
+  text(target, content) {
+    const targetElement = this._target(target);
+    if (content === undefined) return targetElement.textContent;
 
-    placeholders.forEach((element) => {
-      element.remove();
-    });
-
-    replacement.classList.toggle("d-none", false);
+    targetElement.textContent = content;
   }
 
-  renderClipboardAlert(boolean) {
-    this.clipboardAlert.classList.toggle("d-none", !boolean);
+  // Get or set the value of a target input element
+  val(target, value) {
+    const targetElement = this._target(target);
+    if (value === undefined) return targetElement.value;
+
+    targetElement.value = value;
   }
 
-  generateDownloadableElement(src, downloadName) {
-    const link = document.createElement("a");
-    link.href = src;
-    link.download = downloadName;
-
-    return link;
+  // Apply CSS styles to a target element
+  css(target, cssText) {
+    this._target(target).style.cssText = cssText;
   }
 
-  setOutputCode(content) {
-    this.codeOutputTextArea.value = content.trim();
+  // Set a data attribute on a target element
+  dataset(target, key, value) {
+    return (this._target(target).dataset[key] = value);
   }
 
-  setButtonLoadingState(boolean, button) {
-    const i = button.querySelector("i");
+  // Toggle a class on a target element based on a boolean value
+  toggle(target, className, boolean, parent = document) {
+    this._target(target, parent, "one", true)?.classList.toggle(className, boolean);
+  }
 
-    if (boolean) {
-      i.dataset.class = i.className;
-      i.className = "fa fa-spinner fa-pulse fa-fw";
+  // Replace an existing class with a new class on a target element
+  replace(target, currentClass, newClass, parent = document) {
+    this._target(target, parent)?.classList.replace(currentClass, newClass);
+  }
+
+  // Append a child element to a target element
+  append(target, element) {
+    this._target(target).append(element);
+  }
+
+  // Insert a new element after a specified target element
+  appendAfter(target, element) {
+    const targetElement = this._target(target);
+    element.parentElement.insertBefore(targetElement, element.nextElementSibling);
+  }
+
+  // Remove a target element from the DOM
+  remove(target) {
+    this._target(target).remove();
+  }
+
+  // Clone a target element and execute a callback with the clone and original elements
+  copy(target, callback) {
+    const original = this._target(target);
+    const copied = original.cloneNode(true);
+    callback(copied, original);
+  }
+
+  // Add an event listener to a target element
+  on(target, type, handler) {
+    this._target(target).addEventListener(type, handler);
+  }
+
+  // Add an inline event handler to a target element
+  onInline(target, type, handler) {
+    this._target(target)[type] = handler;
+  }
+
+  // Get a single element based on a selector
+  el(target, parent = document) {
+    return this._target(target, parent, "one");
+  }
+
+  // Get all matching elements based on a selector
+  els(target, parent = document) {
+    return this._target(target, parent, "all");
+  }
+
+  // Enable or disable elements, applying or removing classes for disabled styles
+  disable(boolean, ...selectors) {
+    for (const selector of selectors) {
+      const element = this._target(selector);
+
+      if (element.tagName === "INPUT") {
+        element.disabled = boolean;
+        continue;
+      }
+
+      this.toggle(element, "pe-none", boolean);
+      this.toggle(element, "opacity-50", boolean);
+    }
+  }
+
+  /* 
+  =========================================
+     Methods
+  ========================================= 
+  */
+
+  // Generate a downloadable element and trigger its click event
+  download(source, name) {
+    const a = document.createElement("a");
+    a.href = source;
+    a.download = name;
+
+    a.click();
+  }
+
+  // Display a confirmation dialog with the given message
+  dialog(message) {
+    return confirm(message);
+  }
+
+  /* 
+  =========================================
+     General
+  ========================================= 
+  */
+
+  // Adjust the width or height of an image map item based on a math expression, clamping the result to fit within the container
+  setImageMapItemSize(event, element, direction, container) {
+    const isWidth = direction === "width";
+
+    const size = isWidth ? "width" : "height";
+    const rawValue = event.target.value.replace("%", "").trim();
+
+    let evaluatedValue;
+
+    try {
+      evaluatedValue = eval(rawValue);
+    } catch {
+      event.target.value = element.style[size];
       return;
     }
 
-    if (i.dataset.class) {
-      i.className = i.dataset.class;
-      i.removeAttribute("data-class");
-    }
+    const value = parseFloat(evaluatedValue);
+    if (isNaN(value)) return;
+
+    const containerSize = isWidth ? container.offsetWidth : container.offsetHeight;
+    const elementPosition = isWidth ? element.offsetLeft : element.offsetTop;
+
+    const maxAllowedSize = containerSize - elementPosition;
+    const newSizeInPixels = Math.max(1, Math.min((value / 100) * containerSize, maxAllowedSize));
+    const clampedValue = Math.max(2, parseFloat(((newSizeInPixels / containerSize) * 100).toFixed(2)));
+
+    element.style[size] = clampedValue + "%";
+    event.target.value = clampedValue + "%";
   }
 
-  disableEvents(boolean) {
-    document.body.classList.toggle("pe-none", boolean);
+  // Update Bootstrap collapse API attributes for the given element
+  updateBootstrapCollapseId(element, uniqueID) {
+    const collapseButton = element.querySelector('[data-bs-toggle="collapse"]');
+    const collapseContent = element.querySelector("._content");
+
+    collapseButton.dataset.bsTarget = `#${uniqueID}`;
+    collapseContent.id = uniqueID;
   }
 
-  disableButton(boolean, ...buttons) {
-    for (const button of buttons) {
-      button.classList.toggle("pe-none", boolean);
-      button.classList.toggle("opacity-50", boolean);
-    }
+  // Collapse or expand all canvas items based on the given state
+  collapseCanvasItems(isCollapsed) {
+    const elements = document.querySelectorAll(".canvas-item .collapse");
+    elements.forEach((element) => this.toggle(element, "show", !isCollapsed));
   }
 
+  // Display the active modal edit section, hide the previous one, and adjust the modal size based on the isLarge flag
+  renderModalEditSection(key, isLarge) {
+    this.toggle("#modal-edit .modal-dialog", "modal-lg", isLarge);
+    this.replace(".d-block[data-edit]", "d-block", "d-none");
+    this.replace(`.d-none[data-edit="${key}"]`, "d-none", "d-block");
+  }
+
+  // Show or hide the modal edit error message alert and update its text
   renderModalEditErrorMessage(boolean, text = "") {
-    this.modalEditAlert.querySelector("span").textContent = text;
-    this.modalEditAlert.classList.toggle("d-none", !boolean);
+    this.html("#modal-edit-alert span", text);
+    this.toggle("#modal-edit-alert", "d-none", !boolean);
   }
 
-  clearActiveImageMapItem(container) {
-    const currentActive = container.querySelector(".imgmap-edit-item.active");
-    if (currentActive) currentActive.classList.remove("active");
+  // Replace placeholder with the actual content and optionally center the content
+  replacePlaceholder(element, boolean, isCenterized = true) {
+    this.toggle(element, "d-none", !boolean);
+    this.toggle(element.parentElement, "ph", !boolean);
+    this.toggle(element.parentElement, "center-content", boolean && isCenterized);
   }
 
-  toggleCanvasPlaceHolder(boolean) {
-    this.canvasPlaceholder.classList.toggle("d-none", !boolean);
-  }
+  // Replace the button icon with a loading animation, and restore the original icon when set to false
+  buttonLoading(boolean, button) {
+    this.disable(boolean, button);
 
-  toggleActiveImageMapItem(element, container) {
-    const itemElement = element;
-    this.clearActiveImageMapItem(container);
+    const icon = button.querySelector("i");
+    if (!icon) return;
 
-    if (itemElement) {
-      itemElement.classList.add("active");
-      return true;
+    if (boolean) {
+      icon.dataset.class = icon.className;
+      icon.className = "fa fa-spinner fa-pulse fa-fw";
+    } else {
+      icon.className = icon.dataset.class || icon.className;
+      delete icon.dataset.class;
     }
-
-    return false;
   }
 
-  toggleElementPlaceholder(boolean, element, isCenterized = true) {
-    element.classList.toggle("d-none", boolean);
-    element.parentElement.classList.toggle("ph", boolean);
-    if (isCenterized) element.parentElement.classList.toggle("center-content", !boolean);
+  // Clear the currently active image map item in the specified container
+  clearActiveImageMapItem(container) {
+    const currentActive = this.el(".imgmap-edit-item.active", container);
+
+    if (currentActive) {
+      this.toggle(currentActive, "active", false);
+    }
   }
 
-  toggleContainerPlaceholder(container) {
-    const content = container.querySelector("[data-container]");
-    if (content) content.classList.toggle("ph", content && content.children.length === 0);
+  // Toggle the active state of an image map item in the specified container
+  toggleActiveImageMapItem(element, container) {
+    if (!element || element.classList.contains("active")) return false;
+
+    this.clearActiveImageMapItem(container);
+    this.toggle(element, "active", true);
+
+    return true;
   }
 
-  initializeTooltip(parentElement, isMobile = false) {
-    let trigger = isMobile ? "focus" : "hover";
+  /* 
+  =========================================
+     Tooltip
+  ========================================= 
+  */
 
-    return new bootstrap.Tooltip(parentElement, {
-      selector: '[data-bs-toggle="tooltip"]',
-      trigger: trigger,
-    });
+  // Create an instance of Bootstrap tooltip
+  initializeTooltip(triggerType, ...parents) {
+    for (const parent of parents) {
+      new bootstrap.Tooltip(parent, { selector: '[data-bs-toggle="tooltip"]', trigger: triggerType });
+    }
   }
 
-  generateCanvasItem(content, key, isEditable) {
+  // Clear a specific tooltip from an element
+  clearTooltip(element) {
+    const tooltip = bootstrap.Tooltip.getInstance(element);
+    tooltip?.dispose();
+  }
+
+  // Clear all active tooltips in the document
+  clearActiveTooltips() {
+    const tooltips = document.querySelectorAll(".tooltip.bs-tooltip-auto.fade.show");
+    tooltips.forEach((tooltip) => tooltip.remove());
+  }
+
+  /* 
+  =========================================
+     Elements Generator
+  ========================================= 
+  */
+
+  // Generate Canvas Item
+  generateCanvasItem(key, editable, uniqueID, content) {
     const div = document.createElement("div");
-    const uniqueID = "CANVAS" + Date.now();
     div.classList.add("canvas-item", "osu-style");
 
+    const buttonEdit = `
+      <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Edit" data-action="edit" data-key="${key}">
+        <i class="fa fa-pencil fa-fw"></i>
+      </button>
+    `;
+
     div.innerHTML = `
-  <div class="_edit d-flex align-items-center p-2 gap-2 flex-wrap">
-    <div class="d-flex gap-2 flex-fill">
-      <div>
-        <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="collapse" data-bs-target="#${uniqueID}"></button>
+      <div class="_edit d-flex align-items-center p-2 gap-2 flex-wrap">
+        <div class="d-flex gap-2 flex-fill">
+          <div>
+            <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="collapse" data-bs-target="#${uniqueID}"></button>
+          </div>
+          <div class="flex-fill">
+            <input type="text" class="form-control-plaintext h-100 text-light" value="${key}" />
+          </div>
+        </div>
+  
+        <div>
+          <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Move" data-action="move">
+            <i class="fa fa-arrows fa-fw"></i>
+          </button>
+          ${editable === "true" ? buttonEdit : ""}
+          <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Duplicate" data-action="duplicate">
+            <i class="fa fa-copy fa-fw"></i>
+          </button>
+          <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Remove" data-action="remove">
+            <i class="fa fa-trash fa-fw"></i>
+          </button>
+        </div>
       </div>
-      <div class="flex-fill">
-        <input type="text" class="form-control-plaintext h-100 text-light" value="${key}" />
+  
+      <div class="_content p-2 collapse show" id="${uniqueID}">
+        ${content}
       </div>
-    </div>
-
-    <div>
-      <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Move" data-action="move">
-        <i class="fa fa-arrows fa-fw"></i>
-      </button>
-      ${
-        isEditable === "true"
-          ? `<button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Edit" data-action="edit" data-key="${key}">
-              <i class="fa fa-pencil fa-fw"></i>
-             </button>`
-          : ""
-      } 
-      <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Duplicate" data-action="duplicate">
-        <i class="fa fa-copy fa-fw"></i>
-      </button>
-      <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="tooltip" data-bs-title="Remove" data-action="remove">
-        <i class="fa fa-trash fa-fw"></i>
-      </button>
-    </div>
-  </div>
-
-  <div class="_content p-2 collapse show" id="${uniqueID}" data-key="${key}">
-    ${content}
-  </div>
-  `;
+    `;
 
     return div;
   }
 
-  appendItemToCanvas(element) {
-    this.canvasElement.appendChild(element);
-  }
-
-  generateOutputImageMapItem(link, style, title) {
-    const a = document.createElement("a");
-    a.href = link;
-    a.style = style;
-    a.dataset.link = link;
-    a.dataset.bsToggle = "tooltip";
-    a.dataset.bsTitle = title;
-    a.dataset.title = title;
-    a.target = "_blank";
-    a.classList.add("output-imgmap-item");
-
-    return a;
-  }
-
-  generateCanvasElementListButton(key, data) {
-    return `
-  <button class="canvas-element-list-btn btn btn-dark py-3 px-5" data-action="move" data-bs-toggle="tooltip" data-bs-title="${data.tooltipTitle}" data-key="${key}" data-editable="${data.editable}">
-      <i class="fa ${data.icon} fa-fw fa-lg"></i>
-  </button>`;
-  }
-
-  generateListItem(title, content) {
-    return `<li data-title="${title}" data-drop>${content}</li>`;
-  }
-
+  // Generate Canvas Template Item
   generateCanvasTemplateItem(title, des, templatePath) {
     return `
       <div class="d-flex flex-wrap align-items-center justify-content-between p-3 rounded-2 modal-box gap-3">
@@ -266,94 +390,86 @@ export default class View {
           <h3 class="h5 mb-0 text-light">${title}</h3>
           <p class="m-0">${des}</p>
         </div>
-
-        <button class="btn btn-light btn-sm fw-bold" data-template-path="${templatePath}" data-action="render">Edit This Template</button>
+  
+        <button class="btn btn-light btn-sm fw-bold" data-template-path="${templatePath}" data-action="render">
+          Edit This Template
+        </button>
       </div>
     `;
   }
 
-  generateListItemEdit(obj = { title: "", content: "" }) {
+  // Generate Canvas Element List Button
+  generateCanvasElementListButton(key, data) {
+    const { editable, icon, tooltipTitle } = data;
     return `
-  <div class="input-group input-group-sm gap-1">
-    <div class="input-group-text">
-      <button class="btn btn-outline-light btn-sm" data-action="move">
-        <i class="fa fa-arrows fa-fw"></i>
+      <button class="canvas-element-list-btn btn btn-dark py-3 px-5" 
+        data-action="move" 
+        data-bs-toggle="tooltip" 
+        data-bs-title="${tooltipTitle}" 
+        data-key="${key}" 
+        data-editable="${editable}">
+        <i class="fa ${icon} fa-fw fa-lg"></i>
       </button>
-    </div>
-  <input type="text" class="list-title-input form-control rounded-2" placeholder="Title" value="${obj.title}" />
-    <div class="input-group-text">
-      <button class="btn btn-outline-light btn-sm" data-action="delete">
-        <i class="fa fa-trash fa-fw"></i>
-     </button>
-    </div>
-  </div>
-  <div class="_list-content d-none">${obj.content}</div>
-  `;
+    `;
   }
 
-  generateCanvasElementListModal(key, content) {
-    return `<div class="d-none" data-edit="${key}">${content}</div>`;
+  // Generate List Item Edit Element
+  generateListItemEdit(title = "", content = "") {
+    const div = document.createElement("div");
+    div.classList.add("list-item");
+    div.innerHTML = `
+      <div class="input-group input-group-sm gap-1">
+        <div class="input-group-text">
+          <button class="btn btn-outline-light btn-sm" data-action="move">
+            <i class="fa fa-arrows fa-fw"></i>
+          </button>
+        </div>
+        <input type="text" class="list-title-input form-control rounded-2" placeholder="Title" value="${title}" />
+        <div class="input-group-text">
+          <button class="btn btn-outline-light btn-sm" data-action="remove">
+            <i class="fa fa-trash fa-fw"></i>
+          </button>
+        </div>
+      </div>
+      <div class="_list-content d-none">${content}</div>
+    `;
+
+    return div;
   }
 
-  generateImageMapItem(data = { style: "", title: "Untitled", link: "#" }) {
-    const a = document.createElement("a");
-    a.classList.add("imgmap-edit-item");
-    a.innerHTML = ' <div class="_resizer"></div>';
-    a.dataset.title = data.title;
-    a.dataset.link = data.link;
+  // Generate Edit (Input) Image Map Item
+  generateEditImageMapItem(title = "Untitled", link = "#", style = "") {
+    const item = document.createElement("a");
+    item.classList.add("imgmap-edit-item");
+    item.innerHTML = '<div class="_resizer"></div>';
+    item.dataset.title = title;
+    item.dataset.link = link;
 
-    if (data.style === "") {
-      a.style.width = "15%";
-      a.style.height = "15%";
-      a.style.top = "0%";
-      a.style.left = "0%";
+    if (style === "") {
+      item.style.width = "20%";
+      item.style.height = "20%";
+      item.style.top = "0%";
+      item.style.left = "0%";
     } else {
-      a.style.cssText = data.style;
+      item.style.cssText = style;
     }
 
-    return a;
+    return item;
   }
 
-  changeImageMapItemSize(event, element, direction) {
-    if (event.value.includes("%")) event.value = event.value.replace("%", "");
-    if (isNaN(event.value)) return;
-
-    const activeElement = element;
-    const value = parseInt(event.value);
-    let size = direction === "width" ? "width" : "height";
-
-    if (value <= 0) {
-      event.value = activeElement.style[size];
-      return;
-    }
-
-    if (value > 100) {
-      event.value = 100;
-      activeElement.style[size] = "100%";
-      activeElement.style.top = "0%";
-      activeElement.style.left = "0%";
-      return;
-    }
-
-    activeElement.style[size] = event.value + "%";
+  // Generate Output Image Map Item
+  generateOutputImageMapItem(title, link, style) {
+    return `
+      <a class="output-imgmap-item" target="_blank" data-link="${link}" href="${link}" style="${style}" data-title="${title}" data-bs-toggle="tooltip" data-bs-title="${title}"></a>
+    `;
+  }
+  // Generate Modal Edit Section
+  generateModalEditSection(key, content) {
+    return `<div data-edit="${key}" class="d-none">${content}</div>`;
   }
 
-  clearInput(...els) {
-    for (const element of els) {
-      if (element.tagName !== "INPUT") continue;
-
-      element.value = "";
-    }
-  }
-
-  disableInput(boolean, ...els) {
-    for (const element of els) {
-      if (element.tagName === "INPUT") {
-        element.disabled = boolean;
-        continue;
-      }
-
-      this.disableButton(boolean, element);
-    }
+  // Generate List Item Element
+  generateListItem(title, content) {
+    return `<li data-title="${title}" data-drop>${content}</li>`;
   }
 }

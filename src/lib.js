@@ -1,222 +1,215 @@
 export default function initLibraries(controller) {
-  /* =========================================
-       Mation HTML
-       ========================================= */
-  controller.model.mation = new MationHTML();
-  controller.model.mation.ignoreSelectors = ["summary", "._duration", "blockquote > ._source"];
-  controller.model.mation.noRuleFallback = (api) => {
-    return api.content;
-  };
+  const { model, view } = controller;
 
-  controller.model.mation.register([
-    {
-      selector: ".spacing-item",
-      format: (api) => {
-        const container = api.node.closest(".canvas-item");
-        const prevContainer = container.previousElementSibling;
-        const nextContainer = container.nextElementSibling;
+  /* 
+  =========================================
+     Mation HTML
+  ========================================= 
+  */
+  model.mation = new MationHTML();
+  model.mation.ignoreSelectors = ["summary", "._duration", "blockquote > ._source"];
+  model.mation.noRuleFallback = (api) => api.content;
 
-        const value = parseInt(api.node.dataset.spacingLevel);
-        let level = value > 0 ? value : 1;
+  // Spacing
+  model.registerBBCodeConversion(".spacing-item", (api) => {
+    const container = api.node.closest(".canvas-item");
+    const prevContainer = container.previousElementSibling;
+    const nextContainer = container.nextElementSibling;
 
-        if (prevContainer && nextContainer) {
-          if (prevContainer.querySelector("ul") && nextContainer.querySelector("ul")) {
-            level += 1;
-          }
+    const value = parseInt(api.node.dataset.spacingLevel);
+    let level = value > 0 ? value : 1;
 
-          if (prevContainer.querySelector("blockquote") && nextContainer.querySelector("blockquote")) {
-            level += 1;
-          }
-        }
+    if (prevContainer && nextContainer) {
+      const conditions = [
+        view.el("ul", prevContainer) && view.el("ul", nextContainer),
+        view.el("blockquote", prevContainer) && view.el("blockquote", nextContainer),
+      ];
 
-        return `%SPCITM%`.repeat(level);
-      },
-    },
+      level += conditions.filter(Boolean).length;
+    }
 
-    {
-      selector: "p",
-      format: (api) => `${api.content}%NL%`,
-    },
+    return `%SPCITM%`.repeat(level);
+  });
 
-    {
-      selector: ".notice",
-      format: (api) => `[notice]${api.content}[/notice]%NL%`,
-    },
-    {
-      selector: "center",
-      format: (api) => {
-        return `[centre]${api.content}[/centre]`;
-      },
-    },
-    {
-      selector: "iframe",
-      format: (api) => `[youtube]${api.node.dataset.videoId}[/youtube]`,
-    },
-    {
-      selector: ".play-audio-btn",
-      format: (api) => `[audio]${api.node.dataset.audioUrl ? api.node.dataset.audioUrl : "about:blank"}[/audio]`,
-    },
-    {
-      selector: "img",
-      format: (api) => {
-        const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S"];
-        if (inline.includes(api.node.parentElement.tagName)) {
-          return `[img]${api.node.src}[/img]`;
-        }
+  model.registerBBCodeConversion("._content > p > *", (api) => {
+    if (api.node.textContent.trim() !== "") return api.content;
 
-        return `[img]${api.node.src}[/img]%NL%`;
-      },
-    },
-    {
-      selector: ".heading",
-      format: (api) => `[heading]${api.content}[/heading]%NL%`,
-    },
-    {
-      selector: "strong",
-      format: (api) => `[b]${api.content}[/b]`,
-    },
-    {
-      selector: "em",
-      format: (api) => `[i]${api.content}[/i]`,
-    },
-    {
-      selector: "s",
-      format: (api) => `[s]${api.content}[/s]`,
-    },
-    {
-      selector: "u",
-      format: (api) => `[u]${api.content}[/u]`,
-    },
-    {
-      selector: ".spoiler",
-      format: (api) => `[spoiler]${api.content}[/spoiler]`,
-    },
-    {
-      selector: "code",
-      format: (api) => {
-        if (api.node.classList.contains("inline")) {
-          return `[c]${api.content}[/c]`;
-        }
+    return " ";
+  });
 
-        return `[code]${api.content}[/code]%NL%`;
-      },
-    },
-    {
-      selector: ".imgmap-container",
-      format: (api) => `[imagemap]%NL%${api.content}[/imagemap]%NL%`,
-    },
-    {
-      selector: ".imgmap-container > img",
-      format: (api) => `${api.node.src}%NL%`,
-    },
-    {
-      selector: "ul",
-      format: (api) => {
-        const isOrdered = api.node.classList.contains("ol");
+  // Code
+  model.registerBBCodeConversion("code", (api) => {
+    if (api.node.classList.contains("inline")) {
+      return `[c]${api.content}[/c]`;
+    }
 
-        if (isOrdered) {
-          return `[list=1]%NL%${api.content}[/list]%NL%`;
-        }
+    return `[code]${api.content}[/code]%NL%`;
+  });
 
-        return `[list]%NL%${api.content}[/list]%NL%`;
-      },
-    },
-    {
-      selector: "li",
-      format: (api) => {
-        const content = api.node.dataset.title.trim() ? "%NL%" + api.content : api.content;
+  // Spoilerbox / Box
+  model.registerBBCodeConversion("details", (api) => {
+    const title = api.node.dataset.title;
+    const isBox = api.node.dataset.box;
 
-        return `[*]${api.node.dataset.title} ${content}`;
-      },
-    },
-    {
-      selector: "a",
-      format: (api) => {
-        const link = controller.model.isValidURL(api.node.href) ? decodeURIComponent(api.node.href) : "https://google.com";
+    if (isBox === "true") {
+      return `[box=${title}]${api.content}[/box]%NL%`;
+    }
 
-        if (api.node.parentElement.classList.contains("imgmap-container")) {
-          const width = api.node.style.width.replace("%", "");
-          const height = api.node.style.height.replace("%", "");
-          const top = api.node.style.top.replace("%", "");
-          const left = api.node.style.left.replace("%", "");
-          const title = api.node.dataset.bsTitle;
+    return `[spoilerbox]${api.content}[/spoilerbox]%NL%`;
+  });
 
-          return `${left} ${top} ${width} ${height} ${link} ${title}%NL%`;
-        }
+  // Center
+  model.registerBBCodeConversion("center", (api) => {
+    return `[centre]${api.content}[/centre]`;
+  });
 
-        if (/^https:\/\/osu\.ppy\.sh\/users\/[a-zA-Z][a-zA-Z0-9\s-_]*[a-zA-Z0-9]$/.test(link)) {
-          return `[profile]${api.content}[/profile]`;
-        }
+  // Notice
+  model.registerBBCodeConversion(".notice", (api) => {
+    return `[notice]${api.content}[/notice]%NL%`;
+  });
 
-        const renderableAsEmail = link.startsWith("mailto:");
-        if (renderableAsEmail) {
-          return `[email=${link.substring(7)}]${api.content}[/email]`;
-        }
+  // Youtube
+  model.registerBBCodeConversion("iframe", (api) => {
+    return `[youtube]${api.node.dataset.videoId}[/youtube]`;
+  });
 
-        return `[url=${link}]${api.content}[/url]`;
-      },
-    },
-    {
-      selector: '[style*="color:"]',
-      format: (api) => {
-        const content = api.node.textContent;
-        if (api.node.textContent.trim() === "") {
-          return " " + content;
-        }
+  // Audio
+  model.registerBBCodeConversion(".play-audio-btn", (api) => {
+    return `[audio]${api.node.dataset.src}[/audio]`;
+  });
 
-        return `[color=${controller.model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
-      },
-    },
-    {
-      selector: '[style*="font-size:"]',
-      format: (api) => {
-        const size = api.node.style.fontSize;
-        const sizeMaps = {
-          "50%": `[size=50]`,
-          "85%": `[size=85]`,
-          "100%": `[size=100]`,
-          "150%": `[size=150]`,
-        };
+  // Image
+  model.registerBBCodeConversion("img", (api) => {
+    const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S"];
+    if (inline.includes(api.node.parentElement.tagName)) {
+      return `[img]${api.node.src}[/img]`;
+    }
 
-        return `${sizeMaps[size]}${api.content}[/size]`;
-      },
-    },
-    {
-      selector: "blockquote",
-      format: (api) => {
-        const hasSource = api.node.dataset.includeSource;
-        const sourceTitle = api.node.dataset.source;
+    return `[img]${api.node.src}[/img]%NL%`;
+  });
 
-        if (hasSource === "true") {
-          return `[quote="${sourceTitle}"]${api.content}[/quote]%NL%`;
-        }
+  // Text
+  model.registerBBCodeConversion("p", (api) => {
+    return `${api.content}%NL%`;
+  });
 
-        return `[quote]${api.content}[/quote]%NL%`;
-      },
-    },
-    {
-      selector: "details",
-      format: (api) => {
-        const title = api.node.dataset.title;
-        const isBox = api.node.dataset.box;
+  // Heading
+  model.registerBBCodeConversion(".heading", (api) => {
+    return `[heading]${api.content}[/heading]%NL%`;
+  });
 
-        if (isBox === "true") {
-          return `[box=${title}]${api.content}[/box]%NL%`;
-        }
+  // List Item
+  model.registerBBCodeConversion("ul", (api) => {
+    const isOrdered = api.node.classList.contains("ol");
 
-        return `[spoilerbox]${api.content}[/spoilerbox]%NL%`;
-      },
-    },
-    {
-      selector: '[data-spacing="%SPCITM%"]',
-      format: (api) => `%SPCITM%`,
-    },
-  ]);
+    if (isOrdered) {
+      return `[list=1]%NL%${api.content}[/list]%NL%`;
+    }
 
-  /* =========================================
-       DRAGULA
-       ========================================= */
-  controller.model.drake = dragula({
+    return `[list]%NL%${api.content}[/list]%NL%`;
+  });
+
+  model.registerBBCodeConversion("li", (api) => {
+    const content = api.node.dataset.title.trim() ? "%NL%" + api.content : api.content;
+
+    return `[*]${api.node.dataset.title} ${content}`;
+  });
+
+  // Image Map
+  model.registerBBCodeConversion(".imgmap-container", (api) => {
+    return `[imagemap]%NL%${api.content}[/imagemap]%NL%`;
+  });
+
+  model.registerBBCodeConversion(".imgmap-container > img", (api) => {
+    return `${api.node.src}%NL%`;
+  });
+
+  // Quote
+  model.registerBBCodeConversion("blockquote", (api) => {
+    const hasSource = api.node.dataset.includeSource;
+    const sourceTitle = api.node.dataset.source;
+
+    if (hasSource === "true") {
+      return `[quote="${sourceTitle}"]${api.content}[/quote]%NL%`;
+    }
+
+    return `[quote]${api.content}[/quote]%NL%`;
+  });
+
+  // Inline Styles
+  model.registerBBCodeConversion("strong", (api) => {
+    return `[b]${api.content}[/b]`;
+  });
+
+  model.registerBBCodeConversion("em", (api) => {
+    return `[i]${api.content}[/i]`;
+  });
+
+  model.registerBBCodeConversion("s", (api) => {
+    return `[s]${api.content}[/s]`;
+  });
+
+  model.registerBBCodeConversion("u", (api) => {
+    return `[u]${api.content}[/u]`;
+  });
+
+  model.registerBBCodeConversion(".spoiler", (api) => {
+    return `[spoiler]${api.content}[/spoiler]`;
+  });
+
+  model.registerBBCodeConversion('[style*="color:"]', (api) => {
+    return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
+  });
+
+  model.registerBBCodeConversion('[style*="font-size:"]', (api) => {
+    const size = api.node.style.fontSize;
+    const sizeMaps = {
+      "50%": `[size=50]`,
+      "85%": `[size=85]`,
+      "100%": `[size=100]`,
+      "150%": `[size=150]`,
+    };
+
+    return `${sizeMaps[size]}${api.content}[/size]`;
+  });
+
+  // Link
+  model.registerBBCodeConversion("a", (api) => {
+    let content = api.content;
+    let link = decodeURIComponent(api.node.href);
+
+    if (api.node.parentElement.classList.contains("imgmap-container")) {
+      link = model.isValidURL(api.node.dataset.link) ? api.node.dataset.link : "https://google.com";
+
+      const { width, height, top, left } = api.node.style;
+      const title = api.node.dataset.bsTitle;
+
+      return `${left.replace("%", "")} ${top.replace("%", "")} ${width.replace("%", "")} ${height.replace("%", "")} ${link} ${title}%NL%`;
+    }
+
+    if (model.isOsuProfileLink(link)) {
+      return `[profile]${content}[/profile]`;
+    }
+
+    if (link.startsWith("mailto:")) {
+      return `[email=${link.substring(7)}]${content}[/email]`;
+    }
+
+    return `[url=${link}]${content}[/url]`;
+  });
+
+  // BR
+  model.registerBBCodeConversion('[data-spacing="%SPCITM%"]', () => {
+    return "%SPCITM%";
+  });
+
+  /* 
+  =========================================
+     Dragula
+  ========================================= 
+  */
+
+  model.drake = dragula({
     isContainer: (el) => {
       return el.hasAttribute("data-drop") || el.matches("#canvas-wrapper") || el.matches("#canvas-element-list");
     },
@@ -224,102 +217,77 @@ export default function initLibraries(controller) {
       return handle.closest('[data-action="move"]');
     },
     accepts: (el, target) => {
-      if (target.matches("#canvas-element-list")) {
-        return false;
-      }
-
-      if (el.querySelector("center") && target.closest("center")) {
-        return false;
-      }
-
-      if (el.querySelector(".notice") && target.closest(".notice")) {
-        return false;
-      }
-
-      if (el.contains(target)) {
-        return false;
-      }
-
+      if (target.matches("#canvas-element-list")) return false;
+      if (el.querySelector("center") && target.closest("center")) return false;
+      if (el.querySelector(".notice") && target.closest(".notice")) return false;
+      if (el.contains(target)) return false;
       return true;
     },
-    revertOnSpill: true,
-    copy: (el, source) => {
-      if (source.matches("#canvas-element-list")) {
-        return true;
-      }
 
-      return false;
+    copy: (el, source) => {
+      return source.matches("#canvas-element-list");
     },
+    revertOnSpill: true,
   });
 
-  controller.model.drake.on("shadow", (el, container, source) => {
+  model.drake.on("dragend", (el) => {
+    if (!el.matches(".canvas-element-list-btn")) return;
+
+    if (view.el("#canvas-wrapper-ph").classList.contains("d-none") && model.isNodeEmpty("#canvas-wrapper")) {
+      view.toggle(view.canvasWrapperPhElement, "d-none", false);
+    }
+  });
+
+  model.drake.on("shadow", (el) => {
+    if (!el.matches(".canvas-element-list-btn")) return;
+
+    if (!view.el("#canvas-wrapper-ph").classList.contains("d-none")) {
+      view.toggle("#canvas-wrapper-ph", "d-none", true);
+    }
+
     el.style.dispay = "block";
     el.style.width = "100%";
   });
 
-  controller.model.drake.on("drop", (el, target, source, sibling) => {
+  model.drake.on("drop", (el, target, source, sibling) => {
     if (el.matches(".canvas-element-list-btn")) {
-      const canvasSkeleton = controller.canvasElementListButtonHandler(el, false);
+      const { key, editable } = el.dataset;
+      const canvasItem = controller.renderToCanvas(key, editable, model.uniqueID, false);
 
-      target.insertBefore(canvasSkeleton, sibling);
-
-      el.remove();
-
-      controller.view.toggleCanvasPlaceHolder(false);
+      target.insertBefore(canvasItem, sibling);
+      view.remove(el);
     }
 
-    if (target.classList.contains("ph")) {
-      target.classList.remove("ph");
-    }
-
-    if (source.children.length === 0 && source.tagName !== "LI") {
-      source.classList.add("ph");
-    }
+    if (target.classList.contains("ph")) view.toggle(target, "ph", false);
+    view.toggle(source, "ph", model.isNodeEmpty(source) && !source.matches("li"));
   });
 
-  /* =========================================
-   QUIL JS
-   ========================================= */
-  const Inline = Quill.import("blots/inline");
+  /* 
+  =========================================
+     Quill
+  ========================================= 
+  */
+
   const FontSize = Quill.import("attributors/style/size");
   FontSize.whitelist = ["50%", "85%", "100%", "150%"];
 
-  class CodeBlot extends Inline {
-    static create(value) {
-      let node = super.create(value);
-      node.classList.add("inline");
-      return node;
-    }
+  const inlineCodeBlot = model.createInlineBlot({
+    blotName: "inlinecode",
+    tagName: "code",
+    className: "inline",
+  });
 
-    static formats(node) {
-      return node.classList.contains("inline");
-    }
-  }
+  const spoilerBlot = model.createInlineBlot({
+    blotName: "spoiler",
+    tagName: "span",
+    className: "spoiler",
+  });
 
-  class SpoilerBlot extends Inline {
-    static create(value) {
-      let node = super.create(value);
-      node.classList.add("spoiler");
-      return node;
-    }
-
-    static formats(node) {
-      return node.classList.contains("spoiler");
-    }
-  }
-
-  CodeBlot.blotName = "inlinecode";
-  CodeBlot.tagName = "code";
-  CodeBlot.className = "inline";
-  SpoilerBlot.blotName = "spoiler";
-  SpoilerBlot.tagName = "span";
-  SpoilerBlot.className = "spoiler";
-
-  Quill.register(SpoilerBlot);
-  Quill.register(CodeBlot);
+  Quill.register(inlineCodeBlot);
+  Quill.register(spoilerBlot);
   Quill.register(FontSize, true);
 
-  controller.model.quill = new Quill("#text-editor", {
+  model.quill = new Quill("#text-editor", {
     modules: {
       toolbar: {
         container: "#text-editor-toolbar",
@@ -330,8 +298,58 @@ export default function initLibraries(controller) {
     },
   });
 
-  controller.model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, function (node, delta) {
-    var Delta = Quill.import("delta");
+  view.on(model.quill.root, "click", (e) => {
+    model.latestSelection = null;
+
+    const isLink = e.target.matches("a");
+    const color = e.target.style.color;
+
+    view.toggle(".link-form", "d-none", !isLink);
+    view.toggle(".gradient-form", "d-none", true);
+    view.dataset("#text-editor-color-gradient", "open", false);
+
+    if (color) {
+      model.pickr.setColor(color);
+    } else {
+      model.pickr.setColor("#fff");
+    }
+
+    if (isLink) {
+      view.val(".link-form input", e.target.href);
+
+      view.onInline(".link-form button", "onclick", () => {
+        e.target.href = view.val(".link-form input");
+        view.toggle(".link-form", "d-none", true);
+      });
+    }
+  });
+
+  model.quill.getModule("toolbar").addHandler("link", (value) => {
+    const inputLink = document.querySelector('.link-form input[type="text"]');
+    const range = model.quill.getSelection();
+
+    if (value && range) {
+      view.val(".link-form input", "");
+      view.toggle(".link-form", "d-none", false);
+
+      view.onInline(".link-form button", "onclick", () => {
+        model.quill.format("link", inputLink.value);
+        view.toggle(".link-form", "d-none", true);
+
+        const currentFormats = model.quill.getFormat(range);
+        if (currentFormats.color) {
+          model.quill.format("color", false);
+        }
+      });
+
+      return;
+    }
+
+    model.quill.format("link", false);
+  });
+
+  model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+    const Delta = Quill.import("delta");
 
     if (node.tagName === "IMG") {
       return new Delta().insert({ image: node.getAttribute("src") });
@@ -346,215 +364,101 @@ export default function initLibraries(controller) {
     return new Delta().insert(node.innerText || "");
   });
 
-  controller.model.quill.on("text-change", function () {
-    const linkFormCostum = document.querySelector(".link-form");
-    linkFormCostum.classList.toggle("d-none", true);
+  model.quill.on("text-change", function () {
+    view.toggle(".link-form", "d-none", true);
   });
 
-  controller.model.quill.root.addEventListener("click", function (event) {
-    const color = event.target.style.color;
-    controller.model.latestSelection = null;
+  view.on("#text-editor-color-gradient", "click", (e) => {
+    if (!model.latestSelection) model.latestSelection = model.quill.getSelection();
 
-    if (color !== "") {
-      controller.model.pickr.setColor(color);
+    if (model.selectionHasLink()) {
+      view.toggle(".gradient-form", "d-none", true);
+      return alert("Cant gradient color when there's link in selection");
     }
-
-    const linkFormCostum = document.querySelector(".link-form");
-    const gradientForm = document.querySelector(".gradient-form");
-    const saveButton = linkFormCostum.querySelector("button");
-
-    document.getElementById("text-editor-color-gradient").dataset.open = "false";
-    gradientForm.classList.toggle("d-none", true);
-
-    const a = event.target.closest("a");
-    linkFormCostum.classList.toggle("d-none", !a);
-    if (!a) return;
-
-    const inputLink = linkFormCostum.querySelector('input[type="text"]');
-    inputLink.value = a.href;
-
-    saveButton.onclick = () => {
-      a.href = inputLink.value;
-      linkFormCostum.classList.toggle("d-none", true);
-    };
-  });
-
-  controller.model.quill.getModule("toolbar").addHandler("link", (value) => {
-    const linkFormCostum = document.querySelector(".link-form");
-    const inputLink = linkFormCostum.querySelector('input[type="text"]');
-    const saveButton = linkFormCostum.querySelector("button");
-    inputLink.value = "";
-
-    if (value) {
-      const range = controller.model.quill.getSelection();
-      if (range && range.length !== 0) {
-        linkFormCostum.classList.toggle("d-none", false);
-
-        saveButton.onclick = () => {
-          controller.model.quill.format("link", inputLink.value);
-          linkFormCostum.classList.toggle("d-none", true);
-        };
-      }
-    } else {
-      controller.model.quill.format("link", false);
-    }
-  });
-
-  document.getElementById("text-editor-color-gradient").addEventListener("click", (e) => {
-    document.body.classList.add("select-costum");
-
-    const gradientForm = document.querySelector(".gradient-form");
-    controller.model.latestSelection = controller.model.quill.getSelection();
 
     const state = e.target.dataset.open === "true" ? false : true;
     e.target.dataset.open = state;
 
-    gradientForm.classList.toggle("d-none", !state);
+    view.toggle(".gradient-form", "d-none", !state);
 
-    const colorStart = controller.model.gradientColorStart.getColor().toHEXA().toString();
-    const colorEnd = controller.model.gradientColorEnd.getColor().toHEXA().toString();
+    const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
+    const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
 
-    controller.model.formatTextToGradient(colorStart, colorEnd);
+    controller.formatTextToGradient(model.latestSelection, colorStart, colorEnd);
   });
 
-  /* =========================================
-       PICKR JS
-       ========================================= */
-  controller.model.pickr = Pickr.create({
+  /* 
+  =========================================
+     Pickr
+  ========================================= 
+  */
+
+  const pickrComponents = {
+    preview: true,
+    opacity: true,
+    hue: true,
+    interaction: { input: true },
+  };
+
+  model.pickr = Pickr.create({
     el: "#text-editor-color-picker",
     theme: "nano",
     default: "#ff66ab",
-    components: {
-      preview: true,
-      opacity: true,
-      hue: true,
-      interaction: {
-        input: true,
-      },
-    },
+    components: pickrComponents,
   });
 
-  controller.model.pickr.on("show", (color) => {
-    controller.model.latestSelection = controller.model.quill.getSelection();
-
-    const hexColor = color.toHEXA().toString();
-    document.body.classList.add("select-costum");
-
-    const range = controller.model.latestSelection;
-    if (range) {
-      controller.model.quill.formatText(range.index, range.length, "color", hexColor);
-    }
-  });
-
-  controller.model.pickr.on("hide", () => {
-    document.body.classList.remove("select-costum");
-    controller.model.latestSelection = null;
-  });
-
-  controller.model.pickr.on("change", (color) => {
-    const hex = color.toHEXA().toString();
-    controller.model.pickr.getRoot().button.style.setProperty("--pcr-color", hex);
-
-    if (!controller.model.latestSelection) return;
-
-    for (let i = controller.model.latestSelection.index; i < controller.model.latestSelection.index + controller.model.latestSelection.length; i++) {
-      const charFormat = controller.model.quill.getFormat(i, 1);
-      if (charFormat.link) {
-        controller.model.latestSelection = null;
-        alert("Color cannot be applied while there is a link in the selected text.");
-        return;
-      }
-    }
-
-    if (controller.model.latestSelection) {
-      const range = controller.model.latestSelection;
-      controller.model.quill.formatText(range.index, range.length, "color", hex);
-    }
-  });
-
-  controller.model.gradientColorStart = Pickr.create({
+  model.gradientColorStart = Pickr.create({
     el: "#gradient-color-start",
     theme: "nano",
     default: "#00ECFF",
-    components: {
-      preview: true,
-      opacity: true,
-      hue: true,
-      interaction: {
-        input: true,
-      },
-    },
+    components: pickrComponents,
   });
 
-  controller.model.gradientColorEnd = Pickr.create({
+  model.gradientColorEnd = Pickr.create({
     el: "#gradient-color-end",
     theme: "nano",
     default: "#FDD205",
-    components: {
-      preview: true,
-      opacity: true,
-      hue: true,
-      interaction: {
-        input: true,
-      },
-    },
+    components: pickrComponents,
   });
 
-  controller.model.gradientColorStart.on("change", (color) => {
+  model.pickr.on("change", (color) => {
+    const hex = color.toHEXA().toString();
+    model.pickr.getRoot().button.style.setProperty("--pcr-color", hex);
+
+    if (!model.latestSelection) return;
+    model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
+  });
+
+  model.pickr.on("show", (color) => {
+    const hex = color.toHEXA().toString();
+    if (!model.latestSelection) model.latestSelection = model.quill.getSelection();
+    if (model.selectionHasLink()) {
+      model.pickr.hide();
+      return alert("Cant apply color when there's link in selection");
+    }
+
+    model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
+  });
+
+  model.gradientColorStart.on("change", (color) => {
     const colorStart = color.toHEXA().toString();
-    controller.model.gradientColorStart.getRoot().button.style.setProperty("--pcr-color", colorStart);
+    const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
 
-    if (!controller.model.latestSelection) return;
+    model.gradientColorStart.getRoot().button.style.setProperty("--pcr-color", colorStart);
 
-    for (let i = controller.model.latestSelection.index; i < controller.model.latestSelection.index + controller.model.latestSelection.length; i++) {
-      const charFormat = controller.model.quill.getFormat(i, 1);
-      if (charFormat.link) {
-        controller.model.latestSelection = null;
-
-        alert("Gradient color cannot be applied while there is a link in the selected text.");
-        return;
-      }
+    if (model.latestSelection) {
+      controller.formatTextToGradient(model.latestSelection, colorStart, colorEnd);
     }
-
-    const colorEnd = controller.model.gradientColorEnd.getColor().toHEXA().toString();
-
-    controller.model.formatTextToGradient(colorStart, colorEnd);
   });
 
-  controller.model.gradientColorStart.on("show", () => {
-    document.body.classList.add("select-costum");
-  });
-
-  controller.model.gradientColorStart.on("hide", () => {
-    document.body.classList.remove("select-costum");
-  });
-
-  controller.model.gradientColorEnd.on("change", (color) => {
+  model.gradientColorEnd.on("change", (color) => {
+    const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
     const colorEnd = color.toHEXA().toString();
-    controller.model.gradientColorEnd.getRoot().button.style.setProperty("--pcr-color", colorEnd);
 
-    if (!controller.model.latestSelection) return;
+    model.gradientColorEnd.getRoot().button.style.setProperty("--pcr-color", colorEnd);
 
-    for (let i = controller.model.latestSelection.index; i < controller.model.latestSelection.index + controller.model.latestSelection.length; i++) {
-      const charFormat = controller.model.quill.getFormat(i, 1);
-      if (charFormat.link) {
-        controller.model.latestSelection = null;
-
-        alert("Gradient color cannot be applied while there is a link in the selected text.");
-        return;
-      }
+    if (model.latestSelection) {
+      controller.formatTextToGradient(model.latestSelection, colorStart, colorEnd);
     }
-
-    const colorStart = controller.model.gradientColorStart.getColor().toHEXA().toString();
-
-    controller.model.formatTextToGradient(colorStart, colorEnd);
-  });
-
-  controller.model.gradientColorEnd.on("show", () => {
-    document.body.classList.add("select-costum");
-  });
-
-  controller.model.gradientColorEnd.on("hide", () => {
-    document.body.classList.remove("select-costum");
   });
 }

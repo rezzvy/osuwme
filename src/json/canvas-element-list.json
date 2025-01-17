@@ -2,90 +2,101 @@
   "quote": {
     "tooltipTitle": "Quote",
     "icon": "fa-quote-right",
-    "modalPath": "./src/modal/quote.html",
-    "skeletonPath": "./src/skeleton/quote.html",
+    "modalPath": "./src/modal/modal_quote.html",
+    "skeletonPath": "./src/skeleton/skeleton_quote.html",
+    "handlerPath": "../../src/handler/handler_quote.js",
     "editable": true
   },
   "imgmap": {
     "tooltipTitle": "Image Map",
     "icon": "fa-map",
-    "modalPath": "./src/modal/imgmap.html",
-    "skeletonPath": "./src/skeleton/imgmap.html",
+    "modalPath": "./src/modal/modal_imgmap.html",
+    "skeletonPath": "./src/skeleton/skeleton_imgmap.html",
+    "handlerPath": "../../src/handler/handler_imgmap.js",
     "editable": true
   },
   "list": {
     "tooltipTitle": "List",
     "icon": "fa-list",
-    "modalPath": "./src/modal/list.html",
-    "skeletonPath": "./src/skeleton/list.html",
+    "modalPath": "./src/modal/modal_list.html",
+    "skeletonPath": "./src/skeleton/skeleton_list.html",
+    "handlerPath": "../../src/handler/handler_list.js",
     "editable": true
   },
   "heading": {
     "tooltipTitle": "Heading",
     "icon": "fa-header",
-    "modalPath": "./src/modal/heading.html",
-    "skeletonPath": "./src/skeleton/heading.html",
+    "modalPath": "./src/modal/modal_heading.html",
+    "skeletonPath": "./src/skeleton/skeleton_heading.html",
+    "handlerPath": "../../src/handler/handler_heading.js",
     "editable": true
   },
   "text": {
     "tooltipTitle": "Text",
     "icon": "fa-paragraph",
-    "modalPath": "./src/modal/text.html",
-    "skeletonPath": "./src/skeleton/text.html",
+    "modalPath": "./src/modal/modal_text.html",
+    "skeletonPath": "./src/skeleton/skeleton_text.html",
+    "handlerPath": "../../src/handler/handler_text.js",
     "editable": true
   },
   "image": {
     "tooltipTitle": "Image",
     "icon": "fa-picture-o",
-    "modalPath": "./src/modal/image.html",
-    "skeletonPath": "./src/skeleton/image.html",
+    "modalPath": "./src/modal/modal_image.html",
+    "skeletonPath": "./src/skeleton/skeleton_image.html",
+    "handlerPath": "../../src/handler/handler_image.js",
     "editable": true
   },
   "audio": {
     "tooltipTitle": "Audio",
     "icon": "fa-music",
-    "modalPath": "./src/modal/audio.html",
-    "skeletonPath": "./src/skeleton/audio.html",
+    "modalPath": "./src/modal/modal_audio.html",
+    "skeletonPath": "./src/skeleton/skeleton_audio.html",
+    "handlerPath": "../../src/handler/handler_audio.js",
     "editable": true
   },
   "youtube": {
     "tooltipTitle": "Video",
     "icon": "fa-youtube-play",
-    "modalPath": "./src/modal/youtube.html",
-    "skeletonPath": "./src/skeleton/youtube.html",
+    "modalPath": "./src/modal/modal_youtube.html",
+    "skeletonPath": "./src/skeleton/skeleton_youtube.html",
+    "handlerPath": "../../src/handler/handler_youtube.js",
     "editable": true
   },
   "notice": {
     "tooltipTitle": "Notice",
     "icon": "fa-cube",
-    "skeletonPath": "./src/skeleton/notice.html",
+    "skeletonPath": "./src/skeleton/skeleton_notice.html",
     "editable": false
   },
   "center": {
     "tooltipTitle": "Center Block",
     "icon": "fa-align-center",
-    "skeletonPath": "./src/skeleton/center.html",
+    "skeletonPath": "./src/skeleton/skeleton_center.html",
     "editable": false
   },
   "spoilerbox": {
     "tooltipTitle": "Spoiler Box",
     "icon": "fa-caret-down",
-    "modalPath": "./src/modal/spoilerbox.html",
-    "skeletonPath": "./src/skeleton/spoilerbox.html",
+    "modalPath": "./src/modal/modal_spoilerbox.html",
+    "skeletonPath": "./src/skeleton/skeleton_spoilerbox.html",
+    "handlerPath": "../../src/handler/handler_spoilerbox.js",
     "editable": true
   },
   "codeblock": {
     "tooltipTitle": "Code Block",
     "icon": "fa-code",
-    "modalPath": "./src/modal/codeblock.html",
-    "skeletonPath": "./src/skeleton/codeblock.html",
+    "modalPath": "./src/modal/modal_codeblock.html",
+    "skeletonPath": "./src/skeleton/skeleton_codeblock.html",
+    "handlerPath": "../../src/handler/handler_codeblock.js",
     "editable": true
   },
   "spacing": {
     "tooltipTitle": "Spacing",
     "icon": "fa-arrows-v",
-    "modalPath": "./src/modal/spacing.html",
-    "skeletonPath": "./src/skeleton/spacing.html",
+    "modalPath": "./src/modal/modal_spacing.html",
+    "skeletonPath": "./src/skeleton/skeleton_spacing.html",
+    "handlerPath": "../../src/handler/handler_spacing.js",
     "editable": true
   }
 }
