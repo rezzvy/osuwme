@@ -16,6 +16,7 @@ export default class View {
 
     // Sticky Element List Button
     this.menuStickyContainer = document.getElementById("element-list-section");
+    this.menuStickyButtonWrapper = document.getElementById("canvas-element-list");
     this.isMenuSticky = true;
 
     this.isUpdating = false;

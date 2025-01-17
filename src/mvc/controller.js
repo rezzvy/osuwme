@@ -171,6 +171,20 @@ export default class Controller {
         audio.currentTime = 0;
       }
     });
+
+    // Element List Slider Button Event
+    this.view.on("#canvas-element-list-slider", "click", (e) => {
+      if (!e.target.matches("[data-action]")) return;
+
+      const action = e.target.dataset.action;
+      const container = this.view.menuStickyButtonWrapper;
+
+      if (action === "scroll-to-left") {
+        container.scrollTo({ left: container.scrollLeft - 250, behavior: "smooth" });
+      } else if (action === "scroll-to-right") {
+        container.scrollTo({ left: container.scrollLeft + 250, behavior: "smooth" });
+      }
+    });
   }
 
   /* 

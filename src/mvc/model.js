@@ -46,7 +46,7 @@ export default class Model {
   }
 
   /* =========================================
-     Getter and Getter Methods
+     Getter/Setter and Getter Methods
   ========================================= */
 
   // Returns the current handler based on the active edit key

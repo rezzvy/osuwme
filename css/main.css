@@ -248,4 +248,8 @@ body:has(#canvas-wrapper:empty) #download-as-text {
     left: 50%;
     transform: translateX(-50%);
   }
+
+  #canvas-element-list {
+    overflow: hidden !important;
+  }
 }
