@@ -249,6 +249,7 @@ export default class Controller {
     const innerContainer = this.view.el("[data-container]", canvasItemContent);
 
     this.view.clearTooltip(e);
+    this.view.clearActiveTooltips();
     this.view.remove(canvasItem);
 
     if (innerContainer) {

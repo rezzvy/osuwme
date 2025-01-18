@@ -42,7 +42,7 @@ export default class {
     this.view.toggle("body", "select-costum", true);
     this.view.disable(false, "#modal-edit-save");
 
-    this.view.html(this.editorContainer.firstElementChild, this.targetContainer.innerHTML);
+    this.view.html(this.editorContainer.firstElementChild, this.targetContainer.innerHTML.trim());
   }
 
   close() {
@@ -59,11 +59,13 @@ export default class {
     this.view.els("p", editorContent).forEach((paragraph) => {
       const spacingElement = this.view.el("br", paragraph);
 
-      if (spacingElement) {
-        this.view.dataset(spacingElement, "spacing", "%SPCITM%");
-      }
-
+      if (spacingElement) this.view.dataset(spacingElement, "spacing", "%SPCITM%");
       if (!paragraph.innerHTML.trim()) this.view.remove(paragraph);
+
+      this.view.html(
+        paragraph,
+        paragraph.innerHTML.replace(/(?<=^|>)[^<>]+(?=<|$)/g, (text) => text.replace(/ /g, "\u00A0"))
+      );
     });
 
     this.view.html(this.targetContainer, editorContent.innerHTML);

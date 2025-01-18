@@ -289,6 +289,10 @@ body.select-costum ::selection {
   content: attr(data-title);
 }
 
+.osu-style ul li[data-title=""]:before {
+  content: unset !important;
+}
+
 .osu-style ul {
   padding-left: 20px;
 }
