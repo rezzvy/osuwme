@@ -113,12 +113,13 @@ body.select-costum ::selection {
 .ph.ph-quote::before,
 .ph.ph-spoilerbox::before,
 .osu-style details summary:empty:not(:has(*))::after,
-.osu-style li::after {
+.osu-style li:empty:not(:has(*))::after {
   content: "Drop here";
   display: block;
   color: rgba(255, 255, 255, 0.25);
-  letter-spacing: 6px;
-  font-weight: 400;
+  letter-spacing: 4px;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .ph::after {
@@ -200,8 +201,8 @@ body.select-costum ::selection {
 .osu-style details summary {
   display: flex;
   align-items: start;
-  flex-wrap: wrap;
   gap: 14px;
+  overflow: hidden;
 }
 
 .osu-style details summary > :first-of-type {
@@ -222,6 +223,10 @@ body.select-costum ::selection {
   content: "\f0da";
   font-family: "FontAwesome";
   color: #fff;
+}
+
+.osu-style details summary::after {
+  flex-grow: 1;
 }
 
 .osu-style details[open] > summary::before {

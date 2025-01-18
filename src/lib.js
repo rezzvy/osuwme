@@ -50,11 +50,10 @@ export default function initLibraries(controller) {
 
   // Spoilerbox / Box
   model.registerBBCodeConversion("details", (api) => {
-    const title = api.node.dataset.title;
     const isBox = api.node.dataset.box;
 
     if (isBox === "true") {
-      return `[box=${title}${api.content}[/box]%NL%`;
+      return `[box=${api.content}[/box]%NL%`;
     }
 
     return `[spoilerbox]${api.content}[/spoilerbox]%NL%`;
@@ -229,6 +228,8 @@ export default function initLibraries(controller) {
     },
     accepts: (el, target) => {
       if (target.matches("#canvas-element-list")) return false;
+      if (el.matches(".canvas-element-list-btn") && el.dataset.key === "notice" && target.closest(".notice")) return false;
+      if (el.matches(".canvas-element-list-btn") && el.dataset.key === "center" && target.closest("center")) return false;
       if (el.querySelector("center") && target.closest("center")) return false;
       if (el.querySelector(".notice") && target.closest(".notice")) return false;
       if (el.contains(target)) return false;
@@ -267,7 +268,7 @@ export default function initLibraries(controller) {
 
       target.insertBefore(canvasItem, sibling);
 
-      if (target.matches("summary") && !model.isNodeEmpty(target, 2)) view.remove(canvasItem);
+      if ((target.matches("summary") || target.matches("details")) && !model.isNodeEmpty(target, 2)) view.remove(canvasItem);
       view.remove(el);
     }
 
