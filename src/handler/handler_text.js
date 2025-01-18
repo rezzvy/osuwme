@@ -46,6 +46,10 @@ export default class {
   }
 
   close() {
+    this.model.quill.history.clear();
+    this.model.latestSelection = null;
+
+    this.view.html(".ql-editor", "");
     this.view.toggle("body", "select-costum", false);
   }
 

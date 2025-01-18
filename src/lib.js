@@ -45,7 +45,7 @@ export default function initLibraries(controller) {
       return `[c]${api.content}[/c]`;
     }
 
-    return `[code]${api.content}[/code]%NL%`;
+    return `[code]${api.node.dataset.raw}[/code]%NL%`;
   });
 
   // Spoilerbox / Box
@@ -409,7 +409,7 @@ export default function initLibraries(controller) {
 
   const pickrComponents = {
     preview: true,
-    opacity: true,
+    opacity: false,
     hue: true,
     interaction: { input: true },
   };

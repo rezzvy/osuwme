@@ -70,9 +70,8 @@ export default class Model {
   }
 
   // Converts a string into a single-line representation
-  getSingleLine(string, isHTML = true) {
-    if (isHTML) return string.replace(/\s{2,}/g, "").replace(/>\s+</g, "><");
-    return string.replace(/\s+/g, " ").trim();
+  getSingleLine(string) {
+    return string.replace(/\s{2,}/g, "").replace(/>\s+</g, "><");
   }
 
   // Extracts a YouTube video ID from a URL
@@ -82,6 +81,15 @@ export default class Model {
     const match = link.match(regex);
 
     return match ? match[1] || match[2] : null;
+  }
+
+  // Replace textarea spacing with prefix or reverse it
+  replaceTextAreaSpacing(isConvert, value) {
+    if (isConvert) {
+      return value.replace(/\n/g, "%SPCITM%").replace(/ /g, "&nbsp;");
+    }
+
+    return value.replace(/&nbsp;/g, " ").replace(/%SPCITM%/g, "\n");
   }
 
   /* =========================================

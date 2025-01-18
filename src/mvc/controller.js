@@ -295,6 +295,12 @@ export default class Controller {
     this.view.html("#canvas-wrapper", html);
     this.view.toggle("#canvas-wrapper-ph", "d-none", html);
     this.view.css("#canvas", "");
+
+    this.view.els("code").forEach((el) => {
+      if (el.classList.contains("inline") || !el.dataset.raw) return;
+
+      this.view.text(el, this.model.replaceTextAreaSpacing(false, el.dataset.raw));
+    });
   }
 
   // Generate a downloadable blob and clear it afterward.

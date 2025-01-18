@@ -50,6 +50,7 @@ export default class {
   }
 
   save() {
+    this.view.dataset(this.targetElement, "raw", this.model.replaceTextAreaSpacing(true, this.textAreaElement.value));
     this.view.text(this.targetElement, this.textAreaElement.value);
   }
 }
