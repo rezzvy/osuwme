@@ -1,12 +1,22 @@
 {
-  "one": {
+  "1": {
     "title": "Kumi Lone Wolf",
     "des": "Personal BBCode made by <a href='https://osu.ppy.sh/users/8804560' class='text-decoration-underline'>Kumi Lone Wolf</a>",
     "templatePath": "./src/templates/kumi_lone_wolf.html"
   },
-  "two": {
+  "2": {
     "title": "peppy",
     "des": "<a href='https://osu.ppy.sh/users/2' class='text-decoration-underline'>Peppy's</a> osu! userpage BBCode",
     "templatePath": "./src/templates/peppy.html"
+  },
+  "3": {
+    "title": "Simple ASCII Art",
+    "des": "Example Template",
+    "templatePath": "./src/templates/simple_ascii_art.html"
+  },
+  "4": {
+    "title": "Simple Personal",
+    "des": "Example Template",
+    "templatePath": "./src/templates/simple_personal.html"
   }
 }

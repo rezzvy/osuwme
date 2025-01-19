@@ -39,7 +39,9 @@ body.select-costum ::selection {
 
 [data-action="move"] {
   touch-action: none;
+  cursor: grab !important;
 }
+
 /* =========================================
    Background Colors
    ========================================= */
@@ -245,6 +247,7 @@ body.select-costum ::selection {
   border-radius: 4px;
   padding: 10px;
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .osu-style code.inline {

@@ -62,10 +62,8 @@ export default class {
       if (spacingElement) this.view.dataset(spacingElement, "spacing", "%SPCITM%");
       if (!paragraph.innerHTML.trim()) this.view.remove(paragraph);
 
-      this.view.html(
-        paragraph,
-        paragraph.innerHTML.replace(/(?<=^|>)[^<>]+(?=<|$)/g, (text) => text.replace(/ /g, "\u00A0"))
-      );
+      const spacing = paragraph.innerHTML.replace(/(?<=^|>)[^<>]+(?=<|$)/g, (text) => text.replace(/ /g, "\u00A0"));
+      this.view.html(paragraph, spacing);
     });
 
     this.view.html(this.targetContainer, editorContent.innerHTML);

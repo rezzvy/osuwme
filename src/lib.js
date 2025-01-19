@@ -31,21 +31,13 @@ export default function initLibraries(controller) {
     return `%SPCITM%`.repeat(level);
   });
 
-  // Empty Content
-  model.registerBBCodeConversion("._content > p > *", (api) => {
-    const text = api.node.textContent;
-    if (text.trim() !== "") return api.content;
-
-    return "&nbsp;" + api.node.textContent;
-  });
-
   // Code
   model.registerBBCodeConversion("code", (api) => {
     if (api.node.classList.contains("inline")) {
       return `[c]${api.content}[/c]`;
     }
 
-    return `[code]${api.node.dataset.raw}[/code]%NL%`;
+    return `[code]${api.node.dataset.raw ? api.node.dataset.raw : api.content}[/code]%NL%`;
   });
 
   // Spoilerbox / Box
@@ -246,7 +238,7 @@ export default function initLibraries(controller) {
     if (!el.matches(".canvas-element-list-btn")) return;
 
     if (view.el("#canvas-wrapper-ph").classList.contains("d-none") && model.isNodeEmpty("#canvas-wrapper")) {
-      view.toggle(view.canvasWrapperPhElement, "d-none", false);
+      view.toggle("#canvas-wrapper-ph", "d-none", false);
     }
   });
 
