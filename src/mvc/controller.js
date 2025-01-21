@@ -185,6 +185,22 @@ export default class Controller {
         container.scrollTo({ left: container.scrollLeft + 250, behavior: "smooth" });
       }
     });
+
+    // Gradient Select Event
+    this.view.on("#gradient-type-select", "change", (e) => {
+      this.gradientSelectHandler(e);
+    });
+
+    // Gradient Randomize Button Event
+    this.view.on("#randomize-selected-text-btn", "click", (e) => {
+      if (this.model.latestSelection && this.model.currentGradient !== "random") return;
+
+      const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
+        (color) => color.getColor().toHEXA().toString()
+      );
+
+      this.formatTextToGradient(this.model.currentGradient, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
+    });
   }
 
   /* 
@@ -192,6 +208,55 @@ export default class Controller {
      Handler
   ========================================= 
   */
+
+  // Handler for Gradient Select's "onChange"
+  gradientSelectHandler(e) {
+    const value = e.target.value;
+    this.model.currentGradient = value;
+
+    if (this.model.latestSelection) {
+      const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
+        (color) => color.getColor().toHEXA().toString()
+      );
+
+      this.formatTextToGradient(value, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
+    }
+
+    const settings = {
+      horizontal: {
+        text: "Start",
+        columns: ["row-cols-3", "row-cols-2"],
+        toggles: { middle: true, start: false, end: false, randomize: true },
+      },
+      middle: {
+        text: "Start/End",
+        columns: ["row-cols-3", "row-cols-2"],
+        toggles: { middle: false, start: false, end: true, randomize: true },
+      },
+      threeColored: {
+        text: "Start",
+        columns: ["row-cols-2", "row-cols-3"],
+        toggles: { middle: false, start: false, end: false, randomize: true },
+      },
+      random: {
+        toggles: { middle: true, start: true, end: true, randomize: false },
+      },
+      default: {
+        toggles: { start: true, middle: true, end: true, randomize: true },
+      },
+    };
+
+    const toggleSettings = settings[value] || settings.default;
+
+    if (toggleSettings.text) this.view.text("#gradient-start div", toggleSettings.text);
+    if (toggleSettings.columns) this.view.replace(".color-picker-wrapper", ...toggleSettings.columns);
+
+    const toggles = toggleSettings.toggles;
+    this.view.toggle("#gradient-start", "d-none", toggles.start);
+    this.view.toggle("#gradient-middle", "d-none", toggles.middle);
+    this.view.toggle("#gradient-end", "d-none", toggles.end);
+    this.view.toggle(".randomize-btn-container", "d-none", toggles.randomize);
+  }
 
   // Handler for copying text to the clipboard.
   async toClipboardHandler(textarea) {
@@ -313,11 +378,17 @@ export default class Controller {
   }
 
   // Format selected text with a gradient, using start and end colors.
-  formatTextToGradient(range, colorStart, colorEnd) {
+  formatTextToGradient(type, range, colorStart, colorMiddle, colorEnd) {
     if (!range) return;
 
     const text = this.model.quill.getText(range.index, range.length);
-    const gradients = this.model.generateGradient(text, colorStart, colorEnd);
+
+    let gradients = "";
+    if (type === "horizontal") gradients = this.model.generateGradient(text, colorStart, colorEnd);
+    if (type === "middle") gradients = this.model.generateMiddleGradient(text, colorStart, colorMiddle);
+    if (type === "threeColored") gradients = this.model.generateThreeColorGradient(text, colorStart, colorMiddle, colorEnd);
+    if (type === "rainbow") gradients = this.model.generateRainbowColors(text);
+    if (type === "random") gradients = this.model.generateRandomColors(text);
 
     let colorIndex = 0;
     for (let i = 0; i < range.length; i++) {

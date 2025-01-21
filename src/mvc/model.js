@@ -25,6 +25,8 @@ export default class Model {
       target: "", // Target element for the edit
       modal: "", // Associated modal for the edit
     };
+
+    this.currentGradient = "horizontal";
   }
 
   /* =========================================
@@ -232,6 +234,27 @@ export default class Model {
      Color Conversion
   ========================================= */
 
+  // Converts HSL values to RGB format
+  hslToRgb(h, s, l) {
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let r, g, b;
+
+    if (h < 60) [r, g, b] = [c, x, 0];
+    else if (h < 120) [r, g, b] = [x, c, 0];
+    else if (h < 180) [r, g, b] = [0, c, x];
+    else if (h < 240) [r, g, b] = [0, x, c];
+    else if (h < 300) [r, g, b] = [x, 0, c];
+    else [r, g, b] = [c, 0, x];
+
+    return {
+      r: Math.round((r + m) * 255),
+      g: Math.round((g + m) * 255),
+      b: Math.round((b + m) * 255),
+    };
+  }
+
   // Converts an RGB string to a hexadecimal color
   rgbToHex(rgbString) {
     const [r, g, b] = rgbString.match(/\d+/g).map(Number);
@@ -269,6 +292,78 @@ export default class Model {
       const g = Math.round(colorStartRgb.g + ginc * i);
       const b = Math.round(colorStartRgb.b + binc * i);
 
+      colors.push(this.rgbToHex(`rgb(${r}, ${g}, ${b})`));
+    }
+
+    return colors;
+  }
+
+  // Generates a gradient with a middle color transition between the start and end colors
+  generateMiddleGradient(text, colorStart = "#FF0000", colorMiddle = "#00FF00", colorEnd = colorStart) {
+    const colors = [];
+    const textLength = text.length;
+    const midPoint = Math.floor(textLength / 2);
+
+    const colorStartRgb = this.hexToRgb(colorStart);
+    const colorMiddleRgb = this.hexToRgb(colorMiddle);
+    const colorEndRgb = this.hexToRgb(colorEnd);
+
+    const rinc1 = (colorMiddleRgb.r - colorStartRgb.r) / midPoint;
+    const ginc1 = (colorMiddleRgb.g - colorStartRgb.g) / midPoint;
+    const binc1 = (colorMiddleRgb.b - colorStartRgb.b) / midPoint;
+
+    const rinc2 = (colorEndRgb.r - colorMiddleRgb.r) / (textLength - midPoint);
+    const ginc2 = (colorEndRgb.g - colorMiddleRgb.g) / (textLength - midPoint);
+    const binc2 = (colorEndRgb.b - colorMiddleRgb.b) / (textLength - midPoint);
+
+    for (let i = 0; i < textLength; i++) {
+      let r, g, b;
+
+      if (i < midPoint) {
+        r = Math.round(colorStartRgb.r + rinc1 * i);
+        g = Math.round(colorStartRgb.g + ginc1 * i);
+        b = Math.round(colorStartRgb.b + binc1 * i);
+      } else {
+        r = Math.round(colorMiddleRgb.r + rinc2 * (i - midPoint));
+        g = Math.round(colorMiddleRgb.g + ginc2 * (i - midPoint));
+        b = Math.round(colorMiddleRgb.b + binc2 * (i - midPoint));
+      }
+
+      colors.push(this.rgbToHex(`rgb(${r}, ${g}, ${b})`));
+    }
+
+    return colors;
+  }
+
+  // Generates a gradient transitioning through three colors: start, middle, and end
+  generateThreeColorGradient(text, colorStart = "#FF0000", colorMiddle = "#00FF00", colorEnd = "#0000FF") {
+    return this.generateMiddleGradient(text, colorStart, colorMiddle, colorEnd);
+  }
+
+  // Generates a rainbow gradient for the given text
+  generateRainbowColors(text) {
+    const colors = [];
+    const textLength = text.length;
+
+    for (let i = 0; i < textLength; i++) {
+      const fraction = i / textLength;
+      const hue = Math.round(fraction * 360);
+      const rgb = this.hslToRgb(hue, 1, 0.5);
+      colors.push(this.rgbToHex(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`));
+    }
+
+    return colors;
+  }
+
+  // Generates random colors for each letter in the text
+  generateRandomColors(text) {
+    const colors = [];
+    const textLength = text.length;
+
+    for (let i = 0; i < textLength; i++) {
+      const r = Math.floor(Math.random() * 128) + 128;
+      const g = Math.floor(Math.random() * 128) + 128;
+      const b = Math.floor(Math.random() * 128) + 128;
       colors.push(this.rgbToHex(`rgb(${r}, ${g}, ${b})`));
     }
 

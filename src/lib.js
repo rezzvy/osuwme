@@ -234,7 +234,13 @@ export default function initLibraries(controller) {
     revertOnSpill: true,
   });
 
+  model.drake.on("drag", (el) => {
+    view.toggle(document.body, "on-grabbing", true);
+  });
+
   model.drake.on("dragend", (el) => {
+    view.toggle(document.body, "on-grabbing", false);
+
     if (!el.matches(".canvas-element-list-btn")) return;
 
     if (view.el("#canvas-wrapper-ph").classList.contains("d-none") && model.isNodeEmpty("#canvas-wrapper")) {
@@ -388,9 +394,10 @@ export default function initLibraries(controller) {
     view.toggle(".gradient-form", "d-none", !state);
 
     const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
+    const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
     const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
 
-    controller.formatTextToGradient(model.latestSelection, colorStart, colorEnd);
+    controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
   });
 
   /* 
@@ -420,6 +427,13 @@ export default function initLibraries(controller) {
     components: pickrComponents,
   });
 
+  model.gradientColorMiddle = Pickr.create({
+    el: "#gradient-color-middle",
+    theme: "nano",
+    default: "#FF00E5",
+    components: pickrComponents,
+  });
+
   model.gradientColorEnd = Pickr.create({
     el: "#gradient-color-end",
     theme: "nano",
@@ -427,9 +441,15 @@ export default function initLibraries(controller) {
     components: pickrComponents,
   });
 
+  view.colorPickerSolid = model.pickr.getRoot().button;
+  view.colorPickerGradientStart = model.gradientColorStart.getRoot().button;
+  view.colorPickerGradientMiddle = model.gradientColorMiddle.getRoot().button;
+  view.colorPickerGradientEnd = model.gradientColorEnd.getRoot().button;
+
   model.pickr.on("change", (color) => {
     const hex = color.toHEXA().toString();
-    model.pickr.getRoot().button.style.setProperty("--pcr-color", hex);
+
+    view.colorPickerSolid.style.setProperty("--pcr-color", hex);
 
     if (!model.latestSelection) return;
     model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
@@ -448,23 +468,37 @@ export default function initLibraries(controller) {
 
   model.gradientColorStart.on("change", (color) => {
     const colorStart = color.toHEXA().toString();
+    const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
     const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
 
-    model.gradientColorStart.getRoot().button.style.setProperty("--pcr-color", colorStart);
+    view.colorPickerGradientStart.style.setProperty("--pcr-color", colorStart);
 
     if (model.latestSelection) {
-      controller.formatTextToGradient(model.latestSelection, colorStart, colorEnd);
+      controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
+    }
+  });
+
+  model.gradientColorMiddle.on("change", (color) => {
+    const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
+    const colorMiddle = color.toHEXA().toString();
+    const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
+
+    view.colorPickerGradientMiddle.style.setProperty("--pcr-color", colorMiddle);
+
+    if (model.latestSelection) {
+      controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
     }
   });
 
   model.gradientColorEnd.on("change", (color) => {
     const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
+    const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
     const colorEnd = color.toHEXA().toString();
 
-    model.gradientColorEnd.getRoot().button.style.setProperty("--pcr-color", colorEnd);
+    view.colorPickerGradientEnd.style.setProperty("--pcr-color", colorEnd);
 
     if (model.latestSelection) {
-      controller.formatTextToGradient(model.latestSelection, colorStart, colorEnd);
+      controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
     }
   });
 }

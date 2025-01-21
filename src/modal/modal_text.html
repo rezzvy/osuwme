@@ -15,14 +15,33 @@
 
   <div class="gradient-form d-none bg-white bg-opacity-25 p-1 rounded-1">
     <div class="modal-box p-1 rounded-1">
-      <div>
-        <div>Color Start</div>
-        <button id="gradient-color-start"></button>
+      <select class="form-select form-select-sm" id="gradient-type-select">
+        <option value="horizontal" selected>Horizontal</option>
+        <option value="middle">Middle</option>
+        <option value="threeColored">Three Colored</option>
+        <option value="rainbow">Rainbow</option>
+        <option value="random">Random</option>
+      </select>
+
+      <div class="color-picker-wrapper row row-cols-2 g-1">
+        <div id="gradient-start">
+          <div>Start</div>
+          <button id="gradient-color-start"></button>
+        </div>
+
+        <div id="gradient-middle" class="d-none">
+          <div>Middle</div>
+          <button id="gradient-color-middle"></button>
+        </div>
+
+        <div id="gradient-end">
+          <div>End</div>
+          <button id="gradient-color-end"></button>
+        </div>
       </div>
 
-      <div>
-        <div>Color End</div>
-        <button id="gradient-color-end"></button>
+      <div class="randomize-btn-container mt-3 d-none">
+        <button id="randomize-selected-text-btn" class="btn btn-dark btn-sm w-100">Randomize</button>
       </div>
     </div>
   </div>

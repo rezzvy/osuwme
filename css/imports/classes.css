@@ -29,6 +29,10 @@ body.select-costum ::selection {
   background: rgba(255, 255, 255, 0.15) !important;
 }
 
+body.on-grabbing {
+  cursor: grabbing;
+}
+
 .resizeable {
   resize: both;
 }
@@ -39,7 +43,14 @@ body.select-costum ::selection {
 
 [data-action="move"] {
   touch-action: none;
+}
+
+body:not(.on-grabbing) [data-action="move"] {
   cursor: grab !important;
+}
+
+body.on-grabbing [data-action="move"] {
+  cursor: grabbing !important;
 }
 
 /* =========================================
