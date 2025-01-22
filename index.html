@@ -68,9 +68,9 @@
                   <i class="fa fa-bars fa-fw fa-lg"></i>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-template">Templates</button></li>
-                  <li><button class="dropdown-item" id="import-project-btn">Import</button></li>
-                  <li><button class="dropdown-item" id="export-project-btn">Export</button></li>
+                  <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-template">Project Templates</button></li>
+                  <li><button class="dropdown-item" id="import-project-btn">Load Project</button></li>
+                  <li><button class="dropdown-item" id="export-project-btn">Save Project</button></li>
 
                   <li class="mt-2 border">
                     <div class="text-center small text-pink">Canvas Action</div>
@@ -179,12 +179,18 @@
           <div class="modal-content">
             <div class="modal-header pt-3 pb-0 px-3">
               <div class="section-heading">
-                <h2 class="h6 fw-bold text-light px-3 pb-1">Templates</h2>
+                <h2 class="h6 fw-bold text-light px-3 pb-1">Project Templates</h2>
               </div>
               <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div id="modal-template-body" class="modal-body p-3 d-flex flex-column gap-2"></div>
+            <div class="modal-body" class="p-3">
+              <p class="alert alert-primary p-2">
+                Hi! Let me know if you'd like your template to be featured here. To do so, save the project and send me the saved file on Discord
+                (@Rezzvy). Let's provide awesome templates for everyone! &lt;3
+              </p>
+              <div id="modal-template-body" class="d-flex flex-column gap-2"></div>
+            </div>
           </div>
         </div>
       </div>
