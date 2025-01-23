@@ -27,6 +27,40 @@ export default class Model {
     };
 
     this.currentGradient = "horizontal";
+
+    this.history = {
+      STACK_SIZE: 50, // Not a constant, but I felt like I had to write it in uppercase LOL
+      stack: {
+        undo: [],
+        redo: [],
+        tempMoveData: null,
+      },
+    };
+  }
+
+  /* =========================================
+     History (Undo/Redo)
+  ========================================= */
+
+  // Retrieves the next action from history stack.
+  getHistory(type) {
+    const stack = type === "undo" ? this.history.stack.undo : this.history.stack.redo;
+
+    return stack.length !== 0 ? stack.pop() : false;
+  }
+
+  // Adds an action to history stack.
+  pushHistory(type, stackData) {
+    const stack = type === "undo" ? this.history.stack.undo : this.history.stack.redo;
+    if (stack.length >= this.history.STACK_SIZE) stack.shift();
+
+    stack.push(stackData);
+  }
+
+  // Clears history stacks (both undo and redo).
+  clearHistory() {
+    this.history.stack.undo.length = 0;
+    this.history.stack.redo.length = 0;
   }
 
   /* =========================================

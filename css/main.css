@@ -225,6 +225,8 @@ body.view-mode .canvas-item ._content {
   padding: 0 !important;
 }
 
+body.view-mode #undo-canvas-btn,
+body.view-mode #redo-canvas-btn,
 body.view-mode .canvas-action#expand-all-canvas-btn,
 body.view-mode .canvas-action#collapse-all-canvas-btn,
 body.view-mode .canvas-action#clear-canvas-btn,

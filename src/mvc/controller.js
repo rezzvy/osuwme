@@ -71,7 +71,17 @@ export default class Controller {
 
     // Modal Edit Save Button Event
     this.view.on("#modal-edit-save", "click", () => {
+      const stack = {
+        action: "edit",
+        element: this.model.currentEdit.target.closest(".canvas-item"),
+        content: this.model.currentEdit.target.innerHTML,
+      };
+
       this.model.currentHandler?.save?.();
+
+      stack.newContent = this.model.currentEdit.target.innerHTML;
+      this.pushHistory("undo", stack);
+
       this.view.modalEdit.hide();
     });
 
@@ -201,6 +211,16 @@ export default class Controller {
 
       this.formatTextToGradient(this.model.currentGradient, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
     });
+
+    // Undo Button Event
+    this.view.on("#undo-canvas-btn", "click", () => {
+      this.historyHandler("undo");
+    });
+
+    // Redo Button Event
+    this.view.on("#redo-canvas-btn", "click", () => {
+      this.historyHandler("redo");
+    });
   }
 
   /* 
@@ -208,6 +228,52 @@ export default class Controller {
      Handler
   ========================================= 
   */
+
+  // Handler for undo / redo button click
+  historyHandler(type) {
+    const item = this.model.getHistory(type);
+    if (!item) return;
+
+    this.pushHistory(type === "undo" ? "redo" : "undo", item);
+
+    if (item.action === "add" || item.action === "copy") {
+      if (type === "undo") {
+        this.view.remove(item.element);
+      } else {
+        this.view.appendBefore(item.container, item.element, item.sibling);
+      }
+    }
+
+    if (item.action === "remove") {
+      if (type === "undo") {
+        this.view.appendBefore(item.container, item.element, item.sibling);
+      } else {
+        this.view.remove(item.element);
+      }
+    }
+
+    if (item.action === "edit") {
+      const content = this.view.el("._content", item.element);
+
+      this.view.html(content, type === "undo" ? item.content : item.newContent);
+    }
+
+    if (item.action === "move") {
+      if (type === "undo") {
+        this.view.appendBefore(item.container, item.element, item.sibling || null);
+        this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(item.targetContainer), item.targetContainer, item.container);
+      } else {
+        this.view.appendBefore(item.targetContainer, item.element, item.targetSibling || null);
+        this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(item.container), item.container, item.targetContainer);
+      }
+    }
+
+    if (item.action === "add" || item.action === "remove") {
+      this.view.toggle(item.container, "ph", this.model.isNodeEmpty(item.container) && !item.container.matches("#canvas-wrapper"));
+    }
+
+    this.view.toggle("#canvas-wrapper-ph", "d-none", !this.model.isNodeEmpty("#canvas-wrapper"));
+  }
 
   // Handler for Gradient Select's "onChange"
   gradientSelectHandler(e) {
@@ -304,6 +370,13 @@ export default class Controller {
     this.view.copy(e.closest(".canvas-item"), (copied, original) => {
       this.view.updateBootstrapCollapseId(copied, this.model.uniqueID);
       this.view.appendAfter(copied, original);
+
+      this.pushHistory("undo", {
+        action: "copy",
+        element: copied,
+        container: copied.parentElement,
+        sibling: copied.nextSibling,
+      });
     });
   }
 
@@ -313,6 +386,13 @@ export default class Controller {
     const canvasItemContent = canvasItem.closest("._content");
     const innerContainer = this.view.el("[data-container]", canvasItemContent);
 
+    this.pushHistory("undo", {
+      action: "remove",
+      element: canvasItem,
+      container: canvasItem.parentElement,
+      sibling: canvasItem.nextSibling,
+    });
+
     this.view.clearTooltip(e);
     this.view.clearActiveTooltips();
     this.view.remove(canvasItem);
@@ -320,7 +400,11 @@ export default class Controller {
     if (innerContainer) {
       this.view.toggle(innerContainer, "ph", this.model.isNodeEmpty(innerContainer));
     }
-    this.view.toggle("#canvas-wrapper-ph", "d-none", !this.model.isNodeEmpty("#canvas-wrapper"));
+
+    if (this.model.isNodeEmpty("#canvas-wrapper")) {
+      this.view.text("#canvas-wrapper", "");
+      this.view.toggle("#canvas-wrapper-ph", "d-none", false);
+    }
   }
 
   // Handler for playing an audio file in a canvas item.
@@ -337,6 +421,18 @@ export default class Controller {
   ========================================= 
   */
 
+  // Adds an action to the history stack and toggles the undo and redo buttons
+  pushHistory(type, stack) {
+    this.model.pushHistory(type, stack);
+    this.toggleUndoRedoButtons();
+  }
+
+  // Toggles undo and redo buttons based on their availability
+  toggleUndoRedoButtons() {
+    this.view.disable(!this.model.history.stack.undo.length, "#undo-canvas-btn");
+    this.view.disable(!this.model.history.stack.redo.length, "#redo-canvas-btn");
+  }
+
   // Render a canvas element, optionally auto-append or return the element.
   renderToCanvas(key, editable, uniqueID, autoAppend = true) {
     const skeleton = this.model.getSkeleton(key);
@@ -345,6 +441,14 @@ export default class Controller {
 
     if (autoAppend) {
       this.view.append("#canvas-wrapper", canvasItem);
+
+      this.pushHistory("undo", {
+        action: "add",
+        element: canvasItem,
+        container: canvasItem.parentElement,
+        sibling: canvasItem.nextSibling,
+      });
+
       return;
     }
 
@@ -358,6 +462,9 @@ export default class Controller {
 
   // Set canvas content as HTML and adjust visibility of placeholders.
   setCanvasContent(html) {
+    this.model.clearHistory();
+    this.toggleUndoRedoButtons();
+
     this.view.html("#canvas-wrapper", html);
     this.view.toggle("#canvas-wrapper-ph", "d-none", html);
     this.view.css("#canvas", "");

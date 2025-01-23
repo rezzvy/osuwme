@@ -57,9 +57,25 @@
           <h2 class="visually-hidden">Menu</h2>
 
           <div class="d-flex justify-content-sm-between align-items-sm-center flex-column-reverse gap-1 flex-sm-row">
-            <div class="form-check form-switch m-0 p-0 d-flex gap-2 align-items-center">
-              <input id="canvas-mode-switch" class="form-check-input m-0 p-0 fs-4" type="checkbox" role="switch" checked />
-              <label class="form-check-label" for="canvas-mode-switch">Edit Mode</label>
+            <div class="d-flex flex-wrap gap-3">
+              <div class="form-check form-switch m-0 p-0 d-flex gap-2 align-items-center">
+                <input id="canvas-mode-switch" class="form-check-input m-0 p-0 fs-4" type="checkbox" role="switch" checked />
+                <label class="form-check-label" for="canvas-mode-switch">Edit Mode</label>
+              </div>
+
+              <div>
+                <button id="undo-canvas-btn" class="btn btn-outline-light btn-sm" data-bs-toggle="tooltip" data-bs-title="Undo the last action">
+                  <i class="fa fa-undo fa-fw"></i> Undo
+                </button>
+                <button
+                  id="redo-canvas-btn"
+                  class="btn btn-outline-light btn-sm"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Redo the last undone action"
+                >
+                  <i class="fa fa-repeat fa-fw"></i> Redo
+                </button>
+              </div>
             </div>
 
             <div class="d-flex gap-1 flex-grow-1 flex-sm-grow-0">

@@ -234,8 +234,22 @@ export default function initLibraries(controller) {
     revertOnSpill: true,
   });
 
-  model.drake.on("drag", (el) => {
+  model.drake.on("drag", (el, source) => {
     view.toggle(document.body, "on-grabbing", true);
+    if (el.matches(".canvas-element-list-btn")) return;
+
+    model.history.stack.tempMoveData = {
+      action: "move",
+      element: el,
+      container: source,
+      sibling: el.nextSibling,
+      targetContainer: null,
+      targetSibling: null,
+    };
+  });
+
+  model.drake.on("cancel", () => {
+    if (model.history.stack.tempMoveData) model.history.stack.tempMoveData = null;
   });
 
   model.drake.on("dragend", (el) => {
@@ -255,6 +269,7 @@ export default function initLibraries(controller) {
       view.toggle("#canvas-wrapper-ph", "d-none", true);
     }
 
+    el.classList.add("pe-none");
     el.style.dispay = "block";
     el.style.width = "100%";
   });
@@ -268,10 +283,25 @@ export default function initLibraries(controller) {
 
       if ((target.matches("summary") || target.matches("details")) && !model.isNodeEmpty(target, 2)) view.remove(canvasItem);
       view.remove(el);
+
+      controller.pushHistory("undo", {
+        action: "add",
+        element: canvasItem,
+        container: target,
+        sibling: sibling,
+      });
     }
 
-    if (target.classList.contains("ph")) view.toggle(target, "ph", false);
-    view.toggle(source, "ph", model.isNodeEmpty(source) && !source.matches("li") && !source.matches("summary"));
+    if (model.history.stack.tempMoveData) {
+      model.history.stack.tempMoveData.targetContainer = target;
+      model.history.stack.tempMoveData.targetSibling = sibling;
+
+      controller.pushHistory("undo", model.history.stack.tempMoveData);
+
+      model.history.stack.tempMoveData = null;
+    }
+
+    view.replaceContainerPlaceHolder(model.isNodeEmpty(source), source, target);
   });
 
   /* 

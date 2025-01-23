@@ -27,6 +27,7 @@ export default class View {
     this.remove(".placeholder-container");
     this.toggle("body", "pe-none", false);
     this.toggle("#canvas-element-list", "d-none", false);
+    this.disable(true, "#undo-canvas-btn", "#redo-canvas-btn");
     this.initializeTooltip(`${isMobile ? "focus" : "hover"}`, "main", "#modal-wrapper");
     this.initializeStickyMenu();
   }
@@ -133,6 +134,10 @@ export default class View {
   appendAfter(target, element) {
     const targetElement = this._target(target);
     element.parentElement.insertBefore(targetElement, element.nextElementSibling);
+  }
+
+  appendBefore(container, element, sibling) {
+    this._target(container).insertBefore(element, sibling);
   }
 
   // Remove a target element from the DOM
@@ -271,6 +276,11 @@ export default class View {
     this.toggle(element, "d-none", !boolean);
     this.toggle(element.parentElement, "ph", !boolean);
     this.toggle(element.parentElement, "center-content", boolean && isCenterized);
+  }
+
+  replaceContainerPlaceHolder(boolean, sourceContainer, targetContainer) {
+    if (targetContainer.classList.contains("ph")) this.toggle(targetContainer, "ph", false);
+    this.toggle(sourceContainer, "ph", boolean && !sourceContainer.matches("li") && !sourceContainer.matches("li"));
   }
 
   // Replace the button icon with a loading animation, and restore the original icon when set to false
