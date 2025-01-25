@@ -7,6 +7,7 @@
     "handlerPath": "../../src/handler/handler_quote.js",
     "editable": true
   },
+
   "imgmap": {
     "tooltipTitle": "Image Map",
     "icon": "fa-map",
@@ -37,6 +38,14 @@
     "modalPath": "./src/modal/modal_text.html",
     "skeletonPath": "./src/skeleton/skeleton_text.html",
     "handlerPath": "../../src/handler/handler_text.js",
+    "editable": true
+  },
+  "flags": {
+    "tooltipTitle": "Flag Wrapper",
+    "icon": "fa-flag",
+    "modalPath": "./src/modal/modal_flag.html",
+    "skeletonPath": "./src/skeleton/skeleton_flag.html",
+    "handlerPath": "../../src/handler/handler_flag.js",
     "editable": true
   },
   "image": {

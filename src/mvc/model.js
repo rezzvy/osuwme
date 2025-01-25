@@ -128,6 +128,11 @@ export default class Model {
     return value.replace(/&nbsp;/g, " ").replace(/%SPCITM%/g, "\n");
   }
 
+  // Replace spaces with non-breaking spaces (&nbsp;) or reverse it
+  replaceToNBS(boolean, value) {
+    return boolean ? value.replace(/ /g, "&nbsp;") : value.replace(/&nbsp;/g, " ");
+  }
+
   /* =========================================
      Local Storage (Auto Save Project)
   ========================================= */

@@ -149,6 +149,10 @@ body.on-grabbing [data-action="move"] {
   content: "\f001";
 }
 
+.ph.ph-flag::after {
+  content: "\f024";
+}
+
 .ph.ph-youtube::after {
   content: "\f16a";
 }
@@ -195,7 +199,8 @@ body.on-grabbing [data-action="move"] {
 /* =========================================
    OSU Styles
    ========================================= */
-.osu-style a {
+.osu-style a,
+.link-pink {
   color: rgb(217, 166, 189) !important;
   font-weight: initial;
 }
@@ -354,6 +359,7 @@ body.on-grabbing [data-action="move"] {
   height: max-content;
   max-width: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 .osu-style .imgmap-container a {

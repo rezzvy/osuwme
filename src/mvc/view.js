@@ -82,9 +82,14 @@ export default class View {
   */
 
   // Get or set inner HTML content of a target element
-  html(target, content) {
+  html(target, content, keep = false) {
     const targetElement = this._target(target);
     if (content === undefined) return targetElement.innerHTML;
+
+    if (keep) {
+      targetElement.innerHTML += content;
+      return;
+    }
 
     targetElement.innerHTML = content;
   }
@@ -422,6 +427,38 @@ export default class View {
         <i class="fa ${icon} fa-fw fa-lg"></i>
       </button>
     `;
+  }
+
+  // Generate Flag Item
+  generateFlagItem(username, countryId, countryName) {
+    const div = document.createElement("div");
+
+    div.className = "flag-item d-flex align-items-center gap-1";
+    div.innerHTML = `
+    <div style="background:rgb(66, 53, 60)"> 
+      <button class="btn btn-outline-light btn-sm" data-action="move">
+         <i class="fa fa-arrows fa-fw"></i>
+      </button>
+    </div>
+
+    <div 
+    data-username="${username}" 
+    data-country-name="${countryName}" 
+    data-code="${countryId}" 
+    class="flag-item-content flex-fill rounded-2 px-2 d-flex align-items-center gap-1" 
+    style="background:rgba(255, 255, 255, 0.125); min-height:31px;">
+      <img class="pe-none" src="./assets/countries/${countryId}.gif"> 
+      <span class="pe-none d-block flex-fill fw-bold link-pink">${username}</span>
+    </div>
+ 
+    <div style="background:rgb(66, 53, 60)"> 
+      <button class="btn btn-outline-light btn-sm" data-action="remove">
+          <i class="fa fa-trash fa-fw"></i>
+      </button>
+    </div>
+    `;
+
+    return div;
   }
 
   // Generate List Item Edit Element

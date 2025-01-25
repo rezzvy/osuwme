@@ -1,0 +1,33 @@
+<div class="position-sticky top-0 pb-3" style="background: rgb(66, 53, 60)">
+  <div class="mb-2">
+    <button id="add-flag-item-btn" class="btn btn-light btn-sm fw-bold w-100">Add Item</button>
+  </div>
+
+  <div class="row row-cols-md-2 g-2 row-cols-1">
+    <div class="col">
+      <div class="input-group input-group-sm gap-1">
+        <div class="input-group-text">
+          <i class="fa fa-user fa-fw"></i>
+        </div>
+        <input id="username-input" type="text" class="form-control form-control-sm border-0 rounded-2" placeholder="Username" autocomplete="off" />
+      </div>
+    </div>
+    <div class="col">
+      <div class="input-group input-group-sm gap-1 country-input-wrapper">
+        <div class="input-group-text">
+          <i class="fa fa-flag fa-fw"></i>
+        </div>
+
+        <input id="country-name-input" type="text" class="form-control rounded-2" placeholder="Country Name" autocomplete="off" />
+        <div class="_auto-complete d-none rounded-2 overflow-auto"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="flag-edit-item-container" class="modal-box ph ph-absolute-center ph-flag p-3 rounded-2 min-height-300" data-drop></div>
+
+<div class="input-group input-group-sm gap-1 mt-2">
+  <div class="input-group-text">Splitter</div>
+  <input id="splitter-input" type="text" class="form-control rounded-2" placeholder="E.g: , - | ~ /" autocomplete="off" value=", " />
+</div>
