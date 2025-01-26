@@ -281,7 +281,7 @@ export default class Model {
      Logic Methods
   ========================================= */
   isMobileDevice() {
-    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    return "ontouchstart" in window;
   }
 
   // Validates if the imported project HTML contains at least one canvas item

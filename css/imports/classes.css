@@ -86,12 +86,12 @@ body.on-grabbing [data-action="move"] {
   border-radius: 0.5px;
 }
 
-.section-heading h2 {
+.section-heading :first-child {
   display: inline-block;
   position: relative;
 }
 
-.section-heading h2::after {
+.section-heading :first-child::after {
   content: "";
   position: absolute;
   width: 100%;
