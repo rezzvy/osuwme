@@ -22,13 +22,8 @@ p {
   overflow-wrap: break-word;
 }
 
-a,
-span {
+span:has(img, a) {
   display: inline-block;
-}
-
-p span {
-  display: inline !important;
 }
 
 /* =========================================

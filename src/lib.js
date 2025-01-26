@@ -390,32 +390,25 @@ export default function initLibraries(controller) {
     model.quill.format("link", false);
   });
 
-  model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+  model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node) => {
     const Delta = Quill.import("delta");
 
-    const format = (node) => {
+    const format = (el) => {
       const obj = {};
 
-      if (node.style.fontSize && node.style.fontSize.endsWith("%")) obj.size = node.style.fontSize;
-      if (node.style.color) obj.color = node.style.color;
+      if (el.tagName === "STRONG") obj.bold = true;
+      if (el.tagName === "EM") obj.italic = true;
+      if (el.tagName === "U") obj.underline = true;
+      if (el.tagName === "S") obj.strike = true;
+      if (el.tagName === "A") obj.link = el.getAttribute("href");
+      if (el.style.fontSize) obj.size = el.style.fontSize;
+      if (el.style.color) obj.color = el.style.color;
 
       return obj;
     };
 
-    if (node.tagName === "SPAN") return new Delta().insert(node.innerText || "", { color: node.style.color, ...format(node) });
-    if (node.tagName === "STRONG") return new Delta().insert(node.innerText || "", { bold: true, ...format(node) });
-    if (node.tagName === "EM") return new Delta().insert(node.innerText || "", { italic: true, ...format(node) });
-    if (node.tagName === "U") return new Delta().insert(node.innerText || "", { underline: true, ...format(node) });
-    if (node.tagName === "S") return new Delta().insert(node.innerText || "", { strike: true, ...format(node) });
     if (node.tagName === "IMG") return new Delta().insert({ image: node.getAttribute("src") });
-
-    if (node.tagName === "A") {
-      const href = node.getAttribute("href");
-      const text = node.innerText || href;
-      return new Delta().insert(text, { link: href });
-    }
-
-    return new Delta().insert(node.innerText || "");
+    return new Delta().insert(node.innerText || "", { ...format(node) });
   });
 
   model.quill.on("text-change", function () {

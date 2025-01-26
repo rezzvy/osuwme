@@ -4,11 +4,11 @@
     {
       "date": "Jan 26, 2025",
       "changes": [
-        "Canvas Undo/Redo Functionality",
+        "Undo/Redo on Canvas",
         "Import Image Map from BBCode",
-        "Gradient Types (Middle, Three-Channel, Rainbow, Random)",
-        "New Element Flags <em>(to generate a list of profile links with flags)</em>",
-        "And more to explore."
+        "Gradient Types: Middle, Three-Channel, Rainbow, Random",
+        "New Element Flags (for profile links)",
+        "More to explore."
       ]
     },
     {
