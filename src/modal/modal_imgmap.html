@@ -1,60 +1,90 @@
-<div class="input-group input-group-sm gap-1">
-  <div class="input-group-text">
-    <i class="fa fa-picture-o fa-fw"></i>
+<div class="imgmap-from-bbcode d-none">
+  <div class="modal-box rounded-2">
+    <textarea
+      id="imgmap-from-bbcode-input"
+      class="form-control-plaintext font-monospace p-3 min-height-300 text-white"
+      placeholder="BBcode"
+    ></textarea>
   </div>
-  <input type="text" class="form-control rounded-2" placeholder="Image Link" id="imgmap-link-input" autocomplete="off" />
-  <div class="input-group-text">
-    <button class="btn btn-light btn-sm" id="imgmap-link-submit-btn">
-      <i class="fa fa-send fa-fw"></i>
-    </button>
+
+  <div class="row row-cols-2 g-1">
+    <div class="col">
+      <button id="imgmap-from-bbcode-go-back" class="btn btn-outline-light btn-sm mt-3 fw-bold w-100">Back to Editor</button>
+    </div>
+    <div class="col">
+      <button id="imgmap-from-bbcode-execute" class="btn btn-light btn-sm mt-3 fw-bold w-100">Import</button>
+    </div>
   </div>
 </div>
 
-<div class="mt-2">
-  <button class="btn btn-outline-light btn-sm fw-bold w-100" id="add-imgmap-item-btn"><i class="fa fa-plus fa-fw"></i> Add Item</button>
-</div>
-
-<div class="d-flex flex-column flex-sm-row gap-1 position-sticky top-0 z-3 bg-darkest mt-1 mb-2">
+<div class="imgmap-main">
   <div class="input-group input-group-sm gap-1">
     <div class="input-group-text">
-      <i class="fa fa-info fa-fw"></i>
+      <i class="fa fa-picture-o fa-fw"></i>
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Title" id="imgmap-title-input-item" autocomplete="off" />
-  </div>
-
-  <div class="input-group input-group-sm gap-1">
+    <input type="text" class="form-control rounded-2" placeholder="Image Link" id="imgmap-link-input" autocomplete="off" />
     <div class="input-group-text">
-      <i class="fa fa-link fa-fw"></i>
+      <button class="btn btn-light btn-sm" id="imgmap-link-submit-btn">
+        <i class="fa fa-send fa-fw"></i>
+      </button>
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Link" id="imgmap-link-input-item" autocomplete="off" />
   </div>
 
-  <div class="input-group input-group-sm gap-1">
-    <div class="input-group-text">
-      <i class="fa fa-arrows-h fa-fw"></i>
+  <div class="mt-2">
+    <div class="row row-cols-2 g-1">
+      <div class="col">
+        <button class="btn btn-outline-light btn-sm fw-bold w-100" id="add-imgmap-item-btn"><i class="fa fa-plus fa-fw"></i> Add Item</button>
+      </div>
+      <div class="col">
+        <button class="btn btn-outline-light btn-sm fw-bold w-100" id="go-to-imgmap-import-btn">
+          <i class="fa fa-upload"></i> Import from BBCode
+        </button>
+      </div>
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Width" id="imgmap-width-input-item" autocomplete="off" />
   </div>
 
-  <div class="input-group input-group-sm gap-1">
-    <div class="input-group-text">
-      <i class="fa fa-arrows-v fa-fw"></i>
+  <div class="d-flex flex-column flex-sm-row gap-1 position-sticky top-0 z-3 bg-darkest mt-1 mb-2">
+    <div class="input-group input-group-sm gap-1">
+      <div class="input-group-text">
+        <i class="fa fa-info fa-fw"></i>
+      </div>
+      <input type="text" class="form-control rounded-2" placeholder="Title" id="imgmap-title-input-item" autocomplete="off" />
     </div>
-    <input type="text" class="form-control rounded-2" placeholder="Height" id="imgmap-height-input-item" autocomplete="off" />
+
+    <div class="input-group input-group-sm gap-1">
+      <div class="input-group-text">
+        <i class="fa fa-link fa-fw"></i>
+      </div>
+      <input type="text" class="form-control rounded-2" placeholder="Link" id="imgmap-link-input-item" autocomplete="off" />
+    </div>
+
+    <div class="input-group input-group-sm gap-1">
+      <div class="input-group-text">
+        <i class="fa fa-arrows-h fa-fw"></i>
+      </div>
+      <input type="text" class="form-control rounded-2" placeholder="Width" id="imgmap-width-input-item" autocomplete="off" />
+    </div>
+
+    <div class="input-group input-group-sm gap-1">
+      <div class="input-group-text">
+        <i class="fa fa-arrows-v fa-fw"></i>
+      </div>
+      <input type="text" class="form-control rounded-2" placeholder="Height" id="imgmap-height-input-item" autocomplete="off" />
+    </div>
+
+    <div class="flex-shrink-0">
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" id="imgmap-duplicate-btn" data-bs-title="Duplicate">
+        <i class="fa fa-copy fa-fw"></i>
+      </button>
+      <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" id="imgmap-remove-btn" data-bs-title="Remove">
+        <i class="fa fa-trash fa-fw"></i>
+      </button>
+    </div>
   </div>
 
-  <div class="flex-shrink-0">
-    <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" id="imgmap-duplicate-btn" data-bs-title="Duplicate">
-      <i class="fa fa-copy fa-fw"></i>
-    </button>
-    <button class="btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" id="imgmap-remove-btn" data-bs-title="Remove">
-      <i class="fa fa-trash fa-fw"></i>
-    </button>
-  </div>
-</div>
-
-<div class="modal-box ph ph-absolute-center ph-map p-3 rounded-2 min-height-300 d-flex align-items-center">
-  <div id="imgmap-edit-container" class="d-none">
-    <img class="pe-none" />
+  <div class="modal-box ph ph-absolute-center ph-map p-3 rounded-2 min-height-300 d-flex align-items-center">
+    <div id="imgmap-edit-container" class="d-none">
+      <img class="pe-none" />
+    </div>
   </div>
 </div>

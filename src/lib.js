@@ -393,9 +393,21 @@ export default function initLibraries(controller) {
   model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
     const Delta = Quill.import("delta");
 
-    if (node.tagName === "IMG") {
-      return new Delta().insert({ image: node.getAttribute("src") });
-    }
+    const format = (node) => {
+      const obj = {};
+
+      if (node.style.fontSize && node.style.fontSize.endsWith("%")) obj.size = node.style.fontSize;
+      if (node.style.color) obj.color = node.style.color;
+
+      return obj;
+    };
+
+    if (node.tagName === "SPAN") return new Delta().insert(node.innerText || "", { color: node.style.color, ...format(node) });
+    if (node.tagName === "STRONG") return new Delta().insert(node.innerText || "", { bold: true, ...format(node) });
+    if (node.tagName === "EM") return new Delta().insert(node.innerText || "", { italic: true, ...format(node) });
+    if (node.tagName === "U") return new Delta().insert(node.innerText || "", { underline: true, ...format(node) });
+    if (node.tagName === "S") return new Delta().insert(node.innerText || "", { strike: true, ...format(node) });
+    if (node.tagName === "IMG") return new Delta().insert({ image: node.getAttribute("src") });
 
     if (node.tagName === "A") {
       const href = node.getAttribute("href");

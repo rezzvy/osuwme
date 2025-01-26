@@ -37,6 +37,8 @@ export default class {
 
     this.imageMapItemDuplicateButton = this.view.el("#imgmap-duplicate-btn", this.parent);
     this.imageMapItemRemoveButton = this.view.el("#imgmap-remove-btn", this.parent);
+
+    this.importFromBBCodeExecuteButton = this.view.el("#imgmap-from-bbcode-execute", this.parent);
   }
 
   _target() {
@@ -51,6 +53,27 @@ export default class {
      Methods
   ========================================= 
   */
+
+  generateEditItems(source) {
+    this._target();
+
+    if (source.length > 0) {
+      const fragment = document.createDocumentFragment();
+
+      for (const item of source) {
+        const { title, link, style } =
+          item instanceof Element
+            ? { title: item.dataset.title, link: item.dataset.link, style: item.style.cssText }
+            : { title: item.title, link: item.link, style: item.style };
+
+        this.view.append(fragment, this.view.generateEditImageMapItem(title, link, style));
+      }
+
+      return fragment;
+    }
+
+    return false;
+  }
 
   disableImageMapItemInput(boolean) {
     this.view.disable(
@@ -71,6 +94,16 @@ export default class {
     if (link !== null) this.view.val(this.imageMapItemInputLink, link);
     if (width !== null) this.view.val(this.imageMapItemInputWidth, width);
     if (height !== null) this.view.val(this.imageMapItemInputHeight, height);
+  }
+
+  renderMainEditor(boolean) {
+    this.view.renderModalEditErrorMessage(false);
+    this.view.disable(true, "#imgmap-from-bbcode-execute");
+    this.view.val("#imgmap-from-bbcode-input", "");
+
+    this.view.toggle(".imgmap-from-bbcode", "d-none", boolean);
+    this.view.toggle(".imgmap-main", "d-none", !boolean);
+    this.view.toggle("#modal-edit-save", "d-none", !boolean);
   }
 
   /* 
@@ -180,6 +213,44 @@ export default class {
     });
   }
 
+  async _ImportFromBBCode(e) {
+    const button = e.target;
+    this.view.disable(true, button);
+
+    const val = this.view.val("#imgmap-from-bbcode-input");
+    const data = await this.model.parseImagemap(val);
+
+    if (!data.status) {
+      this.view.disable(false, button);
+      return this.view.renderModalEditErrorMessage(true, data.message);
+    }
+
+    if (!data.image.isAvailable) {
+      this.view.disable(false, button);
+      return this.view.renderModalEditErrorMessage(true, "We can't fetch the image. Please check if it's valid or try uploading it elsewhere.");
+    }
+
+    const items = data.items.map((item) => {
+      return {
+        title: item.alt,
+        link: item.href,
+        style: `left:${item.x}%; top:${item.y}%; width:${item.width}%; height:${item.height}%;`,
+      };
+    });
+
+    for (const item of this.view.els(".imgmap-edit-item", this.imageMapContainer)) {
+      await this.view.remove(item);
+    }
+
+    this.view.disable(false, this.imageMapAddItemButton, "#modal-edit-save");
+    this.view.el(this.img).src = data.image.url;
+    this.view.val(this.linkInput, data.image.url);
+
+    this.view.append(this.imageMapContainer, this.generateEditItems(items));
+    this.disableImageMapItemInput(true);
+    this.renderMainEditor(true);
+  }
+
   /* 
   =========================================
      Events
@@ -188,6 +259,7 @@ export default class {
 
   init() {
     this._vars();
+    this.view.disable(true, "#imgmap-from-bbcode-execute");
 
     this.view.on(this.linkInput, "input", (e) => {
       this.view.disable(!e.target.value, this.submitButton);
@@ -284,6 +356,22 @@ export default class {
 
       this.view.clearActiveImageMapItem(this.imageMapContainer);
     });
+
+    this.view.on(this.importFromBBCodeExecuteButton, "click", async (e) => {
+      await this._ImportFromBBCode(e);
+    });
+
+    this.view.on("#imgmap-from-bbcode-input", "input", (e) => {
+      this.view.disable(!e.target.value.trim(), "#imgmap-from-bbcode-execute");
+    });
+
+    this.view.on("#go-to-imgmap-import-btn", "click", (e) => {
+      this.renderMainEditor(false);
+    });
+
+    this.view.on("#imgmap-from-bbcode-go-back", "click", (e) => {
+      this.renderMainEditor(true);
+    });
   }
 
   /* 
@@ -295,21 +383,13 @@ export default class {
   open() {
     this._target();
 
-    const fragment = document.createDocumentFragment();
     const items = this.view.els(".output-imgmap-item", this.targetContainer);
 
     if (items.length > 0) {
       this.view.el(this.img).src = this.targetImg.src;
       this.view.val(this.linkInput, this.targetImg.src);
 
-      items.forEach((item) => {
-        const { title, link } = item.dataset;
-        const style = item.style.cssText;
-
-        this.view.append(fragment, this.view.generateEditImageMapItem(title, link, style));
-      });
-
-      this.view.append(this.imageMapContainer, fragment);
+      this.view.append(this.imageMapContainer, this.generateEditItems(items));
       this.view.replacePlaceholder(this.imageMapContainer, true, false);
       this.view.disable(false, "#modal-edit-save");
     }
