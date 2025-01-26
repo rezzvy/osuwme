@@ -35,7 +35,7 @@
                 <li>
                   <a
                     class="link-light link-opacity-75 link-opacity-100-hover"
-                    href="https://youtube.com/playlist?list=PLL5szT8gX9gmtDv2M7z7_Sz_fQS8EYe_Y&si=AA2iB_AWWvf0wf0s"
+                    href="https://osu.ppy.sh/community/forums/topics/2029947"
                     target="_blank"
                   >
                     <i class="fa fa-info-circle fa-fw"></i> Getting Started
@@ -185,6 +185,73 @@
           <div class="modal-content">
             <div class="modal-body p-3">
               <audio controls class="w-100" id="audio-modal-preview"></audio>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="starting-modal" class="modal" data-bs-backdrop="static" data-bs-focus="false">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content triangle-bg">
+            <div class="modal-body">
+              <div class="row g-3 flex-wrap-reverse flex-md-wrap">
+                <div class="col-12 col-md-9">
+                  <section class="mb-3">
+                    <div class="section-heading mb-3">
+                      <h2 class="h6 fw-bold text-light px-3 pb-1">Welcome</h2>
+                    </div>
+
+                    <p class="mb-2">
+                      If you find a bug, please create an
+                      <a target="_blank" class="fw-bold text-decoration-underline" href="https://github.com/rezzvy/osuwme/issues">issue</a> in the
+                      repository or message me on
+                      <span class="fw-bold text-decoration-underline" data-bs-toggle="tooltip" data-bs-title="@rezzvy">Discord</span>
+                      <em>(might take some time to reply)</em>
+                    </p>
+
+                    <p>
+                      Check out the basic tutorial in this
+                      <a
+                        target="_blank"
+                        class="fw-bold text-decoration-underline"
+                        href="https://www.youtube.com/playlist?list=PLL5szT8gX9gmtDv2M7z7_Sz_fQS8EYe_Y&si=AA2iB_AWWvf0wf0s"
+                        >playlist</a
+                      >.
+                    </p>
+                  </section>
+
+                  <section>
+                    <div class="section-heading mb-3">
+                      <h2 class="h6 fw-bold text-light px-3 pb-1">What's new?</h2>
+                    </div>
+
+                    <div id="changelog-wrapper" class="d-flex flex-column gap-2 overflow-auto" style="height: 200px"></div>
+                  </section>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <section>
+                    <div class="section-heading">
+                      <h2 class="h6 fw-bold text-light px-3 pb-1">Projects</h2>
+                    </div>
+
+                    <div class="mt-3 d-flex flex-column gap-1">
+                      <button id="starting-modal-new-project-btn" class="btn btn-light btn-sm w-100 fw-semibold text-start">
+                        <i class="fa fa-file-o fa-fw"></i>
+                        <span>New Project</span>
+                      </button>
+                      <button id="starting-modal-load-project-btn" class="btn btn-outline-light btn-sm w-100 fw-semibold text-start">
+                        <i class="fa fa-file-o fa-fw"></i>
+                        Load Project
+                      </button>
+                      <button id="starting-modal-templates-btn" class="btn btn-outline-light btn-sm w-100 fw-semibold text-start">
+                        <i class="fa fa-file-o fa-fw"></i>
+                        Templates
+                      </button>
+                    </div>
+                  </section>
+                </div>
+              </div>
             </div>
           </div>
         </div>

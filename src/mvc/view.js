@@ -4,6 +4,7 @@ export default class View {
     this.modalEdit = new bootstrap.Modal("#modal-edit");
     this.modalTemplate = new bootstrap.Modal("#modal-template");
     this.modalAudioPlayer = new bootstrap.Modal("#audio-modal");
+    this.modalStarting = new bootstrap.Modal("#starting-modal");
 
     // File Input
     this.importProjectFileInput = document.getElementById("import-project-input");
@@ -24,6 +25,8 @@ export default class View {
 
   // Initialize the View
   init(isMobile) {
+    this.modalStarting.show();
+
     this.remove(".placeholder-container");
     this.toggle("body", "pe-none", false);
     this.toggle("#canvas-element-list", "d-none", false);
@@ -519,5 +522,15 @@ export default class View {
   // Generate List Item Element
   generateListItem(title, content) {
     return `<li data-title="${title}" data-drop>${content}</li>`;
+  }
+
+  generateChangelogItem(date, changes) {
+    return `
+    <div>
+      <div class="mb-1"><span class="badge text-bg-dark">${date}</span></div>
+      <ul>
+        ${changes.map((change) => `<li>${change}</li>`).join("")}
+      </ul>
+    </div>`;
   }
 }

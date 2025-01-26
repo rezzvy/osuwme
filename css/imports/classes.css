@@ -53,6 +53,13 @@ body.on-grabbing [data-action="move"] {
   cursor: grabbing !important;
 }
 
+.triangle-bg {
+  background-image: url(../../assets/triangles.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
 /* =========================================
    Background Colors
    ========================================= */

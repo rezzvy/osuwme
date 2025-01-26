@@ -160,6 +160,7 @@ a {
 .modal {
   --bs-modal-bg: #42353c;
   --bs-border-color: transparent;
+  backdrop-filter: blur(12px);
 }
 
 .btn-close {

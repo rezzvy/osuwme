@@ -2,11 +2,14 @@ export default class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
+
+    this.onModalStarting = false;
   }
 
   async init() {
     await this.renderCanvasElementList();
     await this.renderCanvasTemplateList();
+    await this.renderChangeLogs();
     this.attachEvents();
     this.renderLatestCanvasContent();
 
@@ -104,10 +107,15 @@ export default class Controller {
     // Project Action: Import File Input Event
     this.view.on("#import-project-input", "change", (e) => {
       const files = e.target.files;
-      if (files.length === 0) return;
+      if (files.length === 0) {
+        if (this.onModalStarting) this.onModalStarting = false;
+        return;
+      }
 
       this.model.readFileAsText(files[0], (content) => {
         if (!this.model.isValidProjectFile(content)) return alert("Can't recognize HTML formats!");
+        if (this.onModalStarting) this.view.modalStarting.hide();
+
         this.setCanvasContent(content);
         this.view.clearActiveTooltips();
       });
@@ -220,6 +228,23 @@ export default class Controller {
     // Redo Button Event
     this.view.on("#redo-canvas-btn", "click", () => {
       this.historyHandler("redo");
+    });
+
+    // Starting Modal New Project/Continue Button Event
+    this.view.on("#starting-modal-new-project-btn", "click", () => {
+      this.view.modalStarting.hide();
+    });
+
+    // Starting Modal Load Project Button Event
+    this.view.on("#starting-modal-load-project-btn", "click", () => {
+      this.onModalStarting = true;
+      this.view.importProjectFileInput.click();
+    });
+
+    // Starting Modal Templates Button Event
+    this.view.on("#starting-modal-templates-btn", "click", () => {
+      this.view.modalStarting.hide();
+      this.view.modalTemplate.show();
     });
   }
 
@@ -457,7 +482,15 @@ export default class Controller {
 
   // Render the latest saved canvas content.
   renderLatestCanvasContent() {
-    this.setCanvasContent(this.model.latestCanvasContent);
+    const content = this.model.latestCanvasContent;
+
+    if (content) {
+      this.view.text("#starting-modal-new-project-btn span", "Continue");
+    } else {
+      this.view.text("#starting-modal-new-project-btn span", "New Project");
+    }
+
+    this.setCanvasContent(content);
   }
 
   // Set canvas content as HTML and adjust visibility of placeholders.
@@ -553,6 +586,19 @@ export default class Controller {
 
     this.view.html("#modal-edit-body", modals);
     this.view.html("#canvas-element-list", temp.button);
+  }
+
+  // Get the changelogs and render them in the list.
+  async renderChangeLogs() {
+    const data = await this.model.fetchData("./src/json/version.json", "json");
+
+    let content = "";
+    for (const change of data.changelogs) {
+      const { date, changes } = change;
+      content += this.view.generateChangelogItem(date, changes);
+    }
+
+    this.view.html("#changelog-wrapper", content);
   }
 
   // Get canvas template list JSON and render template item buttons.

@@ -27,6 +27,10 @@ span {
   display: inline-block;
 }
 
+p span {
+  display: inline !important;
+}
+
 /* =========================================
    Layout Sections
    ========================================= */
