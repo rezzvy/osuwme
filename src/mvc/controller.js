@@ -4,6 +4,7 @@ export default class Controller {
     this.view = view;
 
     this.onModalStarting = false;
+    this.lastScrollTop = 0;
   }
 
   async init() {
@@ -97,7 +98,17 @@ export default class Controller {
 
     // Edit Mode Switch Event
     this.view.on("#canvas-mode-switch", "input", (e) => {
-      this.view.toggle("body", "view-mode", !e.target.checked);
+      const isViewMode = !e.target.checked;
+
+      if (isViewMode) {
+        this.lastScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      }
+
+      this.view.toggle("body", "view-mode", isViewMode);
+
+      if (!isViewMode) {
+        document.documentElement.scrollTop = document.body.scrollTop = this.lastScrollTop;
+      }
     });
 
     // Event delegation for loading template.

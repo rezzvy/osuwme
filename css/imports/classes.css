@@ -114,11 +114,15 @@ body.on-grabbing [data-action="move"] {
    ========================================= */
 .ph {
   position: relative;
-  text-align: center;
 }
 
 .ph.no-center {
   text-align: start;
+}
+
+.ph:not(.no-center):after,
+.ph:not(.no-center)::before {
+  text-align: center;
 }
 
 .ph.ph-absolute-center::after {
@@ -146,6 +150,7 @@ body.on-grabbing [data-action="move"] {
   font-family: "FontAwesome";
   color: rgba(255, 255, 255, 0.25);
   font-size: 2.5em;
+  display: block;
 }
 
 .ph.ph-img::after {
@@ -190,6 +195,11 @@ body.on-grabbing [data-action="move"] {
 
 .ph.ph-quote::after {
   content: "\f10e";
+}
+
+.ph:has(.canvas-item)::before,
+.ph:has(.canvas-item)::after {
+  all: unset;
 }
 
 ._resizer {

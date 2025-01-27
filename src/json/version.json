@@ -3,7 +3,11 @@
   "changelogs": [
     {
       "date": "Jan 27, 2025",
-      "changes": ["Add support for moving selected canvas items", "Bug fixes and code adjustments"]
+      "changes": [
+        "Add support for moving selected canvas items",
+        "Restore scroll position when going back to edit mode",
+        "Bug fixes and code adjustments"
+      ]
     },
     {
       "date": "Jan 26, 2025",
