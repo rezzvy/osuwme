@@ -36,27 +36,39 @@ export default class View {
   }
 
   // Initialize sticky menu behavior on scroll and resize
-  initializeStickyMenu() {
-    const updateStickyState = () => {
-      if (!this.isMenuSticky) return;
+  _stickyOnWindowScroll() {
+    if (!this.isMenuSticky || this.isUpdating) return;
 
-      const element = this.menuStickyContainer;
-      const elementBottom = element.offsetTop + element.offsetHeight + 16;
-      const viewportBottom = window.innerHeight + window.scrollY - 16;
+    this.isUpdating = true;
+    requestAnimationFrame((timestamp) => {
+      this._updateStickyState();
+    });
+  }
 
-      this.toggle(element, "pinned", elementBottom >= viewportBottom);
+  _updateStickyState() {
+    if (!this.isMenuSticky) return;
+
+    if (document.body.classList.contains("on-grabbing")) {
       this.isUpdating = false;
-    };
+      return;
+    }
 
-    const onScroll = () => {
-      if (!this.isMenuSticky || this.isUpdating) return;
+    const element = this.menuStickyContainer;
+    const elementBottom = element.offsetTop + element.offsetHeight + 16;
+    const viewportBottom = window.innerHeight + window.scrollY - 16;
 
-      this.isUpdating = true;
-      requestAnimationFrame(updateStickyState);
-    };
+    this.toggle(element, "pinned", elementBottom >= viewportBottom);
+    this.isUpdating = false;
+  }
 
-    this.on(window, "scroll", onScroll);
-    new ResizeObserver(updateStickyState).observe(this.canvasWrapperElement);
+  initializeStickyMenu() {
+    this.on(window, "scroll", () => {
+      this._stickyOnWindowScroll();
+    });
+
+    new ResizeObserver(() => {
+      this._updateStickyState();
+    }).observe(this.canvasWrapperElement);
   }
 
   /* 

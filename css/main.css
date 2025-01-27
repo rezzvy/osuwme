@@ -237,20 +237,25 @@ footer {
   opacity: 1;
 }
 
-.canvas-item.selected {
+body:not(.view-mode) .canvas-item.selected {
   border-color: #ff66ab;
   border-bottom-width: 2px;
   margin-bottom: 2px;
 }
 
-.canvas-item.selected:last-of-type {
+body:not(.view-mode) .canvas-item.selected:last-of-type {
   margin-bottom: 0;
 }
 
 /* =========================================
    Canvas Wrapper Placeholder
    ========================================= */
+body:has(#canvas-wrapper:empty) #canvas-wrapper-ph {
+  display: block;
+}
+
 #canvas-wrapper-ph {
+  display: none;
   width: 100%;
   position: absolute;
   top: 50%;
@@ -277,6 +282,7 @@ body.view-mode .canvas-item ._content {
 
 body.view-mode #undo-canvas-btn,
 body.view-mode #redo-canvas-btn,
+body.view-mode #clear-canvas-selection-btn,
 body.view-mode .canvas-action#expand-all-canvas-btn,
 body.view-mode .canvas-action#collapse-all-canvas-btn,
 body.view-mode .canvas-action#clear-canvas-btn,

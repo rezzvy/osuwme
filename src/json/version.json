@@ -6,6 +6,7 @@
       "changes": [
         "Add support for moving selected canvas items",
         "Restore scroll position when going back to edit mode",
+        "Hide Canvas Element List while dragging Canvas Item",
         "Bug fixes and code adjustments"
       ]
     },

@@ -37,7 +37,7 @@ export default class Controller {
     this.view.on("#canvas-wrapper", "click", (e) => {
       const canvasItem = e.target.closest(".canvas-item");
 
-      if (canvasItem && e.shiftKey) {
+      if (canvasItem && e.shiftKey && !document.body.classList.contains("view-mode")) {
         window.getSelection().removeAllRanges();
         canvasItem.classList.toggle("selected", !canvasItem.classList.contains("selected"));
       }
@@ -320,8 +320,6 @@ export default class Controller {
     if (item.action === "add" || item.action === "remove") {
       this.view.toggle(item.container, "ph", this.model.isNodeEmpty(item.container) && !item.container.matches("#canvas-wrapper"));
     }
-
-    this.view.toggle("#canvas-wrapper-ph", "d-none", !this.model.isNodeEmpty("#canvas-wrapper"));
   }
 
   // Handler for Gradient Select's "onChange"
@@ -452,7 +450,6 @@ export default class Controller {
 
     if (this.model.isNodeEmpty("#canvas-wrapper")) {
       this.view.text("#canvas-wrapper", "");
-      this.view.toggle("#canvas-wrapper-ph", "d-none", false);
     }
   }
 
@@ -486,7 +483,6 @@ export default class Controller {
   renderToCanvas(key, editable, uniqueID, autoAppend = true) {
     const skeleton = this.model.getSkeleton(key);
     const canvasItem = this.view.generateCanvasItem(key, editable, uniqueID, skeleton);
-    this.view.toggle("#canvas-wrapper-ph", "d-none", true);
 
     if (autoAppend) {
       this.view.append("#canvas-wrapper", canvasItem);
@@ -523,7 +519,6 @@ export default class Controller {
     this.toggleUndoRedoButtons();
 
     this.view.html("#canvas-wrapper", html);
-    this.view.toggle("#canvas-wrapper-ph", "d-none", html);
     this.view.css("#canvas", "");
     this.view.clearSelectedCanvasItem();
 

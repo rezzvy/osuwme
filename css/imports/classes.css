@@ -41,7 +41,8 @@ body.on-grabbing {
   cursor: nwse-resize !important;
 }
 
-[data-action="move"] {
+[data-action="move"],
+.imgmap-edit-item {
   touch-action: none;
 }
 
@@ -195,11 +196,6 @@ body.on-grabbing [data-action="move"] {
 
 .ph.ph-quote::after {
   content: "\f10e";
-}
-
-.ph:has(.canvas-item)::before,
-.ph:has(.canvas-item)::after {
-  all: unset;
 }
 
 ._resizer {

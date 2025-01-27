@@ -290,7 +290,9 @@ export default class {
       if (this.isUpdating || !this.imagemap.activeBox) return;
 
       this.isUpdating = true;
-      requestAnimationFrame(() => this._mouseMoveHandler(e));
+      requestAnimationFrame((timestamp) => {
+        this._mouseMoveHandler(e);
+      });
     });
 
     this.view.on(document, this.eventName.down, (e) => {

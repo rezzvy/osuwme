@@ -238,6 +238,8 @@ export default function initLibraries(controller) {
     view.toggle(document.body, "on-grabbing", true);
     if (el.matches(".canvas-element-list-btn")) return;
 
+    view.toggle(view.menuStickyContainer, "d-none", view.menuStickyContainer.classList.contains("pinned"));
+
     const selectedItems = view.els(".canvas-item.selected");
 
     const obj = (element) => {
@@ -264,20 +266,13 @@ export default function initLibraries(controller) {
 
   model.drake.on("dragend", (el) => {
     view.toggle(document.body, "on-grabbing", false);
+    view.toggle(view.menuStickyContainer, "d-none", false);
 
-    if (!el.matches(".canvas-element-list-btn")) return;
-
-    if (view.el("#canvas-wrapper-ph").classList.contains("d-none") && model.isNodeEmpty("#canvas-wrapper")) {
-      view.toggle("#canvas-wrapper-ph", "d-none", false);
-    }
+    view._updateStickyState();
   });
 
   model.drake.on("shadow", (el) => {
     if (!el.matches(".canvas-element-list-btn")) return;
-
-    if (!view.el("#canvas-wrapper-ph").classList.contains("d-none")) {
-      view.toggle("#canvas-wrapper-ph", "d-none", true);
-    }
 
     el.classList.add("pe-none");
     el.style.dispay = "block";
