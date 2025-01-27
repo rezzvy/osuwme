@@ -209,10 +209,11 @@ footer {
    ========================================= */
 .canvas-item {
   border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-bottom-width: 0;
 }
 
-.canvas-item:not(:first-of-type, :last-of-type) {
-  border-bottom: 0;
+.canvas-item:last-of-type {
+  border-bottom-width: 2px;
 }
 
 .canvas-item ._edit {
@@ -234,6 +235,16 @@ footer {
 .canvas-item:has(> ._content.show) > ._edit button[data-bs-toggle="collapse"]::after {
   content: "\f06e";
   opacity: 1;
+}
+
+.canvas-item.selected {
+  border-color: #ff66ab;
+  border-bottom-width: 2px;
+  margin-bottom: 2px;
+}
+
+.canvas-item.selected:last-of-type {
+  margin-bottom: 0;
 }
 
 /* =========================================

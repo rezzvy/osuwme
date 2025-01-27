@@ -33,7 +33,7 @@ export default class Model {
       stack: {
         undo: [],
         redo: [],
-        tempMoveData: null,
+        tempMoveData: [],
       },
     };
   }

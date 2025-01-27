@@ -2,6 +2,10 @@
   "latest_updated": "Jan 26, 2025",
   "changelogs": [
     {
+      "date": "Jan 27, 2025",
+      "changes": ["Add support for moving selected canvas items", "Bug fixes and code adjustments"]
+    },
+    {
       "date": "Jan 26, 2025",
       "changes": [
         "Undo/Redo on Canvas",

@@ -145,7 +145,13 @@ export default class View {
   }
 
   appendBefore(container, element, sibling) {
-    this._target(container).insertBefore(element, sibling);
+    const targetContainer = this._target(container);
+
+    if (sibling && sibling.parentNode !== targetContainer) {
+      sibling = null;
+    }
+
+    targetContainer.insertBefore(element, sibling);
   }
 
   // Remove a target element from the DOM
@@ -220,6 +226,12 @@ export default class View {
      General
   ========================================= 
   */
+
+  clearSelectedCanvasItem() {
+    this.els(".canvas-item.selected").forEach((item) => {
+      item.classList.remove("selected");
+    });
+  }
 
   // Adjust the width or height of an image map item based on a math expression, clamping the result to fit within the container
   setImageMapItemSize(event, element, direction, container) {

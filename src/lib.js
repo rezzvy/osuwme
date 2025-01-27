@@ -234,22 +234,32 @@ export default function initLibraries(controller) {
     revertOnSpill: true,
   });
 
-  model.drake.on("drag", (el, source) => {
+  model.drake.on("drag", (el) => {
     view.toggle(document.body, "on-grabbing", true);
     if (el.matches(".canvas-element-list-btn")) return;
 
-    model.history.stack.tempMoveData = {
-      action: "move",
-      element: el,
-      container: source,
-      sibling: el.nextSibling,
-      targetContainer: null,
-      targetSibling: null,
+    const selectedItems = view.els(".canvas-item.selected");
+
+    const obj = (element) => {
+      return {
+        action: "move",
+        element: element,
+        container: element.parentElement,
+        sibling: element.nextSibling,
+        targetContainer: null,
+        targetSibling: null,
+      };
     };
+
+    if (selectedItems.length !== 0 && el.classList.contains("selected")) {
+      selectedItems.forEach((item) => model.history.stack.tempMoveData.push(obj(item)));
+    } else {
+      model.history.stack.tempMoveData.push(obj(el));
+    }
   });
 
   model.drake.on("cancel", () => {
-    if (model.history.stack.tempMoveData) model.history.stack.tempMoveData = null;
+    if (model.history.stack.tempMoveData) model.history.stack.tempMoveData.length = 0;
   });
 
   model.drake.on("dragend", (el) => {
@@ -292,13 +302,28 @@ export default function initLibraries(controller) {
       });
     }
 
-    if (model.history.stack.tempMoveData) {
-      model.history.stack.tempMoveData.targetContainer = target;
-      model.history.stack.tempMoveData.targetSibling = sibling;
+    if (model.history.stack.tempMoveData.length !== 0) {
+      const nodes = model.history.stack.tempMoveData.map((item) => item.element);
 
-      controller.pushHistory("undo", model.history.stack.tempMoveData);
+      for (let i = model.history.stack.tempMoveData.length - 1; i >= 0; i--) {
+        const currentNode = model.history.stack.tempMoveData[i].element;
 
-      model.history.stack.tempMoveData = null;
+        if (nodes.some((otherNode) => otherNode !== currentNode && otherNode.contains(currentNode))) {
+          currentNode.classList.remove("selected");
+          model.history.stack.tempMoveData.splice(i, 1);
+        }
+      }
+
+      model.history.stack.tempMoveData.forEach((item) => {
+        target.insertBefore(item.element, sibling && sibling.parentNode === target ? sibling : null);
+
+        item.element.classList.remove("selected");
+        item.targetContainer = target;
+        item.targetSibling = sibling;
+      });
+
+      controller.pushHistory("undo", [...model.history.stack.tempMoveData]);
+      model.history.stack.tempMoveData.length = 0;
     }
 
     view.replaceContainerPlaceHolder(model.isNodeEmpty(source), source, target);

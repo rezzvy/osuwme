@@ -34,6 +34,13 @@ export default class Controller {
 
     // Event delegation for canvas items.
     this.view.on("#canvas-wrapper", "click", (e) => {
+      const canvasItem = e.target.closest(".canvas-item");
+
+      if (canvasItem && e.shiftKey) {
+        window.getSelection().removeAllRanges();
+        canvasItem.classList.toggle("selected", !canvasItem.classList.contains("selected"));
+      }
+
       if (!e.target.dataset.action) return;
 
       switch (e.target.dataset.action) {
@@ -141,6 +148,10 @@ export default class Controller {
     this.view.on("#clear-canvas-btn", "click", () => {
       if (!this.model.isNodeEmpty("#canvas-wrapper") && !this.view.dialog("Are you sure?")) return;
       this.setCanvasContent("");
+    });
+
+    this.view.on("#clear-canvas-selection-btn", "click", () => {
+      this.view.clearSelectedCanvasItem();
     });
 
     // Canvas Action: Reset Canvas Size Event
@@ -283,14 +294,16 @@ export default class Controller {
       this.view.html(content, type === "undo" ? item.content : item.newContent);
     }
 
-    if (item.action === "move") {
-      if (type === "undo") {
-        this.view.appendBefore(item.container, item.element, item.sibling || null);
-        this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(item.targetContainer), item.targetContainer, item.container);
-      } else {
-        this.view.appendBefore(item.targetContainer, item.element, item.targetSibling || null);
-        this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(item.container), item.container, item.targetContainer);
-      }
+    if (Array.isArray(item)) {
+      item.forEach((obj) => {
+        if (type === "undo" && obj.action === "move") {
+          this.view.appendBefore(obj.container, obj.element, obj.sibling);
+          this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.targetContainer), obj.targetContainer, obj.container);
+        } else if (type === "redo" && obj.action === "move") {
+          this.view.appendBefore(obj.targetContainer, obj.element, obj.targetSibling);
+          this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.container), obj.container, obj.targetContainer);
+        }
+      });
     }
 
     if (item.action === "add" || item.action === "remove") {
@@ -501,6 +514,7 @@ export default class Controller {
     this.view.html("#canvas-wrapper", html);
     this.view.toggle("#canvas-wrapper-ph", "d-none", html);
     this.view.css("#canvas", "");
+    this.view.clearSelectedCanvasItem();
 
     this.view.els("code").forEach((el) => {
       if (el.classList.contains("inline") || !el.dataset.raw) return;
