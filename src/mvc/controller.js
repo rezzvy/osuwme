@@ -306,15 +306,22 @@ export default class Controller {
     }
 
     if (Array.isArray(item)) {
-      item.forEach((obj) => {
-        if (type === "undo" && obj.action === "move") {
-          this.view.appendBefore(obj.container, obj.element, obj.sibling);
-          this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.targetContainer), obj.targetContainer, obj.container);
-        } else if (type === "redo" && obj.action === "move") {
-          this.view.appendBefore(obj.targetContainer, obj.element, obj.targetSibling);
-          this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.container), obj.container, obj.targetContainer);
+      if (type === "undo") {
+        for (let i = item.length - 1; i >= 0; i--) {
+          const obj = item[i];
+          if (obj.action === "move") {
+            this.view.appendBefore(obj.container, obj.element, obj.sibling);
+            this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.targetContainer), obj.targetContainer, obj.container);
+          }
         }
-      });
+      } else if (type === "redo") {
+        item.forEach((obj) => {
+          if (obj.action === "move") {
+            this.view.appendBefore(obj.targetContainer, obj.element, obj.targetSibling);
+            this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.container), obj.container, obj.targetContainer);
+          }
+        });
+      }
     }
 
     if (item.action === "add" || item.action === "remove") {
