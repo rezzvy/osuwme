@@ -176,6 +176,11 @@ export default class Controller {
       this.view.isMenuSticky = e.target.checked;
     });
 
+    // Preference: Hide content on move switch event
+    this.view.on("#hide-on-move-switch ", "input", (e) => {
+      this.view.toggle("body", "hide-on-move", e.target.checked);
+    });
+
     // Get Code Modal on Open Event
     this.view.on("#getcode-modal", "show.bs.modal", () => {
       this.view.html("#code-output-textarea", this.model.output(this.view.html("#canvas-wrapper")));

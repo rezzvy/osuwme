@@ -1,6 +1,10 @@
 {
-  "latest_updated": "Jan 26, 2025",
+  "latest_updated": "Jan 28, 2025",
   "changelogs": [
+    {
+      "date": "Jan 28, 2025",
+      "changes": ["Add option to hide canvas content while moving", "Bug fixes and code adjustments"]
+    },
     {
       "date": "Jan 27, 2025",
       "changes": [

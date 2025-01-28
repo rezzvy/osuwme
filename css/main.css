@@ -247,6 +247,17 @@ body:not(.view-mode) .canvas-item.selected:last-of-type {
   margin-bottom: 0;
 }
 
+body.hide-on-move .canvas-item.gu-mirror,
+body.hide-on-move .canvas-item.gu-transit {
+  height: min-content !important;
+  overflow: hidden;
+}
+
+body.hide-on-move .canvas-item.gu-mirror ._content,
+body.hide-on-move .canvas-item.gu-transit ._content {
+  display: none;
+}
+
 /* =========================================
    Canvas Wrapper Placeholder
    ========================================= */
