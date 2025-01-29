@@ -340,6 +340,9 @@ export default class Model {
 
   // Converts an RGB string to a hexadecimal color
   rgbToHex(rgbString) {
+    const isValidRgb = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/.test(rgbString);
+    if (!isValidRgb) return "#FFFFFF";
+
     const [r, g, b] = rgbString.match(/\d+/g).map(Number);
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
   }
