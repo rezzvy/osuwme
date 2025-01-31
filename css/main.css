@@ -8,6 +8,10 @@
 /* =========================================
    Global Styles
    ========================================= */
+html {
+  scroll-behavior: auto;
+}
+
 body {
   overflow-x: hidden;
   font-family: "Inter", serif;

@@ -4,7 +4,8 @@ export default class Controller {
     this.view = view;
 
     this.onModalStarting = false;
-    this.lastScrollTop = 0;
+    this.lastEditModeScrollTop = 0;
+    this.lastViewModeScrollTop = 0;
   }
 
   async init() {
@@ -101,14 +102,15 @@ export default class Controller {
       const isViewMode = !e.target.checked;
 
       if (isViewMode) {
-        this.lastScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        this.lastEditModeScrollTop = window.scrollY;
+        this.view.toggle("body", "view-mode", true);
+        window.scrollTo({ top: this.lastViewModeScrollTop || 0, behavior: "instant" });
+        return;
       }
 
-      this.view.toggle("body", "view-mode", isViewMode);
-
-      if (!isViewMode) {
-        document.documentElement.scrollTop = document.body.scrollTop = this.lastScrollTop;
-      }
+      this.lastViewModeScrollTop = window.scrollY;
+      this.view.toggle("body", "view-mode", false);
+      window.scrollTo({ top: this.lastEditModeScrollTop || 0, behavior: "instant" });
     });
 
     // Event delegation for loading template.
