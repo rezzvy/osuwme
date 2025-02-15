@@ -111,10 +111,15 @@ export default function initLibraries(controller) {
     return `[list]%NL%${api.content}[/list]%NL%`;
   });
 
-  model.registerBBCodeConversion("li", (api) => {
-    const content = api.node.dataset.title.trim() ? "%NL%" + api.content : api.content;
+  model.registerBBCodeConversion("ol", (api) => {
+    return `[list=1]%NL%${api.content}[/list]%NL%`;
+  });
 
-    return `[*]${api.node.dataset.title} ${content}`;
+  model.registerBBCodeConversion("li", (api) => {
+    const title = api.node.dataset.title ? api.node.dataset.title : api.content;
+    const content = title.trim() + "%NL%";
+
+    return `[*]${content}`;
   });
 
   // Image Map
