@@ -7,7 +7,7 @@ export default function initLibraries(controller) {
   ========================================= 
   */
   model.mation = new MationHTML();
-  model.mation.ignoreSelectors = ["._duration", "blockquote > ._source"];
+  model.mation.ignoreSelectors = ["._duration", "blockquote > ._source", "._edit"];
   model.mation.noRuleFallback = (api) => api.content;
 
   // Spacing
@@ -144,6 +144,10 @@ export default function initLibraries(controller) {
   });
 
   // Inline Styles
+  model.registerBBCodeConversion(".inline-splitter", (api) => {
+    return api.node.closest("summary") ? "\u00A0" : " ";
+  });
+
   model.registerBBCodeConversion(".spoiler", (api) => {
     return `[spoiler]${api.content}[/spoiler]`;
   });

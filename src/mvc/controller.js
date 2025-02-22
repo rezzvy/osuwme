@@ -536,6 +536,10 @@ export default class Controller {
     this.view.css("#canvas", "");
     this.view.clearSelectedCanvasItem();
 
+    this.view.els(".inline-splitter").forEach((el) => {
+      el.textContent = " ";
+    });
+
     this.view.els("code").forEach((el) => {
       if (el.classList.contains("inline") || !el.dataset.raw) return;
 

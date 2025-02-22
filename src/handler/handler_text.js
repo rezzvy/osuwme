@@ -43,9 +43,9 @@ export default class {
     this.view.disable(false, "#modal-edit-save");
 
     let content = this.targetContainer.innerHTML.trim();
-    content = content.replace(/\&nbsp;/g, " ").replace(/\u2011/g, "-");
-
     this.view.html(this.editorContainer.firstElementChild, content);
+
+    this.editorContainer.querySelectorAll(".inline-splitter").forEach((el) => el.replaceWith(document.createTextNode(" ")));
   }
 
   close() {
@@ -60,13 +60,14 @@ export default class {
     const editorContent = this.editorContainer.firstElementChild;
 
     this.view.els("p", editorContent).forEach((paragraph) => {
-      const spacingElement = this.view.el("br", paragraph);
+      paragraph.innerHTML = paragraph.innerHTML
+        .replace(/\s+/g, " ") // Normalize multiple spaces
+        .replace(/(?<=>)(\s|&nbsp;)+(?=<)/g, '<span class="inline-splitter"> </span>');
 
-      if (spacingElement) this.view.dataset(spacingElement, "spacing", "%SPCITM%");
-      if (!paragraph.innerHTML.trim()) this.view.remove(paragraph);
-
-      const spacing = paragraph.innerHTML.replace(/(?<=^|>)[^<>]+(?=<|$)/g, (text) => text.replace(/ /g, "\u00A0").replace(/-/g, "\u2011"));
-      this.view.html(paragraph, spacing);
+      for (const el of paragraph.children) {
+        if (el.parentElement.tagName !== "P") span.parentElement.replaceWith(span);
+        if (el.tagName === "BR") this.view.dataset(el, "spacing", "%SPCITM%");
+      }
     });
 
     this.view.html(this.targetContainer, editorContent.innerHTML);
