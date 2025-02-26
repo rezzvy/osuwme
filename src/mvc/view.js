@@ -312,7 +312,7 @@ export default class View {
 
   replaceContainerPlaceHolder(boolean, sourceContainer, targetContainer) {
     if (targetContainer.classList.contains("ph")) this.toggle(targetContainer, "ph", false);
-    this.toggle(sourceContainer, "ph", boolean && !sourceContainer.matches("li") && !sourceContainer.matches("li"));
+    this.toggle(sourceContainer, "ph", boolean && !sourceContainer.matches("li") && !sourceContainer.matches("summary"));
   }
 
   // Replace the button icon with a loading animation, and restore the original icon when set to false

@@ -229,11 +229,13 @@ export default function initLibraries(controller) {
     },
     accepts: (el, target) => {
       if (target.matches("#canvas-element-list")) return false;
+      if (target.matches("summary") && target.querySelector(".canvas-item:not(.gu-transit)")) return false;
       if (el.matches(".canvas-element-list-btn") && el.dataset.key === "notice" && target.closest(".notice")) return false;
       if (el.matches(".canvas-element-list-btn") && el.dataset.key === "center" && target.closest("center")) return false;
       if (el.querySelector("center") && target.closest("center")) return false;
       if (el.querySelector(".notice") && target.closest(".notice")) return false;
       if (el.contains(target)) return false;
+
       return true;
     },
 
@@ -295,7 +297,6 @@ export default function initLibraries(controller) {
 
       target.insertBefore(canvasItem, sibling);
 
-      if ((target.matches("summary") || target.matches("details")) && !model.isNodeEmpty(target, 2)) view.remove(canvasItem);
       view.remove(el);
 
       controller.pushHistory("undo", {
