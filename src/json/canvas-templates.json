@@ -15,9 +15,9 @@
     "templatePath": "./src/templates/simple_personal.html"
   },
   "4": {
-    "title": "Kumi Lone Wolf",
-    "des": "Personal BBCode made by <a href='https://osu.ppy.sh/users/8804560' class='text-decoration-underline'>Kumi Lone Wolf</a>",
-    "templatePath": "./src/templates/kumi_lone_wolf.html"
+    "title": "rezzvy",
+    "des": "Personal BBCode made by <a href='https://osu.ppy.sh/users/8804560' class='text-decoration-underline'>rezzvy</a>",
+    "templatePath": "./src/templates/rezzvy.html"
   },
   "5": {
     "title": "peppy",
