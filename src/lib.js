@@ -116,7 +116,7 @@ export default function initLibraries(controller) {
   });
 
   model.registerBBCodeConversion("li", (api) => {
-    const title = api.node.dataset.title ? api.node.dataset.title : api.content;
+    const title = api.node.dataset.title ? `${api.node.dataset.title}%NL%${api.content}` : api.content;
     const content = title.trim() + "%NL%";
 
     return `[*]${content}`;
