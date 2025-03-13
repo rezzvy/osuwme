@@ -298,7 +298,7 @@ export default class {
     });
 
     this.view.on(this.addFlagButton, "click", (e) => {
-      this.view.append(this.itemContainer, this.view.generateFlagItem("Kumi Lone Wolf", "id", "Indonesia"));
+      this.view.append(this.itemContainer, this.view.generateFlagItem("rezzvy", "id", "Indonesia"));
 
       this.view.disable(false, "#modal-edit-save");
       this.view.toggle(this.itemContainer, "ph", false);
