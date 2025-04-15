@@ -187,10 +187,10 @@ export default class {
   }
 
   _mouseUpHandler() {
-    this.imagemap.activeBox = null;
     this.imagemap.isResizing = false;
-
     this.view.toggle(this.imagemap.activeBox, "resize-cursor", this.imagemap.isResizing);
+
+    this.imagemap.activeBox = null;
   }
 
   _removeButtonHandler() {

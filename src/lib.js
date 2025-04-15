@@ -249,7 +249,8 @@ export default function initLibraries(controller) {
     view.toggle(document.body, "on-grabbing", true);
     if (el.matches(".canvas-element-list-btn")) return;
 
-    view.toggle(view.menuStickyContainer, "d-none", view.menuStickyContainer.classList.contains("pinned"));
+    const isHiding = view.menuStickyContainer.classList.contains("pinned") && !el.parentElement?.closest("#list-item-edit-container");
+    view.toggle(view.menuStickyContainer, "d-none", isHiding);
 
     const selectedItems = view.els(".canvas-item.selected");
 

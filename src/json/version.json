@@ -1,32 +1,28 @@
 {
-  "latest_updated": "Jan 28, 2025",
+  "latest_updated": "April 15, 2025",
   "changelogs": [
     {
-      "date": "Jan 28, 2025",
-      "changes": ["Add option to hide canvas content while moving", "Bug fixes and code adjustments"]
+      "date": "Apr 2025",
+      "changes": ["Bug fixes and code adjustments"]
     },
     {
-      "date": "Jan 27, 2025",
+      "date": "Feb 2025",
+      "changes": ["Bug fixes and code adjustments"]
+    },
+    {
+      "date": "Jan 2025",
       "changes": [
-        "Add support for moving selected canvas items",
-        "Restore scroll position when going back to edit mode",
-        "Hide Canvas Element List while dragging Canvas Item",
+        "Added option to hide canvas content while moving",
+        "Added support for moving selected canvas items",
+        "Added Undo/Redo functionality on Canvas",
+        "Added support for importing Image Maps from BBCode",
+        "Added Element Flags (for generating user links with flags)",
+        "Added 5 new project templates",
+        "Restored scroll position when returning to edit mode",
+        "Hid Canvas Element List while dragging a Canvas Item",
+        "Introduced new gradient types: Middle, Three-Channel, Rainbow, Random",
         "Bug fixes and code adjustments"
       ]
-    },
-    {
-      "date": "Jan 26, 2025",
-      "changes": [
-        "Undo/Redo on Canvas",
-        "Import Image Map from BBCode",
-        "Gradient Types: Middle, Three-Channel, Rainbow, Random",
-        "New Element Flags (for profile links)",
-        "More to explore."
-      ]
-    },
-    {
-      "date": "Jan 20, 2025",
-      "changes": ["First Public Release", "Bug fixes and code adjustments"]
     }
   ]
 }

@@ -286,6 +286,7 @@ export default class Controller {
   // Handler for undo / redo button click
   historyHandler(type) {
     const item = this.model.getHistory(type);
+
     if (!item) return;
 
     this.pushHistory(type === "undo" ? "redo" : "undo", item);
@@ -294,7 +295,12 @@ export default class Controller {
       if (type === "undo") {
         this.view.remove(item.element);
       } else {
-        this.view.appendBefore(item.container, item.element, item.sibling);
+        let container = null;
+        if (item.container.matches("li") && item.container.dataset.listItem) {
+          container = document.querySelector(`[data-list-item="${item.container.dataset.listItem}"]`);
+        }
+
+        this.view.appendBefore(container ? container : item.container, item.element, item.sibling);
       }
     }
 
@@ -317,14 +323,24 @@ export default class Controller {
         for (let i = item.length - 1; i >= 0; i--) {
           const obj = item[i];
           if (obj.action === "move") {
-            this.view.appendBefore(obj.container, obj.element, obj.sibling);
+            let container = null;
+            if (obj.container.matches("li") && obj.container.dataset.listItem) {
+              container = document.querySelector(`[data-list-item="${obj.container.dataset.listItem}"]`);
+            }
+
+            this.view.appendBefore(container ? container : obj.container, obj.element, obj.sibling);
             this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.targetContainer), obj.targetContainer, obj.container);
           }
         }
       } else if (type === "redo") {
         item.forEach((obj) => {
           if (obj.action === "move") {
-            this.view.appendBefore(obj.targetContainer, obj.element, obj.targetSibling);
+            let container = null;
+            if (obj.targetContainer.matches("li") && obj.targetContainer.dataset.listItem) {
+              container = document.querySelector(`[data-list-item="${obj.targetContainer.dataset.listItem}"]`);
+            }
+
+            this.view.appendBefore(container ? container : obj.targetContainer, obj.element, obj.targetSibling);
             this.view.replaceContainerPlaceHolder(this.model.isNodeEmpty(obj.container), obj.container, obj.targetContainer);
           }
         });
@@ -332,7 +348,11 @@ export default class Controller {
     }
 
     if (item.action === "add" || item.action === "remove") {
-      this.view.toggle(item.container, "ph", this.model.isNodeEmpty(item.container) && !item.container.matches("#canvas-wrapper"));
+      this.view.toggle(
+        item.container,
+        "ph",
+        this.model.isNodeEmpty(item.container) && !item.container.matches("#canvas-wrapper") && !item.container.matches("li")
+      );
     }
   }
 

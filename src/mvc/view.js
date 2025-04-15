@@ -544,8 +544,8 @@ export default class View {
   }
 
   // Generate List Item Element
-  generateListItem(title, content) {
-    return `<li data-title="${title}" data-drop>${content}</li>`;
+  generateListItem(title, content, uniqueID) {
+    return `<li data-list-item="${uniqueID}" data-title="${title}" data-drop>${content}</li>`;
   }
 
   generateChangelogItem(date, changes) {

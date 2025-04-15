@@ -427,14 +427,14 @@ export default class Model {
   }
 
   // Generates a rainbow gradient for the given text
-  generateRainbowColors(text) {
+  generateRainbowColors(text, lightness = 0.625) {
     const colors = [];
     const textLength = text.length;
 
     for (let i = 0; i < textLength; i++) {
       const fraction = i / textLength;
       const hue = Math.round(fraction * 360);
-      const rgb = this.hslToRgb(hue, 1, 0.5);
+      const rgb = this.hslToRgb(hue, 1, lightness);
       colors.push(this.rgbToHex(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`));
     }
 

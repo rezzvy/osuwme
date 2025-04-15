@@ -41,9 +41,9 @@ export default class {
     });
 
     this.view.on(this.listItemContainer, "click", (e) => {
-      if (!e.target.dataset.action) return;
-      this.view.remove(e.target.closest(".list-item"));
+      if (!e.target.dataset.action || e.target.dataset.action === "move") return;
 
+      this.view.remove(e.target.closest(".list-item"));
       const isContainerEmpty = this.model.isNodeEmpty(this.listItemContainer);
       this.view.toggle(this.listItemContainer, "ph", isContainerEmpty);
       this.view.disable(isContainerEmpty, "#modal-edit-save");
@@ -86,11 +86,12 @@ export default class {
 
   save() {
     let li = "";
-    for (const item of this.listItemContainer.children) {
+
+    for (const [index, item] of Array.from(this.listItemContainer.children).entries()) {
       const title = this.view.el(".list-title-input", item);
       const content = this.view.el("._list-content", item);
 
-      li += this.view.generateListItem(title.value, content.innerHTML);
+      li += this.view.generateListItem(title.value, content.innerHTML, `${Date.now()}${index}`);
     }
 
     this.view.toggle(this.targetElement, "ol", this.orderedListSwitch.checked);
