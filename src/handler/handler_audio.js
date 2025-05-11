@@ -44,6 +44,22 @@ export default class {
 
   _submitButtonHandler() {
     const value = this.linkInput.value;
+
+    if (value.startsWith("https://drive.google.com/")) {
+      const match = value.match(/\/d\/(.+?)\//);
+      const fileId = match && match[1] ? match[1] : null;
+
+      const directLink = fileId ? `https://drive.google.com/uc?export=download&id=${fileId}` : value;
+      const keepCustomLink = confirm("Google Drive link detected. Preview won't work, but it still works on osu-web. Continue?");
+
+      if (keepCustomLink) {
+        this.save(directLink);
+        this.controller.view.modalEdit.hide();
+      }
+
+      return;
+    }
+
     this.view.disable(true, "#modal-edit-save", this.linkInput);
 
     this.stop();
@@ -56,7 +72,6 @@ export default class {
     }
 
     this.view.el(this.audio).src = value;
-
     this.view.renderModalEditErrorMessage(false);
     this.view.buttonLoading(true, this.submitButton);
   }
@@ -71,7 +86,11 @@ export default class {
   _audioErrorHandler() {
     this.view.buttonLoading(false, this.submitButton);
     this.view.disable(false, this.linkInput);
-    this.view.renderModalEditErrorMessage(true, "Can't proceseed the link");
+    if (this.audio.src.startsWith("https://drive.google.com")) {
+      this.view.renderModalEditErrorMessage(true, "Preview is not available for google drive link");
+    } else {
+      this.view.renderModalEditErrorMessage(true, "Can't proceseed the link");
+    }
     this.view.replacePlaceholder(this.audio, false);
   }
 
@@ -129,8 +148,15 @@ export default class {
     this.view.val(this.linkInput, "");
   }
 
-  save() {
-    this.view.dataset(this.targetElement, "src", this.audio.src);
+  save(costumSrc) {
+    this.view.dataset(this.targetElement, "src", costumSrc ? costumSrc : this.audio.src);
+
+    if (costumSrc) {
+      this.view.el(this.targetElement).dataset.bsTitle = "Preview is not available for costum audio source (e.g Google Drive Direct Link)";
+      this.view.el(this.targetElement).dataset.bsToggle = "tooltip";
+      this.view.el(this.targetElement).dataset.event = "false";
+      return;
+    }
 
     if (this.targetElement.dataset.event === "false") {
       this.view.dataset(this.targetElement, "event", "true");
