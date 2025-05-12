@@ -326,3 +326,14 @@ body:has(#canvas-wrapper:empty) #download-as-text {
     overflow: hidden !important;
   }
 }
+
+/* =========================================
+   Starting Modal Changelogs
+   ========================================= */
+#changelog-wrapper > div:first-child > ul > li::after {
+  content: "(Still hot)";
+  color: #fdf4c0;
+  font-size: 12px;
+  margin-left: 6px;
+  display: inline-block;
+}

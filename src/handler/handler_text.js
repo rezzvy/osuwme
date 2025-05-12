@@ -45,6 +45,12 @@ export default class {
     let content = this.targetContainer.innerHTML.trim();
     this.view.html(this.editorContainer.firstElementChild, content);
 
+    this.editorContainer.querySelectorAll(".anchor-color").forEach((el) => {
+      const color = el.style.color;
+      el.parentElement.style.color = color;
+      el.parentElement.innerHTML = el.textContent;
+    });
+
     this.editorContainer.querySelectorAll(".inline-splitter").forEach((el) => el.replaceWith(document.createTextNode(" ")));
   }
 
@@ -60,13 +66,34 @@ export default class {
     const editorContent = this.editorContainer.firstElementChild;
 
     this.view.els("p", editorContent).forEach((paragraph) => {
+      let color = null;
+      let colorEl = null;
+
       paragraph.innerHTML = paragraph.innerHTML
+        .replace(/\&nbsp;/g, " ") // Normalize all &nbsp; to regular space
         .replace(/\s+/g, " ") // Normalize multiple spaces
         .replace(/(?<=>)(\s|&nbsp;)+(?=<)/g, '<span class="inline-splitter"> </span>');
 
       for (const el of paragraph.children) {
         if (el.parentElement.tagName !== "P") span.parentElement.replaceWith(span);
         if (el.tagName === "BR") this.view.dataset(el, "spacing", "%SPCITM%");
+
+        if (el.style.color && !color) {
+          if (el.matches("a") || el.querySelector('a[style*="color"]')) {
+            color = el.style.color;
+            el.style.color = "";
+            colorEl = el;
+          }
+        }
+      }
+
+      const anchor = colorEl?.querySelector("a");
+      if (color && anchor && colorEl) {
+        anchor.innerHTML = `<span class="anchor-color" style="color: ${color}">${anchor.innerHTML}</span>`;
+      }
+
+      if (!anchor && colorEl) {
+        colorEl.style.color = color;
       }
     });
 

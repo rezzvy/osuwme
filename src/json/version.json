@@ -1,7 +1,10 @@
 {
   "latest_updated": "April 15, 2025",
   "changelogs": [
-    { "date": "May 2025", "changes": ["Added support to use Google Drive link in audio editor"] },
+    {
+      "date": "May 2025",
+      "changes": ["Added support to use Google Drive link in audio editor", "Added support for custom colors in links"]
+    },
     {
       "date": "Apr 2025",
       "changes": ["Bug fixes and code adjustments"]

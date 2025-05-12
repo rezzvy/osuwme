@@ -212,7 +212,7 @@ body.on-grabbing [data-action="move"] {
 /* =========================================
    OSU Styles
    ========================================= */
-.osu-style a,
+.osu-style a:not([style*="color"]),
 .link-pink {
   color: rgb(217, 166, 189) !important;
   font-weight: initial;

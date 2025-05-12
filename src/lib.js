@@ -153,6 +153,14 @@ export default function initLibraries(controller) {
   });
 
   model.registerBBCodeConversion('[style*="color:"]', (api) => {
+    const anchor = api.node.parentElement;
+
+    if (anchor && anchor.matches("a")) {
+      const link = decodeURI(anchor.href);
+
+      if (model.isOsuProfileLink(link)) return api.content;
+    }
+
     return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
   });
 
@@ -524,10 +532,6 @@ export default function initLibraries(controller) {
   model.pickr.on("show", (color) => {
     const hex = color.toHEXA().toString();
     if (!model.latestSelection) model.latestSelection = model.quill.getSelection();
-    if (model.selectionHasLink()) {
-      model.pickr.hide();
-      return alert("Cant apply color when there's link in selection");
-    }
 
     model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
   });
