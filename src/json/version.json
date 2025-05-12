@@ -1,11 +1,12 @@
 {
-  "latest_updated": "April 15, 2025",
+  "latest_updated": "May 12, 2025",
   "changelogs": [
     {
       "date": "May 2025",
       "changes": [
         "Added support to use Google Drive link in audio editor",
         "Added support for custom colors in links",
+        "Added hotkeys for canvas actions",
         "Bug fixes and code adjustments"
       ]
     },

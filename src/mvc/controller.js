@@ -3,6 +3,7 @@ export default class Controller {
     this.model = model;
     this.view = view;
 
+    this.hotkeyReady = false;
     this.onModalStarting = false;
     this.lastEditModeScrollTop = 0;
     this.lastViewModeScrollTop = 0;
@@ -143,6 +144,8 @@ export default class Controller {
 
     // Project Action: Export Event
     this.view.on("#export-project-btn", "click", () => {
+      if (this.model.isNodeEmpty("#canvas-wrapper")) return;
+
       const content = this.model.getSingleLine(this.view.html("#canvas-wrapper"));
       this.download(content, "text/html", "osuwme-project.html");
     });
@@ -261,6 +264,7 @@ export default class Controller {
 
     // Starting Modal New Project/Continue Button Event
     this.view.on("#starting-modal-new-project-btn", "click", () => {
+      this.hotkeyReady = true;
       this.view.modalStarting.hide();
     });
 
@@ -274,6 +278,61 @@ export default class Controller {
     this.view.on("#starting-modal-templates-btn", "click", () => {
       this.view.modalStarting.hide();
       this.view.modalTemplate.show();
+    });
+
+    this.view.on(document, "keydown", (e) => {
+      const key = e.key.toLowerCase();
+      const blockedKeys = ["o", "s", "1", "2", "3", "4", "5", "e", "z", "y"];
+
+      if (e.ctrlKey && blockedKeys.includes(key)) {
+        e.preventDefault();
+      }
+
+      if (this.hotkeyReady) {
+        if (e.ctrlKey && key === "1") {
+          this.view.el("#expand-all-canvas-btn").click();
+        }
+
+        if (e.ctrlKey && key === "2") {
+          this.view.el("#collapse-all-canvas-btn").click();
+        }
+
+        if (e.ctrlKey && key === "3") {
+          this.view.el("#clear-canvas-btn").click();
+        }
+
+        if (e.ctrlKey && key === "4") {
+          this.view.el("#clear-canvas-selection-btn").click();
+        }
+
+        if (e.ctrlKey && key === "5") {
+          this.view.el("#reset-canvas-size-btn").click();
+        }
+
+        if (e.ctrlKey && key === "s") {
+          this.view.el("#export-project-btn").click();
+        }
+
+        if (e.ctrlKey && key === "o") {
+          this.view.el("#import-project-btn").click();
+        }
+
+        if (e.ctrlKey && key === "e") {
+          const editModeInput = this.view.el("#canvas-mode-switch");
+          editModeInput.checked = !editModeInput.checked;
+          editModeInput.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+
+        if (!document.body.classList.contains("select-costum")) {
+          if (e.ctrlKey && key === "z") {
+            this.view.el("#undo-canvas-btn").click();
+          }
+
+          if (e.ctrlKey && key === "y") {
+            this.view.el("#redo-canvas-btn").click();
+          }
+        }
+      }
     });
   }
 
