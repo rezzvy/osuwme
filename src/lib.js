@@ -153,14 +153,6 @@ export default function initLibraries(controller) {
   });
 
   model.registerBBCodeConversion('[style*="color:"]', (api) => {
-    const anchor = api.node.parentElement;
-
-    if (anchor && anchor.matches("a")) {
-      const link = decodeURI(anchor.href);
-
-      if (model.isOsuProfileLink(link)) return api.content;
-    }
-
     return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
   });
 
@@ -257,7 +249,11 @@ export default function initLibraries(controller) {
     view.toggle(document.body, "on-grabbing", true);
     if (el.matches(".canvas-element-list-btn")) return;
 
-    const isHiding = view.menuStickyContainer.classList.contains("pinned") && !el.parentElement?.closest("#list-item-edit-container");
+    const isHiding =
+      view.menuStickyContainer.classList.contains("pinned") &&
+      !el.parentElement?.closest("#list-item-edit-container") &&
+      !el.parentElement.closest("#flag-edit-item-container");
+
     view.toggle(view.menuStickyContainer, "d-none", isHiding);
 
     const selectedItems = view.els(".canvas-item.selected");
@@ -380,6 +376,7 @@ export default function initLibraries(controller) {
   });
 
   view.on(model.quill.root, "click", (e) => {
+    model.currentSelectedElement = null;
     model.latestSelection = null;
 
     const isLink = e.target.matches("a");
@@ -391,8 +388,13 @@ export default function initLibraries(controller) {
 
     if (color) {
       model.pickr.setColor(color);
-    } else {
-      model.pickr.setColor("#fff");
+    }
+
+    if (!e.target.matches("p") && !e.target.matches(".ql-editor")) {
+      if (e.target.matches("a") && model.isOsuProfileLink(e.target.href)) return;
+      if (model.quill.getSelection().length !== 0) return;
+
+      model.currentSelectedElement = e.target;
     }
 
     if (isLink) {
@@ -525,13 +527,31 @@ export default function initLibraries(controller) {
 
     view.colorPickerSolid.style.setProperty("--pcr-color", hex);
 
+    if (model.currentSelectedElement) {
+      model.currentSelectedElement.style.color = hex;
+      return;
+    }
+
     if (!model.latestSelection) return;
     model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
   });
 
   model.pickr.on("show", (color) => {
     const hex = color.toHEXA().toString();
+
+    if (model.currentSelectedElement) {
+      model.currentSelectedElement.style.color = hex;
+      return;
+    }
+
     if (!model.latestSelection) model.latestSelection = model.quill.getSelection();
+
+    if (model.selectionHasProfileLink()) {
+      alert("Can't apply color when there's a special link (profile link) in the selection.");
+      model.latestSelection = null;
+      model.pickr.hide();
+      return;
+    }
 
     model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
   });

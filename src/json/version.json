@@ -3,7 +3,11 @@
   "changelogs": [
     {
       "date": "May 2025",
-      "changes": ["Added support to use Google Drive link in audio editor", "Added support for custom colors in links"]
+      "changes": [
+        "Added support to use Google Drive link in audio editor",
+        "Added support for custom colors in links",
+        "Bug fixes and code adjustments"
+      ]
     },
     {
       "date": "Apr 2025",

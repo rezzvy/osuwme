@@ -214,8 +214,15 @@ body.on-grabbing [data-action="move"] {
    ========================================= */
 .osu-style a:not([style*="color"]),
 .link-pink {
-  color: rgb(217, 166, 189) !important;
+  color: rgb(217, 166, 189);
   font-weight: initial;
+}
+
+p > em[style*="color"]:has(a) a,
+p > strong[style*="color"]:has(a) a,
+p > s[style*="color"]:has(a) a,
+p > u[style*="color"]:has(a) a {
+  color: inherit !important;
 }
 
 .osu-style strong a,

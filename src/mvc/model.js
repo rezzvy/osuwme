@@ -473,6 +473,18 @@ export default class Model {
     return false;
   }
 
+  selectionHasProfileLink() {
+    if (!this.latestSelection) return null;
+
+    for (let i = this.latestSelection.index; i < this.latestSelection.index + this.latestSelection.length; i++) {
+      const charFormat = this.quill.getFormat(i, 1);
+      if (charFormat.link) {
+        return this.isOsuProfileLink(charFormat.link);
+      }
+    }
+    return null;
+  }
+
   // Creates and registers a custom inline blot for Quill
   createInlineBlot({ blotName, tagName, className }) {
     const Inline = Quill.import("blots/inline");

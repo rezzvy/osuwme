@@ -79,7 +79,7 @@ export default class {
         if (el.tagName === "BR") this.view.dataset(el, "spacing", "%SPCITM%");
 
         if (el.style.color && !color) {
-          if (el.matches("a") || el.querySelector('a[style*="color"]')) {
+          if (el.matches('a[style*="color"]') || el.querySelector("a")) {
             color = el.style.color;
             el.style.color = "";
             colorEl = el;
