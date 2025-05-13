@@ -7,6 +7,7 @@
         "Added support to use Google Drive link in audio editor",
         "Added support for custom colors in links",
         "Added hotkeys for canvas actions",
+        "Added 2 new project templates",
         "Bug fixes and code adjustments"
       ]
     },

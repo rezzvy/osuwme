@@ -282,10 +282,14 @@ export default class Controller {
 
     this.view.on(document, "keydown", (e) => {
       const key = e.key.toLowerCase();
-      const blockedKeys = ["o", "s", "1", "2", "3", "4", "5", "e", "z", "y"];
+      const blockedKeys = ["o", "s", "1", "2", "3", "4", "5", "e"];
 
       if (e.ctrlKey && blockedKeys.includes(key)) {
         e.preventDefault();
+      }
+
+      if (document.body.classList.contains("modal-open")) {
+        return;
       }
 
       if (this.hotkeyReady) {
@@ -323,14 +327,12 @@ export default class Controller {
           editModeInput.dispatchEvent(new Event("input", { bubbles: true }));
         }
 
-        if (!document.body.classList.contains("select-costum")) {
-          if (e.ctrlKey && key === "z") {
-            this.view.el("#undo-canvas-btn").click();
-          }
+        if (e.ctrlKey && key === "z" && !document.body.classList.contains("view-mode")) {
+          this.view.el("#undo-canvas-btn").click();
+        }
 
-          if (e.ctrlKey && key === "y") {
-            this.view.el("#redo-canvas-btn").click();
-          }
+        if (e.ctrlKey && key === "y" && !document.body.classList.contains("view-mode")) {
+          this.view.el("#redo-canvas-btn").click();
         }
       }
     });
@@ -364,6 +366,7 @@ export default class Controller {
     }
 
     if (item.action === "remove") {
+      this.view.clearActiveTooltips();
       if (type === "undo") {
         this.view.appendBefore(item.container, item.element, item.sibling);
       } else {
@@ -624,6 +627,8 @@ export default class Controller {
 
       this.view.text(el, this.model.replaceTextAreaSpacing(false, el.dataset.raw));
     });
+
+    this.hotkeyReady = true;
   }
 
   // Generate a downloadable blob and clear it afterward.
