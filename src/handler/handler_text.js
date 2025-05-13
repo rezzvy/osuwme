@@ -65,6 +65,11 @@ export default class {
   save() {
     const editorContent = this.editorContainer.firstElementChild;
 
+    const latestSelectedChilds = this.view.els(".text-editor-item-selected", editorContent);
+    latestSelectedChilds.forEach((item) => {
+      item.classList.remove("text-editor-item-selected");
+    });
+
     this.view.els("p", editorContent).forEach((paragraph) => {
       let color = null;
       let colorEl = null;

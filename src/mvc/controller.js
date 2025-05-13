@@ -653,9 +653,27 @@ export default class Controller {
     if (type === "random") gradients = this.model.generateRandomColors(text);
 
     let colorIndex = 0;
-    for (let i = 0; i < range.length; i++) {
-      this.model.quill.formatText(range.index + i, 1, "color", gradients[colorIndex]);
-      colorIndex = (colorIndex + 1) % gradients.length;
+
+    const isProblematicSequence = (text, i) => {
+      const threeChar = text.slice(i, i + 3);
+      const twoChar = text.slice(i, i + 2);
+
+      return ["<--", "<---", "-->", "--->"].includes(threeChar) || ["<--", "-->", "<---", "--->"].includes(twoChar);
+    };
+
+    for (let i = 0; i < text.length; ) {
+      const pos = range.index + i;
+
+      if (isProblematicSequence(text, i)) {
+        const skipLen = text[i + 3] ? 4 : text[i + 2] ? 3 : 2;
+        this.model.quill.formatText(pos, skipLen, "color", gradients[colorIndex]);
+        colorIndex = (colorIndex + 1) % gradients.length;
+        i += skipLen;
+      } else {
+        this.model.quill.formatText(pos, 1, "color", gradients[colorIndex]);
+        colorIndex = (colorIndex + 1) % gradients.length;
+        i++;
+      }
     }
   }
 

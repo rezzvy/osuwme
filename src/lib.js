@@ -376,11 +376,15 @@ export default function initLibraries(controller) {
   });
 
   view.on(model.quill.root, "click", (e) => {
+    if (model.currentSelectedElement) {
+      model.currentSelectedElement.classList.remove("text-editor-item-selected");
+    }
     model.currentSelectedElement = null;
     model.latestSelection = null;
 
     const isLink = e.target.matches("a");
-    const color = e.target.style.color;
+    const parentColorEl = e.target.closest('[style*="color:"]');
+    const color = e.target.style.color || parentColorEl?.style.color;
 
     view.toggle(".link-form", "d-none", !isLink);
     view.toggle(".gradient-form", "d-none", true);
@@ -392,9 +396,10 @@ export default function initLibraries(controller) {
 
     if (!e.target.matches("p") && !e.target.matches(".ql-editor")) {
       if (e.target.matches("a") && model.isOsuProfileLink(e.target.href)) return;
-      if (model.quill.getSelection().length !== 0) return;
+      if (model.quill.getSelection()?.length !== 0) return;
 
-      model.currentSelectedElement = e.target;
+      model.currentSelectedElement = !e.target.parentElement?.matches("p") ? (parentColorEl ? parentColorEl : e.target) : e.target;
+      model.currentSelectedElement.classList.add("text-editor-item-selected");
     }
 
     if (isLink) {
@@ -553,7 +558,9 @@ export default function initLibraries(controller) {
       return;
     }
 
-    model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
+    if (model.latestSelection.index && model.latestSelection.length) {
+      model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
+    }
   });
 
   model.gradientColorStart.on("change", (color) => {
