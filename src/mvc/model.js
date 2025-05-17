@@ -310,7 +310,7 @@ export default class Model {
 
   // Checks if a link is an osu! profile link with a valid username
   isOsuProfileLink(link) {
-    return /^https:\/\/osu\.ppy\.sh\/users\/[a-zA-Z][a-zA-Z0-9\s-_]*[a-zA-Z0-9_]$/.test(link);
+    return /https:\/\/osu\.ppy\.sh\/users\/(?!\d+$)[A-Za-z0-9_\-\[\]]+/.test(link);
   }
 
   /* =========================================

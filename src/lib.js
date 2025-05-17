@@ -153,6 +153,7 @@ export default function initLibraries(controller) {
   });
 
   model.registerBBCodeConversion('[style*="color:"]', (api) => {
+    if (api.node.matches("a") && model.isOsuProfileLink(api.node.href)) return api.content;
     return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
   });
 
@@ -181,11 +182,20 @@ export default function initLibraries(controller) {
       "150%": `[size=150]`,
     };
 
+    if (api.node.matches("a")) return api.content;
     return `${sizeMaps[size]}${api.content}[/size]`;
   });
 
   // Link
   model.registerBBCodeConversion("a", (api) => {
+    const size = api.node.style.fontSize;
+    const sizeMaps = {
+      "50%": `[size=50]`,
+      "85%": `[size=85]`,
+      "100%": `[size=100]`,
+      "150%": `[size=150]`,
+    };
+
     let content = api.content;
     let link = decodeURI(api.node.href);
 
@@ -199,11 +209,23 @@ export default function initLibraries(controller) {
     }
 
     if (model.isOsuProfileLink(link)) {
+      if (size) {
+        return `${sizeMaps[size]}[profile]${content}[/profile][/size]`;
+      }
+
       return `[profile]${content}[/profile]`;
     }
 
     if (link.startsWith("mailto:")) {
+      if (size) {
+        return `${sizeMaps[size]}[email=${link.substring(7)}]${content}[/email][/size]`;
+      }
+
       return `[email=${link.substring(7)}]${content}[/email]`;
+    }
+
+    if (size) {
+      return `${sizeMaps[size]}[url=${link}]${content}[/url][/size]`;
     }
 
     return `[url=${link}]${content}[/url]`;
@@ -394,14 +416,6 @@ export default function initLibraries(controller) {
       model.pickr.setColor(color);
     }
 
-    if (!e.target.matches("p") && !e.target.matches(".ql-editor")) {
-      if (e.target.matches("a") && model.isOsuProfileLink(e.target.href)) return;
-      if (model.quill.getSelection()?.length !== 0) return;
-
-      model.currentSelectedElement = !e.target.parentElement?.matches("p") ? (parentColorEl ? parentColorEl : e.target) : e.target;
-      model.currentSelectedElement.classList.add("text-editor-item-selected");
-    }
-
     if (isLink) {
       view.val(".link-form input", e.target.href);
 
@@ -409,6 +423,14 @@ export default function initLibraries(controller) {
         e.target.href = view.val(".link-form input");
         view.toggle(".link-form", "d-none", true);
       });
+    }
+
+    if (!e.target.matches("p") && !e.target.matches(".ql-editor")) {
+      if (e.target.matches("a") && model.isOsuProfileLink(e.target.href)) return;
+      if (model.quill.getSelection()?.length !== 0) return;
+
+      model.currentSelectedElement = !e.target.parentElement?.matches("p") ? (parentColorEl ? parentColorEl : e.target) : e.target;
+      model.currentSelectedElement.classList.add("text-editor-item-selected");
     }
   });
 
