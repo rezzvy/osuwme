@@ -399,7 +399,7 @@ export default class View {
             <button class="btn btn-outline-light p-0 border-0" data-bs-toggle="collapse" data-bs-target="#${uniqueID}"></button>
           </div>
           <div class="flex-fill">
-            <input type="text" class="form-control-plaintext h-100 text-light" value="${key}" />
+            <input type="text" class="canvas-item-title form-control-plaintext h-100 text-light" value="${key}" />
           </div>
         </div>
   

@@ -62,6 +62,12 @@ export default class Controller {
       }
     });
 
+    this.view.on("#canvas-wrapper", "input", (e) => {
+      if (e.target.matches(".canvas-item-title")) {
+        e.target.setAttribute("value", e.target.value);
+      }
+    });
+
     // Modal Edit on Open Event
     this.view.on("#modal-edit", "show.bs.modal", () => {
       this.view.disable(true, "#modal-edit-save");

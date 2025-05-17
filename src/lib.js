@@ -62,12 +62,16 @@ export default function initLibraries(controller) {
 
   // Center
   model.registerBBCodeConversion("center", (api) => {
-    return `[centre]${api.content}[/centre]`;
+    const hasCenterBlock = api.node.parentElement?.closest("center");
+
+    return hasCenterBlock ? api.content : `[centre]${api.content}[/centre]`;
   });
 
   // Notice
   model.registerBBCodeConversion(".notice", (api) => {
-    return `[notice]${api.content}[/notice]%NL%`;
+    const hasNoticeBlock = api.node.parentElement?.closest(".notice");
+
+    return hasNoticeBlock ? api.content : `[notice]${api.content}[/notice]%NL%`;
   });
 
   // Youtube
