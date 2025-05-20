@@ -409,6 +409,8 @@ export default class {
     this.view.els(".imgmap-edit-item", this.imageMapContainer).forEach((item) => this.view.remove(item));
     this.view.replacePlaceholder(this.imageMapContainer, false);
     this.setImageMapItemInputValue("", "", "", "");
+
+    this.renderMainEditor(true);
   }
 
   save() {

@@ -248,15 +248,19 @@ export default class Controller {
     });
 
     // Gradient Randomize Button Event
-    this.view.on("#randomize-selected-text-btn", "click", (e) => {
-      if (this.model.latestSelection && this.model.currentGradient !== "random") return;
+    this.view.on(
+      "#randomize-selected-text-btn",
+      "click",
+      this.debounce((e) => {
+        if (this.model.latestSelection && this.model.currentGradient !== "random") return;
 
-      const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
-        (color) => color.getColor().toHEXA().toString()
-      );
+        const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
+          (color) => color.getColor().toHEXA().toString()
+        );
 
-      this.formatTextToGradient(this.model.currentGradient, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
-    });
+        this.formatTextToGradient(this.model.currentGradient, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
+      }, 100)
+    );
 
     // Undo Button Event
     this.view.on("#undo-canvas-btn", "click", () => {
@@ -569,6 +573,14 @@ export default class Controller {
   ========================================= 
   */
 
+  debounce(fn, delay) {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
   // Adds an action to the history stack and toggles the undo and redo buttons
   pushHistory(type, stack) {
     this.model.pushHistory(type, stack);
@@ -651,36 +663,52 @@ export default class Controller {
 
     const text = this.model.quill.getText(range.index, range.length);
 
-    let gradients = "";
+    let gradients = [];
     if (type === "horizontal") gradients = this.model.generateGradient(text, colorStart, colorEnd);
     if (type === "middle") gradients = this.model.generateMiddleGradient(text, colorStart, colorMiddle);
     if (type === "threeColored") gradients = this.model.generateThreeColorGradient(text, colorStart, colorMiddle, colorEnd);
     if (type === "rainbow") gradients = this.model.generateRainbowColors(text);
     if (type === "random") gradients = this.model.generateRandomColors(text);
 
+    const operations = [];
     let colorIndex = 0;
+    let cursor = 0;
 
     const isProblematicSequence = (text, i) => {
-      const threeChar = text.slice(i, i + 3);
-      const twoChar = text.slice(i, i + 2);
+      const fourChar = text.slice(i, i + 4);
+      if (fourChar === "<---" || fourChar === "--->") return 4;
 
-      return ["<--", "<---", "-->", "--->"].includes(threeChar) || ["<--", "-->", "<---", "--->"].includes(twoChar);
+      const threeChar = text.slice(i, i + 3);
+      if (threeChar === "<--" || threeChar === "-->") return 3;
+
+      const twoChar = text.slice(i, i + 2);
+      if (twoChar === "<-" || twoChar === "->") return 2;
+
+      return 0;
     };
 
     for (let i = 0; i < text.length; ) {
       const pos = range.index + i;
 
-      if (isProblematicSequence(text, i)) {
-        const skipLen = text[i + 3] ? 4 : text[i + 2] ? 3 : 2;
-        this.model.quill.formatText(pos, skipLen, "color", gradients[colorIndex]);
-        colorIndex = (colorIndex + 1) % gradients.length;
-        i += skipLen;
-      } else {
-        this.model.quill.formatText(pos, 1, "color", gradients[colorIndex]);
-        colorIndex = (colorIndex + 1) % gradients.length;
-        i++;
+      let len = isProblematicSequence(text, i);
+      if (len === 0) len = 1;
+
+      const retainOffset = pos - range.index - cursor;
+      if (retainOffset > 0) {
+        operations.push({ retain: retainOffset });
       }
+
+      operations.push({
+        retain: len,
+        attributes: { color: gradients[colorIndex] },
+      });
+
+      colorIndex = (colorIndex + 1) % gradients.length;
+      cursor += retainOffset + len;
+      i += len;
     }
+
+    this.model.quill.updateContents(new this.model.Delta(operations), Quill.sources.USER);
   }
 
   /* 

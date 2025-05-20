@@ -371,6 +371,8 @@ export default function initLibraries(controller) {
   ========================================= 
   */
 
+  model.Delta = Quill.import("delta");
+
   const FontSize = Quill.import("attributors/style/size");
   FontSize.whitelist = ["50%", "85%", "100%", "150%"];
 
@@ -589,39 +591,48 @@ export default function initLibraries(controller) {
     }
   });
 
-  model.gradientColorStart.on("change", (color) => {
-    const colorStart = color.toHEXA().toString();
-    const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
-    const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
+  model.gradientColorStart.on(
+    "change",
+    controller.debounce((color) => {
+      const colorStart = color.toHEXA().toString();
+      const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
+      const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
 
-    view.colorPickerGradientStart.style.setProperty("--pcr-color", colorStart);
+      view.colorPickerGradientStart.style.setProperty("--pcr-color", colorStart);
 
-    if (model.latestSelection) {
-      controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
-    }
-  });
+      if (model.latestSelection) {
+        controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
+      }
+    }, 50)
+  );
 
-  model.gradientColorMiddle.on("change", (color) => {
-    const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
-    const colorMiddle = color.toHEXA().toString();
-    const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
+  model.gradientColorMiddle.on(
+    "change",
+    controller.debounce((color) => {
+      const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
+      const colorMiddle = color.toHEXA().toString();
+      const colorEnd = model.gradientColorEnd.getColor().toHEXA().toString();
 
-    view.colorPickerGradientMiddle.style.setProperty("--pcr-color", colorMiddle);
+      view.colorPickerGradientMiddle.style.setProperty("--pcr-color", colorMiddle);
 
-    if (model.latestSelection) {
-      controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
-    }
-  });
+      if (model.latestSelection) {
+        controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
+      }
+    }, 50)
+  );
 
-  model.gradientColorEnd.on("change", (color) => {
-    const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
-    const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
-    const colorEnd = color.toHEXA().toString();
+  model.gradientColorEnd.on(
+    "change",
+    controller.debounce((color) => {
+      const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
+      const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
+      const colorEnd = color.toHEXA().toString();
 
-    view.colorPickerGradientEnd.style.setProperty("--pcr-color", colorEnd);
+      view.colorPickerGradientEnd.style.setProperty("--pcr-color", colorEnd);
 
-    if (model.latestSelection) {
-      controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
-    }
-  });
+      if (model.latestSelection) {
+        controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
+      }
+    }, 50)
+  );
 }
