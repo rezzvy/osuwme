@@ -404,9 +404,10 @@ export default function initLibraries(controller) {
   });
 
   view.on(model.quill.root, "click", (e) => {
-    if (model.currentSelectedElement) {
-      model.currentSelectedElement.classList.remove("text-editor-item-selected");
-    }
+    // if (model.currentSelectedElement) {
+    //   model.currentSelectedElement.classList.remove("text-editor-item-selected");
+    // }
+
     model.currentSelectedElement = null;
     model.latestSelection = null;
 
@@ -435,8 +436,8 @@ export default function initLibraries(controller) {
       if (e.target.matches("a") && model.isOsuProfileLink(e.target.href)) return;
       if (model.quill.getSelection()?.length !== 0) return;
 
-      model.currentSelectedElement = !e.target.parentElement?.matches("p") ? (parentColorEl ? parentColorEl : e.target) : e.target;
-      model.currentSelectedElement.classList.add("text-editor-item-selected");
+      model.currentSelectedElement = parentColorEl && !e.target.matches("p") ? parentColorEl : null;
+      // model.currentSelectedElement.classList.add("text-editor-item-selected");
     }
   });
 
@@ -586,7 +587,7 @@ export default function initLibraries(controller) {
       return;
     }
 
-    if (model.latestSelection.index && model.latestSelection.length) {
+    if (model.latestSelection) {
       model.quill.formatText(model.latestSelection.index, model.latestSelection.length, "color", hex);
     }
   });

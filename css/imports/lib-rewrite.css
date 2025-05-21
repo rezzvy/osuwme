@@ -196,10 +196,10 @@ a {
   padding: 1rem;
 }
 
-.ql-editor > p > *:hover,
+/* .ql-editor > p > *:hover,
 .text-editor-item-selected {
   border: 2px dashed rgba(255, 255, 255, 0.75);
-}
+} */
 
 .ql-editor:focus-visible {
   outline: unset;

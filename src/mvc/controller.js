@@ -673,7 +673,7 @@ export default class Controller {
 
     const operations = [];
     let colorIndex = 0;
-    let cursor = 0;
+    let lastRetain = 0;
 
     const isProblematicSequence = (text, i) => {
       const fourChar = text.slice(i, i + 4);
@@ -689,12 +689,10 @@ export default class Controller {
     };
 
     for (let i = 0; i < text.length; ) {
-      const pos = range.index + i;
+      const len = isProblematicSequence(text, i) || 1;
+      const globalIndex = range.index + i;
 
-      let len = isProblematicSequence(text, i);
-      if (len === 0) len = 1;
-
-      const retainOffset = pos - range.index - cursor;
+      const retainOffset = globalIndex - lastRetain;
       if (retainOffset > 0) {
         operations.push({ retain: retainOffset });
       }
@@ -704,8 +702,8 @@ export default class Controller {
         attributes: { color: gradients[colorIndex] },
       });
 
+      lastRetain = globalIndex + len;
       colorIndex = (colorIndex + 1) % gradients.length;
-      cursor += retainOffset + len;
       i += len;
     }
 
