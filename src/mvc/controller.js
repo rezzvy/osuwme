@@ -145,6 +145,7 @@ export default class Controller {
 
         this.setCanvasContent(content);
         this.view.clearActiveTooltips();
+        e.target.value = "";
       });
     });
 
@@ -772,6 +773,7 @@ export default class Controller {
       content += this.view.generateChangelogItem(date, changes);
     }
 
+    this.view.text("#last-update-date", data.latest_updated);
     this.view.html("#changelog-wrapper", content);
   }
 

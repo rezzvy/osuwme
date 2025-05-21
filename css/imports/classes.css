@@ -134,6 +134,7 @@ body.on-grabbing [data-action="move"] {
 }
 
 .ph.ph-notice::before,
+.ph.ph-group::before,
 .ph.ph-center::before,
 .ph.ph-quote::before,
 .ph.ph-spoilerbox::before,
@@ -188,6 +189,10 @@ body.on-grabbing [data-action="move"] {
 
 .ph.ph-notice::after {
   content: "\f1b2";
+}
+
+.ph.ph-group::after {
+  content: "\f247";
 }
 
 .ph.ph-spoilerbox::after {

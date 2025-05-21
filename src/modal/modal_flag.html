@@ -27,7 +27,14 @@
 
 <div id="flag-edit-item-container" class="modal-box ph ph-absolute-center ph-flag p-3 rounded-2 min-height-300" data-drop></div>
 
-<div class="input-group input-group-sm gap-1 mt-2">
-  <div class="input-group-text">Splitter</div>
-  <input id="splitter-input" type="text" class="form-control rounded-2" placeholder="E.g: , - | ~ /" autocomplete="off" value=", " />
+<div class="mt-2 d-flex gap-3 justify-content-between align-items-center">
+  <div class="input-group input-group-sm gap-1">
+    <div class="input-group-text">Splitter</div>
+    <input id="splitter-input" type="text" class="form-control rounded-2" placeholder="E.g: , - | ~ /" autocomplete="off" value=", " />
+  </div>
+
+  <div class="form-check form-switch d-flex align-items-center gap-2 m-0 p-0 flex-shrink-0">
+    <input id="flag-display-horizontal-check" class="form-check-input fs-4 m-0 p-0" type="checkbox" role="switch" checked />
+    <label class="form-check-label" for="flag-display-horizontal-check">Display horizontally</label>
+  </div>
 </div>

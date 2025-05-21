@@ -78,6 +78,12 @@
     "skeletonPath": "./src/skeleton/skeleton_notice.html",
     "editable": false
   },
+  "group": {
+    "tooltipTitle": "Group Container",
+    "icon": "fa-object-group",
+    "skeletonPath": "./src/skeleton/skeleton_group.html",
+    "editable": false
+  },
   "center": {
     "tooltipTitle": "Center Block",
     "icon": "fa-align-center",

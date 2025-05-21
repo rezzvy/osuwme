@@ -231,6 +231,8 @@ export default class {
     this.autoCompleteContainer = this.view.el("._auto-complete", this.parent);
     this.splitterInput = this.view.el("#splitter-input", this.parent);
     this.itemContainer = this.view.el("#flag-edit-item-container", this.parent);
+
+    this.displayHorizontalCheck = this.view.el("#flag-display-horizontal-check", this.parent);
   }
 
   _target() {
@@ -395,6 +397,12 @@ export default class {
     this.view.val(this.splitterInput, this.model.replaceToNBS(false, this.targetElement.dataset.splitter));
     this.clear(true);
 
+    if (this.targetElement.dataset.horizontal === undefined) {
+      this.targetElement.dataset.horizontal = "true";
+    }
+
+    this.view.el(this.displayHorizontalCheck).checked = this.targetElement.dataset.horizontal === "true" ? true : false;
+
     if (!this.model.isNodeEmpty(this.targetElement)) {
       this.view.disable(false, "#modal-edit-save");
 
@@ -427,18 +435,24 @@ export default class {
       const { countryName, code } = wrapper.dataset;
 
       const spacing = item !== lastItemElement ? splitter : "";
+      const lineBreak = '<br data-spacing="%SPCITM%">';
+      const endOfLine = this.displayHorizontalCheck.checked
+        ? `${spacing}`
+        : `${spacing === "" ? "" : lineBreak}${spacing}${item !== lastItemElement ? lineBreak : ""}`;
+
       content += `
       <span 
         data-country-name="${countryName}" 
         data-code="${code}" 
         data-username="${username.textContent}">
           <img src="${img.src}">&nbsp;<a target="_blank" href="https://osu.ppy.sh/users/${username.textContent}">${username.textContent}</a>   
-       </span>${spacing}`;
+       </span>${endOfLine}`;
     }
     content += "</p>";
 
     this.view.toggle(this.targetElement, "ph", false);
     this.view.dataset(this.targetElement, "splitter", splitter);
+    this.view.dataset(this.targetElement, "horizontal", this.displayHorizontalCheck.checked);
     this.view.html(this.targetElement, content);
   }
 }
