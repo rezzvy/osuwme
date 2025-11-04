@@ -1,35 +1,40 @@
 {
   "1": {
+    "title": "Cookie n Cream",
+    "des": "<a href='https://osu.ppy.sh/users/34839373' class='text-decoration-underline'>Cookie n Cream's</a> osu profile with a variety of category",
+    "templatePath": "./src/templates/cookie_n_cream.html"
+  },
+  "2": {
     "title": "Simple Tournament",
     "des": "Example Template",
     "templatePath": "./src/templates/simple_tournament.html"
   },
-  "2": {
+  "3": {
     "title": "Simple Personal #1",
     "des": "Example Template",
     "templatePath": "./src/templates/simple_personal_1.html"
   },
-  "3": {
+  "4": {
     "title": "Simple Personal #2",
     "des": "Example Template",
     "templatePath": "./src/templates/simple_personal_2.html"
   },
-  "4": {
+  "5": {
     "title": "Simple Personal #3",
     "des": "Example Template",
     "templatePath": "./src/templates/simple_personal_3.html"
   },
-  "5": {
+  "6": {
     "title": "Random #1",
     "des": "I wanna die so please notice me uwu",
     "templatePath": "./src/templates/random_1.html"
   },
-  "6": {
+  "7": {
     "title": "rezzvy",
     "des": "Personal BBCode made by <a href='https://osu.ppy.sh/users/8804560' class='text-decoration-underline'>rezzvy</a>",
     "templatePath": "./src/templates/rezzvy.html"
   },
-  "7": {
+  "8": {
     "title": "peppy",
     "des": "<a href='https://osu.ppy.sh/users/2' class='text-decoration-underline'>Peppy's</a> osu! userpage BBCode",
     "templatePath": "./src/templates/peppy.html"
