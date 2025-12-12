@@ -236,6 +236,10 @@ p > u[style*="color"]:has(a) a {
   font-weight: 700 !important;
 }
 
+.osu-style a {
+  font-weight: initial;
+}
+
 .osu-style details summary:not(:has(*)) {
   color: rgb(217, 166, 189);
   font-weight: 700;

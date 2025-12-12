@@ -493,10 +493,16 @@ export default function initLibraries(controller) {
   view.on("#text-editor-color-gradient", "click", (e) => {
     if (!model.latestSelection) model.latestSelection = model.quill.getSelection();
 
-    if (model.selectionHasLink()) {
+    if (model.selectionHasProfileLink()) {
       view.toggle(".gradient-form", "d-none", true);
-      return alert("Cant gradient color when there's link in selection");
+      return alert("Can't apply gradients when there's a special link (profile link) in the selection.");
+      return;
     }
+
+    // if (model.selectionHasLink()) {
+    //   view.toggle(".gradient-form", "d-none", true);
+    //   return alert("Cant gradient color when there's link in selection");
+    // }
 
     const state = e.target.dataset.open === "true" ? false : true;
     e.target.dataset.open = state;

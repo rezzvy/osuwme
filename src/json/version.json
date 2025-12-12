@@ -1,6 +1,10 @@
 {
-  "latest_updated": "May 21, 2025",
+  "latest_updated": "Dec 12, 2025",
   "changelogs": [
+    {
+      "date": "Dec 2025",
+      "changes": ["Added support for gradients in links (still buggy sometimes)"]
+    },
     {
       "date": "May 2025",
       "changes": [
