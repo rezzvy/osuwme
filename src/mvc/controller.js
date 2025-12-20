@@ -676,6 +676,7 @@ export default class Controller {
     const text = this.model.quill.getText(range.index, range.length);
 
     let gradients = [];
+
     if (type === "horizontal") gradients = this.model.generateGradient(text, colorStart, colorEnd);
     if (type === "middle") gradients = this.model.generateMiddleGradient(text, colorStart, colorMiddle);
     if (type === "threeColored") gradients = this.model.generateThreeColorGradient(text, colorStart, colorMiddle, colorEnd);
@@ -699,8 +700,22 @@ export default class Controller {
       return 0;
     };
 
+    const isSurrogatePair = (text, i) => {
+      const code = text.charCodeAt(i);
+      return code >= 0xd800 && code <= 0xdbff;
+    };
+
     for (let i = 0; i < text.length; ) {
-      const len = isProblematicSequence(text, i) || 1;
+      let len = isProblematicSequence(text, i);
+
+      if (len === 0) {
+        if (isSurrogatePair(text, i)) {
+          len = 2;
+        } else {
+          len = 1;
+        }
+      }
+
       const globalIndex = range.index + i;
 
       const retainOffset = globalIndex - lastRetain;
@@ -708,13 +723,16 @@ export default class Controller {
         operations.push({ retain: retainOffset });
       }
 
+      const colorToApply = gradients[colorIndex % gradients.length];
+
       operations.push({
         retain: len,
-        attributes: { color: gradients[colorIndex] },
+        attributes: { color: colorToApply },
       });
 
       lastRetain = globalIndex + len;
-      colorIndex = (colorIndex + 1) % gradients.length;
+
+      colorIndex++;
       i += len;
     }
 

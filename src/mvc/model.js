@@ -364,10 +364,13 @@ export default class Model {
   generateGradient(text, colorStart = "#FF0000", colorEnd = "#0000FF") {
     const colors = [];
 
+    const chars = [...text];
+    const textLength = chars.length;
+
     const colorStartRgb = this.hexToRgb(colorStart);
     const colorEndRgb = this.hexToRgb(colorEnd);
 
-    const textLength = text.length;
+    if (textLength === 0) return [];
 
     const rinc = (colorEndRgb.r - colorStartRgb.r) / textLength;
     const ginc = (colorEndRgb.g - colorStartRgb.g) / textLength;
@@ -387,20 +390,28 @@ export default class Model {
   // Generates a gradient with a middle color transition between the start and end colors
   generateMiddleGradient(text, colorStart = "#FF0000", colorMiddle = "#00FF00", colorEnd = colorStart) {
     const colors = [];
-    const textLength = text.length;
+
+    const chars = [...text];
+    const textLength = chars.length;
+
+    if (textLength === 0) return [];
+
     const midPoint = Math.floor(textLength / 2);
 
     const colorStartRgb = this.hexToRgb(colorStart);
     const colorMiddleRgb = this.hexToRgb(colorMiddle);
     const colorEndRgb = this.hexToRgb(colorEnd);
 
-    const rinc1 = (colorMiddleRgb.r - colorStartRgb.r) / midPoint;
-    const ginc1 = (colorMiddleRgb.g - colorStartRgb.g) / midPoint;
-    const binc1 = (colorMiddleRgb.b - colorStartRgb.b) / midPoint;
+    const firstHalfLength = midPoint === 0 ? 1 : midPoint;
+    const secondHalfLength = textLength - midPoint === 0 ? 1 : textLength - midPoint;
 
-    const rinc2 = (colorEndRgb.r - colorMiddleRgb.r) / (textLength - midPoint);
-    const ginc2 = (colorEndRgb.g - colorMiddleRgb.g) / (textLength - midPoint);
-    const binc2 = (colorEndRgb.b - colorMiddleRgb.b) / (textLength - midPoint);
+    const rinc1 = (colorMiddleRgb.r - colorStartRgb.r) / firstHalfLength;
+    const ginc1 = (colorMiddleRgb.g - colorStartRgb.g) / firstHalfLength;
+    const binc1 = (colorMiddleRgb.b - colorStartRgb.b) / firstHalfLength;
+
+    const rinc2 = (colorEndRgb.r - colorMiddleRgb.r) / secondHalfLength;
+    const ginc2 = (colorEndRgb.g - colorMiddleRgb.g) / secondHalfLength;
+    const binc2 = (colorEndRgb.b - colorMiddleRgb.b) / secondHalfLength;
 
     for (let i = 0; i < textLength; i++) {
       let r, g, b;
@@ -429,13 +440,32 @@ export default class Model {
   // Generates a rainbow gradient for the given text
   generateRainbowColors(text, lightness = 0.625) {
     const colors = [];
-    const textLength = text.length;
+
+    const chars = [...text];
+    const textLength = chars.length;
 
     for (let i = 0; i < textLength; i++) {
       const fraction = i / textLength;
       const hue = Math.round(fraction * 360);
       const rgb = this.hslToRgb(hue, 1, lightness);
       colors.push(this.rgbToHex(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`));
+    }
+
+    return colors;
+  }
+
+  // Generates random colors for each letter in the text
+  generateRandomColors(text) {
+    const colors = [];
+
+    const chars = [...text];
+    const textLength = chars.length;
+
+    for (let i = 0; i < textLength; i++) {
+      const r = Math.floor(Math.random() * 128) + 128;
+      const g = Math.floor(Math.random() * 128) + 128;
+      const b = Math.floor(Math.random() * 128) + 128;
+      colors.push(this.rgbToHex(`rgb(${r}, ${g}, ${b})`));
     }
 
     return colors;

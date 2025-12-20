@@ -8,7 +8,8 @@
         "Added new tools to the text editor (YouTube, Profile, Assets)",
         "Added support for gradients in links",
         "Fixed auto-save feature not working on mobile",
-        "Fixed text selection reset when clicking outside the text editor area."
+        "Fixed text selection reset when clicking outside the text editor area",
+        "Fixed Unicode (fancy text) incorrectly rendered when applied with gradients"
       ]
     },
     {
