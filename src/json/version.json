@@ -5,7 +5,8 @@
       "date": "Dec 2025",
       "changes": [
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
-        "Added support for gradients in links"
+        "Added support for gradients in links",
+        "Fixed auto-save feature not working on mobile"
       ]
     },
     {

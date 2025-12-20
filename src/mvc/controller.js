@@ -15,6 +15,7 @@ export default class Controller {
     await this.renderChangeLogs();
     this.attachEvents();
     this.renderLatestCanvasContent();
+    this.initWatchCanvasChange();
 
     this.view.init(this.model.isMobileDevice());
   }
@@ -216,9 +217,9 @@ export default class Controller {
     });
 
     // Window Before Page Close Event
-    this.view.on(window, "beforeunload", () => {
-      this.model.latestCanvasContent = this.view.html("#canvas-wrapper");
-    });
+    // this.view.on(window, "beforeunload", () => {
+    //   this.model.latestCanvasContent = this.view.html("#canvas-wrapper");
+    // });
 
     // Audio Modal on Close Event
     this.view.on("#audio-modal", "hide.bs.modal", () => {
@@ -573,6 +574,19 @@ export default class Controller {
      Methods
   ========================================= 
   */
+
+  initWatchCanvasChange() {
+    this.observer = new MutationObserver((mutations) => {
+      this.model.latestCanvasContent = this.view.html("#canvas-wrapper");
+    });
+
+    this.observer.observe(this.view.canvasWrapperElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true,
+    });
+  }
 
   debounce(fn, delay) {
     let timer;
