@@ -176,6 +176,10 @@ export default class {
   */
 
   _addImageMapItem(appendOnView = false) {
+    if (this.imagemap.workingElement) {
+      this.view.toggle(this.imagemap.workingElement, "active", false);
+    }
+
     const newItem = this.view.generateEditImageMapItem();
     const { title, link } = newItem.dataset;
     const { width, height } = newItem.style;

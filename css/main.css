@@ -67,7 +67,8 @@ footer {
   z-index: 100;
 }
 
-#text-editor-toolbar .gradient-form {
+#text-editor-toolbar .gradient-form,
+#text-editor-toolbar .assets-form {
   position: absolute;
   width: 200px;
   max-width: 100%;
@@ -76,9 +77,19 @@ footer {
   z-index: 100;
 }
 
+#text-editor-toolbar .assets-form {
+  right: 8%;
+}
+
 #text-editor-toolbar .gradient-form .pickr .pcr-button {
   width: 100%;
   border-radius: unset;
+}
+
+.assets-form img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
 /* =========================================

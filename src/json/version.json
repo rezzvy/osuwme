@@ -1,12 +1,14 @@
 {
-  "latest_updated": "Dec 20, 2025",
+  "latest_updated": "Dec 21, 2025",
   "changelogs": [
     {
       "date": "Dec 2025",
       "changes": [
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
+        "Added new tools to the text editor (YouTube, Profile, Assets)",
         "Added support for gradients in links",
-        "Fixed auto-save feature not working on mobile"
+        "Fixed auto-save feature not working on mobile",
+        "Fixed text selection reset when clicking outside the text editor area."
       ]
     },
     {

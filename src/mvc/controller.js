@@ -84,9 +84,6 @@ export default class Controller {
       this.model.clearCurrentEdit();
       this.view.clearActiveTooltips();
       this.view.renderModalEditErrorMessage(false);
-
-      this.view.toggle(".gradient-form", "d-none", true);
-      this.view.dataset("#text-editor-color-gradient", "open", false);
     });
 
     // Modal Edit Save Button Event

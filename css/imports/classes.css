@@ -440,3 +440,11 @@ body.view-mode .osu-style li::after {
 body.view-mode .collapse {
   display: block !important;
 }
+
+.flex-item-no-shrink > * {
+  flex-shrink: 0;
+}
+
+.flex-item-no-shrink > * > img {
+  pointer-events: none;
+}

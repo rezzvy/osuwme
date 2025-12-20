@@ -36,18 +36,15 @@ export default function initLibraries(controller) {
     if (api.node.classList.contains("inline")) {
       return `[c]${api.content}[/c]`;
     }
-
     return `[code]${api.node.dataset.raw ? api.node.dataset.raw : api.content}[/code]%NL%`;
   });
 
   // Spoilerbox / Box
   model.registerBBCodeConversion("details", (api) => {
     const isBox = api.node.dataset.box;
-
     if (isBox === "true") {
       return `[box=${api.content}[/box]%NL%`;
     }
-
     return `[spoilerbox]${api.content}[/spoilerbox]%NL%`;
   });
 
@@ -56,27 +53,24 @@ export default function initLibraries(controller) {
     if (api.node.parentElement.dataset.box === "true") {
       return `${api.content}]`;
     }
-
     return "";
   });
 
   // Center
   model.registerBBCodeConversion("center", (api) => {
     const hasCenterBlock = api.node.parentElement?.closest("center");
-
     return hasCenterBlock ? api.content : `[centre]${api.content}[/centre]`;
   });
 
   // Notice
   model.registerBBCodeConversion(".notice", (api) => {
     const hasNoticeBlock = api.node.parentElement?.closest(".notice");
-
     return hasNoticeBlock ? api.content : `[notice]${api.content}[/notice]%NL%`;
   });
 
   // Youtube
   model.registerBBCodeConversion("iframe", (api) => {
-    return `[youtube]${api.node.dataset.videoId}[/youtube]`;
+    return `[youtube]${api.node.dataset.videoId ?? model.getYoutubeVideoId(api.node.src)}[/youtube]`;
   });
 
   // Audio
@@ -90,7 +84,6 @@ export default function initLibraries(controller) {
     if (inline.includes(api.node.parentElement.tagName)) {
       return `[img]${api.node.src}[/img]`;
     }
-
     return `[img]${api.node.src}[/img]%NL%`;
   });
 
@@ -107,11 +100,9 @@ export default function initLibraries(controller) {
   // List Item
   model.registerBBCodeConversion("ul", (api) => {
     const isOrdered = api.node.classList.contains("ol");
-
     if (isOrdered) {
       return `[list=1]%NL%${api.content}[/list]%NL%`;
     }
-
     return `[list]%NL%${api.content}[/list]%NL%`;
   });
 
@@ -122,7 +113,6 @@ export default function initLibraries(controller) {
   model.registerBBCodeConversion("li", (api) => {
     const title = api.node.dataset.title ? `${api.node.dataset.title}%NL%${api.content}` : api.content;
     const content = title.trim() + "%NL%";
-
     return `[*]${content}`;
   });
 
@@ -139,11 +129,9 @@ export default function initLibraries(controller) {
   model.registerBBCodeConversion("blockquote", (api) => {
     const hasSource = api.node.dataset.includeSource;
     const sourceTitle = api.node.dataset.source;
-
     if (hasSource === "true") {
       return `[quote="${sourceTitle}"]${api.content}[/quote]%NL%`;
     }
-
     return `[quote]${api.content}[/quote]%NL%`;
   });
 
@@ -185,7 +173,6 @@ export default function initLibraries(controller) {
       "100%": `[size=100]`,
       "150%": `[size=150]`,
     };
-
     if (api.node.matches("a")) return api.content;
     return `${sizeMaps[size]}${api.content}[/size]`;
   });
@@ -205,10 +192,8 @@ export default function initLibraries(controller) {
 
     if (api.node.parentElement.classList.contains("imgmap-container")) {
       link = model.isValidURL(api.node.dataset.link) ? encodeURI(api.node.dataset.link) : "https://google.com";
-
       const { width, height, top, left } = api.node.style;
       const title = api.node.dataset.bsTitle;
-
       return `${left.replace("%", "")} ${top.replace("%", "")} ${width.replace("%", "")} ${height.replace("%", "")} ${link} ${title}%NL%`;
     }
 
@@ -216,7 +201,6 @@ export default function initLibraries(controller) {
       if (size) {
         return `${sizeMaps[size]}[profile]${content}[/profile][/size]`;
       }
-
       return `[profile]${content}[/profile]`;
     }
 
@@ -224,7 +208,6 @@ export default function initLibraries(controller) {
       if (size) {
         return `${sizeMaps[size]}[email=${link.substring(7)}]${content}[/email][/size]`;
       }
-
       return `[email=${link.substring(7)}]${content}[/email]`;
     }
 
@@ -261,10 +244,8 @@ export default function initLibraries(controller) {
       if (el.querySelector("center") && target.closest("center")) return false;
       if (el.querySelector(".notice") && target.closest(".notice")) return false;
       if (el.contains(target)) return false;
-
       return true;
     },
-
     copy: (el, source) => {
       return source.matches("#canvas-element-list");
     },
@@ -309,13 +290,11 @@ export default function initLibraries(controller) {
   model.drake.on("dragend", (el) => {
     view.toggle(document.body, "on-grabbing", false);
     view.toggle(view.menuStickyContainer, "d-none", false);
-
     view._updateStickyState();
   });
 
   model.drake.on("shadow", (el) => {
     if (!el.matches(".canvas-element-list-btn")) return;
-
     el.classList.add("pe-none");
     el.style.dispay = "block";
     el.style.width = "100%";
@@ -327,7 +306,6 @@ export default function initLibraries(controller) {
       const canvasItem = controller.renderToCanvas(key, editable, model.uniqueID, false);
 
       target.insertBefore(canvasItem, sibling);
-
       view.remove(el);
 
       controller.pushHistory("undo", {
@@ -352,7 +330,6 @@ export default function initLibraries(controller) {
 
       model.history.stack.tempMoveData.forEach((item) => {
         target.insertBefore(item.element, sibling && sibling.parentNode === target ? sibling : null);
-
         item.element.classList.remove("selected");
         item.targetContainer = target;
         item.targetSibling = sibling;
@@ -396,6 +373,35 @@ export default function initLibraries(controller) {
     modules: {
       toolbar: {
         container: "#text-editor-toolbar",
+        handlers: {
+          youtube: function () {
+            const rawURL = prompt("Youtube URL");
+            if (rawURL) {
+              const videoID = model.getYoutubeVideoId(rawURL);
+              if (videoID) {
+                const url = `https://www.youtube.com/embed/${videoID}?feature=oembed`;
+
+                const range = model.getSmartSelection();
+
+                model.quill.insertEmbed(range.index, "video", url);
+                model.quill.setSelection(range.index + 1);
+              } else {
+                alert("Invalid youtube link!");
+              }
+            }
+          },
+          profile: function () {
+            var username = prompt("Username:");
+            if (username) {
+              const range = model.getSmartSelection();
+
+              model.quill.insertText(range.index, username, {
+                link: `https://osu.ppy.sh/users/${username}`,
+              });
+              model.quill.setSelection(range.index + username.length + 1);
+            }
+          },
+        },
       },
       clipboard: {
         matchVisual: false,
@@ -403,21 +409,38 @@ export default function initLibraries(controller) {
     },
   });
 
-  view.on(model.quill.root, "click", (e) => {
-    // if (model.currentSelectedElement) {
-    //   model.currentSelectedElement.classList.remove("text-editor-item-selected");
-    // }
+  model.quill.on("selection-change", (range) => {
+    if (range) {
+      model.latestSelection = range;
+    }
+  });
 
+  model.getSmartSelection = () => {
+    const current = model.quill.getSelection();
+    if (current) return current;
+
+    if (model.latestSelection) return model.latestSelection;
+
+    return { index: model.quill.getLength(), length: 0 };
+  };
+
+  view.on(model.quill.root, "click", (e) => {
     model.currentSelectedElement = null;
-    model.latestSelection = null;
 
     const isLink = e.target.matches("a");
     const parentColorEl = e.target.closest('[style*="color:"]');
     const color = e.target.style.color || parentColorEl?.style.color;
 
+    if (view.el("#text-editor-assets").dataset.open === "true") {
+      view.html(model.handler.text.countryAssetWrapper, "");
+      model.handler.text.cuontryAssetInput.value = "";
+    }
+
     view.toggle(".link-form", "d-none", !isLink);
     view.toggle(".gradient-form", "d-none", true);
+    view.toggle(".assets-form", "d-none", true);
     view.dataset("#text-editor-color-gradient", "open", false);
+    view.dataset("#text-editor-assets", "open", false);
 
     if (color) {
       model.pickr.setColor(color);
@@ -437,7 +460,6 @@ export default function initLibraries(controller) {
       if (model.quill.getSelection()?.length !== 0) return;
 
       model.currentSelectedElement = parentColorEl && !e.target.matches("p") ? parentColorEl : null;
-      // model.currentSelectedElement.classList.add("text-editor-item-selected");
     }
   });
 
@@ -458,19 +480,15 @@ export default function initLibraries(controller) {
           model.quill.format("color", false);
         }
       });
-
       return;
     }
-
     model.quill.format("link", false);
   });
 
   model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node) => {
     const Delta = Quill.import("delta");
-
     const format = (el) => {
       const obj = {};
-
       if (el.tagName === "STRONG") obj.bold = true;
       if (el.tagName === "EM") obj.italic = true;
       if (el.tagName === "U") obj.underline = true;
@@ -478,7 +496,6 @@ export default function initLibraries(controller) {
       if (el.tagName === "A") obj.link = el.getAttribute("href");
       if (el.style.fontSize) obj.size = el.style.fontSize;
       if (el.style.color) obj.color = el.style.color;
-
       return obj;
     };
 
@@ -490,24 +507,55 @@ export default function initLibraries(controller) {
     view.toggle(".link-form", "d-none", true);
   });
 
+  view.on(".assets-form", "click", (e) => {
+    if (e.target.matches(`[data-action="assets"]`)) {
+      const range = model.getSmartSelection();
+
+      model.quill.insertEmbed(range.index, "image", e.target.firstElementChild.src);
+      model.quill.setSelection(range.index + 1);
+
+      model.latestSelection = { index: range.index + 1, length: 0 };
+    }
+  });
+
+  view.on("#text-editor-assets", "click", (e) => {
+    const state = e.target.dataset.open === "true" ? false : true;
+    e.target.dataset.open = state;
+
+    if (!e.target.dataset.isRendered) {
+      e.target.dataset.isRendered = "true";
+      model.handler.text.renderAssets();
+    }
+
+    if (!state) {
+      view.html(model.handler.text.countryAssetWrapper, "");
+      model.handler.text.cuontryAssetInput.value = "";
+    }
+
+    view.toggle(".assets-form", "d-none", !state);
+    view.toggle(".gradient-form", "d-none", true);
+    view.dataset("#text-editor-color-gradient", "open", false);
+  });
+
   view.on("#text-editor-color-gradient", "click", (e) => {
-    if (!model.latestSelection) model.latestSelection = model.quill.getSelection();
+    if (!model.latestSelection) model.latestSelection = model.getSmartSelection();
 
     if (model.selectionHasProfileLink()) {
       view.toggle(".gradient-form", "d-none", true);
       return alert("Can't apply gradients when there's a special link (profile link) in the selection.");
-      return;
     }
 
-    // if (model.selectionHasLink()) {
-    //   view.toggle(".gradient-form", "d-none", true);
-    //   return alert("Cant gradient color when there's link in selection");
-    // }
+    if (view.el("#text-editor-assets").dataset.open === "true") {
+      view.html(model.handler.text.countryAssetWrapper, "");
+      model.handler.text.cuontryAssetInput.value = "";
+    }
 
     const state = e.target.dataset.open === "true" ? false : true;
     e.target.dataset.open = state;
 
     view.toggle(".gradient-form", "d-none", !state);
+    view.toggle(".assets-form", "d-none", true);
+    view.dataset("#text-editor-assets", "open", false);
 
     const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
     const colorMiddle = model.gradientColorMiddle.getColor().toHEXA().toString();
@@ -584,7 +632,7 @@ export default function initLibraries(controller) {
       return;
     }
 
-    if (!model.latestSelection) model.latestSelection = model.quill.getSelection();
+    if (!model.latestSelection) model.latestSelection = model.getSmartSelection();
 
     if (model.selectionHasProfileLink()) {
       alert("Can't apply color when there's a special link (profile link) in the selection.");
