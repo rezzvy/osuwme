@@ -147,13 +147,13 @@ export default class {
     this._vars();
 
     this.view.on(this.cuontryAssetInput, "input", (e) => {
-      const query = e.target.value.trim();
+      const query = e.target.value.trim().toLowerCase();
       if (!query) {
         this.view.html(this.countryAssetWrapper, "");
         return;
       }
 
-      this.getCountries(e.target.value.trim());
+      this.getCountries(query);
     });
   }
 

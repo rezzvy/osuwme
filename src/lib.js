@@ -1,6 +1,8 @@
 export default function initLibraries(controller) {
   const { model, view } = controller;
 
+  model.isInsideTextEditor = false;
+
   /* 
   =========================================
      Mation HTML
@@ -348,6 +350,38 @@ export default function initLibraries(controller) {
   ========================================= 
   */
 
+  const getLinkBlotAt = (index) => {
+    const [leaf] = model.quill.getLeaf(index);
+    let blot = leaf;
+
+    while (blot && blot.domNode?.tagName !== "A") {
+      blot = blot.parent === model.quill.scroll ? null : blot.parent;
+    }
+
+    return blot;
+  };
+
+  const updateLinkFormState = (range) => {
+    if (!range) {
+      if (!document.activeElement?.closest(".link-form")) {
+        view.toggle(".link-form", "d-none", true);
+      }
+      return;
+    }
+
+    const formats = model.quill.getFormat(range);
+    const color = formats.color;
+
+    if (color && !Array.isArray(color) && model.isInsideTextEditor) model.pickr.setColor(color);
+
+    const link = formats.link;
+    view.toggle(".link-form", "d-none", !link);
+
+    if (!link) return;
+
+    view.val(".link-form input", link);
+  };
+
   model.Delta = Quill.import("delta");
 
   const FontSize = Quill.import("attributors/style/size");
@@ -383,7 +417,9 @@ export default function initLibraries(controller) {
 
                 const range = model.getSmartSelection();
 
-                model.quill.insertEmbed(range.index, "video", url);
+                model.quill.updateContents({
+                  ops: [{ retain: range.index }, { insert: { video: url } }],
+                });
                 model.quill.setSelection(range.index + 1);
               } else {
                 alert("Invalid youtube link!");
@@ -395,10 +431,39 @@ export default function initLibraries(controller) {
             if (username) {
               const range = model.getSmartSelection();
 
-              model.quill.insertText(range.index, username, {
-                link: `https://osu.ppy.sh/users/${username}`,
-              });
+              model.quill.updateContents([
+                { retain: range.index },
+                {
+                  insert: username,
+                  attributes: {
+                    link: `https://osu.ppy.sh/users/${username}`,
+                  },
+                },
+              ]);
+
               model.quill.setSelection(range.index + username.length + 1);
+            }
+          },
+          link: function (value) {
+            const range = model.quill.getSelection();
+            const formats = model.quill.getFormat(range);
+            const linkValue = formats.link;
+
+            if (linkValue && range.length === 0) return;
+
+            if (range) {
+              if (value) {
+                view.toggle(".link-form", "d-none", false);
+
+                const input = document.querySelector(".link-form input");
+                if (input) {
+                  input.value = "";
+                  input.focus();
+                }
+              } else {
+                model.quill.format("link", false);
+                view.toggle(".link-form", "d-none", true);
+              }
             }
           },
         },
@@ -409,10 +474,44 @@ export default function initLibraries(controller) {
     },
   });
 
-  model.quill.on("selection-change", (range) => {
+  view.onInline(".link-form button", "onclick", () => {
+    const range = model.quill.getSelection() || model.latestSelection;
+    if (!range) return;
+
+    const newLink = view.val(".link-form input");
+    const blot = getLinkBlotAt(range.index);
+
+    if (blot) {
+      model.quill.setSelection(model.quill.getIndex(blot), blot.length());
+    } else {
+      model.quill.focus();
+    }
+
+    model.quill.format("link", newLink || false);
+
+    if (newLink && model.quill.getFormat().color) {
+      model.quill.format("color", false);
+    }
+
+    view.toggle(".link-form", "d-none", true);
+  });
+
+  model.quill.on("selection-change", (range, oldRange, source) => {
     if (range) {
       model.latestSelection = range;
     }
+
+    updateLinkFormState(range);
+  });
+
+  model.quill.on("text-change", () => {
+    const range = model.quill.getSelection();
+    if (!range) return;
+
+    const index = Math.min(range.index + 1, model.quill.getLength() - 1);
+    const formats = model.quill.getFormat(index);
+
+    view.toggle(".link-form", "d-none", !formats.link);
   });
 
   model.getSmartSelection = () => {
@@ -425,64 +524,28 @@ export default function initLibraries(controller) {
   };
 
   view.on(model.quill.root, "click", (e) => {
+    model.isInsideTextEditor = true;
     model.currentSelectedElement = null;
-
-    const isLink = e.target.matches("a");
-    const parentColorEl = e.target.closest('[style*="color:"]');
-    const color = e.target.style.color || parentColorEl?.style.color;
 
     if (view.el("#text-editor-assets").dataset.open === "true") {
       view.html(model.handler.text.countryAssetWrapper, "");
       model.handler.text.cuontryAssetInput.value = "";
     }
 
-    view.toggle(".link-form", "d-none", !isLink);
-    view.toggle(".gradient-form", "d-none", true);
-    view.toggle(".assets-form", "d-none", true);
-    view.dataset("#text-editor-color-gradient", "open", false);
-    view.dataset("#text-editor-assets", "open", false);
-
-    if (color) {
-      model.pickr.setColor(color);
-    }
-
-    if (isLink) {
-      view.val(".link-form input", e.target.href);
-
-      view.onInline(".link-form button", "onclick", () => {
-        e.target.href = view.val(".link-form input");
-        view.toggle(".link-form", "d-none", true);
-      });
+    if (!e.target.closest(".link-form")) {
+      view.toggle(".gradient-form", "d-none", true);
+      view.toggle(".assets-form", "d-none", true);
+      view.dataset("#text-editor-color-gradient", "open", false);
+      view.dataset("#text-editor-assets", "open", false);
     }
 
     if (!e.target.matches("p") && !e.target.matches(".ql-editor")) {
       if (e.target.matches("a") && model.isOsuProfileLink(e.target.href)) return;
       if (model.quill.getSelection()?.length !== 0) return;
 
-      model.currentSelectedElement = parentColorEl && !e.target.matches("p") ? parentColorEl : null;
+      const colorElement = e.target.closest('[style*="color:"]');
+      model.currentSelectedElement = colorElement;
     }
-  });
-
-  model.quill.getModule("toolbar").addHandler("link", (value) => {
-    const inputLink = document.querySelector('.link-form input[type="text"]');
-    const range = model.quill.getSelection();
-
-    if (value && range) {
-      view.val(".link-form input", "");
-      view.toggle(".link-form", "d-none", false);
-
-      view.onInline(".link-form button", "onclick", () => {
-        model.quill.format("link", inputLink.value);
-        view.toggle(".link-form", "d-none", true);
-
-        const currentFormats = model.quill.getFormat(range);
-        if (currentFormats.color) {
-          model.quill.format("color", false);
-        }
-      });
-      return;
-    }
-    model.quill.format("link", false);
   });
 
   model.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node) => {
@@ -503,22 +566,26 @@ export default function initLibraries(controller) {
     return new Delta().insert(node.innerText || "", { ...format(node) });
   });
 
-  model.quill.on("text-change", function () {
-    view.toggle(".link-form", "d-none", true);
-  });
-
   view.on(".assets-form", "click", (e) => {
     if (e.target.matches(`[data-action="assets"]`)) {
       const range = model.getSmartSelection();
+      const url = e.target.firstElementChild.src;
 
-      model.quill.insertEmbed(range.index, "image", e.target.firstElementChild.src);
+      model.quill.updateContents({
+        ops: [{ retain: range.index }, { insert: { image: url } }],
+      });
+
       model.quill.setSelection(range.index + 1);
-
       model.latestSelection = { index: range.index + 1, length: 0 };
+
+      view.toggle(".assets-form", "d-none", true);
+      view.dataset("#text-editor-assets", "open", false);
     }
   });
 
   view.on("#text-editor-assets", "click", (e) => {
+    model.isInsideTextEditor = false;
+
     const state = e.target.dataset.open === "true" ? false : true;
     e.target.dataset.open = state;
 
@@ -538,6 +605,8 @@ export default function initLibraries(controller) {
   });
 
   view.on("#text-editor-color-gradient", "click", (e) => {
+    model.isInsideTextEditor = false;
+
     if (!model.latestSelection) model.latestSelection = model.getSmartSelection();
 
     if (model.selectionHasProfileLink()) {
@@ -612,6 +681,7 @@ export default function initLibraries(controller) {
 
   model.pickr.on("change", (color) => {
     const hex = color.toHEXA().toString();
+    if (model.isInsideTextEditor) return;
 
     view.colorPickerSolid.style.setProperty("--pcr-color", hex);
 
@@ -625,6 +695,8 @@ export default function initLibraries(controller) {
   });
 
   model.pickr.on("show", (color) => {
+    model.isInsideTextEditor = false;
+
     const hex = color.toHEXA().toString();
 
     if (model.currentSelectedElement) {
