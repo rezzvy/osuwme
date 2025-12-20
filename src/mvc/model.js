@@ -515,51 +515,51 @@ export default class Model {
   ========================================= */
 
   // Sets image map data for resizing or moving operations
-  setImageMapData(event, element) {
-    this.imagemap.workingElement = element;
-    this.imagemap.activeBox = element;
-    this.imagemap.startY = event.touches?.[0]?.clientY ?? event.clientY;
-    this.imagemap.startX = event.touches?.[0]?.clientX ?? event.clientX;
-    this.imagemap.initialX = element.offsetLeft;
-    this.imagemap.initialY = element.offsetTop;
-    this.imagemap.initialWidth = element.offsetWidth;
-    this.imagemap.initialHeight = element.offsetHeight;
-    this.imagemap.isResizing = event.target.classList.contains("_resizer");
-  }
+  // setImageMapData(event, element) {
+  //   this.imagemap.workingElement = element;
+  //   this.imagemap.activeBox = element;
+  //   this.imagemap.startY = event.touches?.[0]?.clientY ?? event.clientY;
+  //   this.imagemap.startX = event.touches?.[0]?.clientX ?? event.clientX;
+  //   this.imagemap.initialX = element.offsetLeft;
+  //   this.imagemap.initialY = element.offsetTop;
+  //   this.imagemap.initialWidth = element.offsetWidth;
+  //   this.imagemap.initialHeight = element.offsetHeight;
+  //   this.imagemap.isResizing = event.target.classList.contains("_resizer");
+  // }
 
   // Calculates new pointer data for resizing or moving within a container
-  calculatePointerData(event, container, type) {
-    const clientX = event.touches?.[0]?.clientX ?? event.clientX;
-    const clientY = event.touches?.[0]?.clientY ?? event.clientY;
+  // calculatePointerData(event, container, type) {
+  //   const clientX = event.touches?.[0]?.clientX ?? event.clientX;
+  //   const clientY = event.touches?.[0]?.clientY ?? event.clientY;
 
-    const deltaX = clientX - this.imagemap.startX;
-    const deltaY = clientY - this.imagemap.startY;
+  //   const deltaX = clientX - this.imagemap.startX;
+  //   const deltaY = clientY - this.imagemap.startY;
 
-    if (type === "resizing") {
-      let newWidth = this.imagemap.initialWidth + deltaX;
-      let newHeight = this.imagemap.initialHeight + deltaY;
+  //   if (type === "resizing") {
+  //     let newWidth = this.imagemap.initialWidth + deltaX;
+  //     let newHeight = this.imagemap.initialHeight + deltaY;
 
-      const minWidth = container.offsetWidth * 0.02;
-      const minHeight = container.offsetHeight * 0.02;
+  //     const minWidth = container.offsetWidth * 0.02;
+  //     const minHeight = container.offsetHeight * 0.02;
 
-      newWidth = Math.max(minWidth, Math.min(newWidth, container.offsetWidth - this.imagemap.initialX));
-      newHeight = Math.max(minHeight, Math.min(newHeight, container.offsetHeight - this.imagemap.initialY));
+  //     newWidth = Math.max(minWidth, Math.min(newWidth, container.offsetWidth - this.imagemap.initialX));
+  //     newHeight = Math.max(minHeight, Math.min(newHeight, container.offsetHeight - this.imagemap.initialY));
 
-      const width = ((newWidth / container.offsetWidth) * 100).toFixed(2);
-      const height = ((newHeight / container.offsetHeight) * 100).toFixed(2);
+  //     const width = ((newWidth / container.offsetWidth) * 100).toFixed(2);
+  //     const height = ((newHeight / container.offsetHeight) * 100).toFixed(2);
 
-      return [width, height];
-    } else if (type === "moving") {
-      let newX = this.imagemap.initialX + deltaX;
-      let newY = this.imagemap.initialY + deltaY;
+  //     return [width, height];
+  //   } else if (type === "moving") {
+  //     let newX = this.imagemap.initialX + deltaX;
+  //     let newY = this.imagemap.initialY + deltaY;
 
-      newX = Math.max(0, Math.min(newX, container.offsetWidth - this.imagemap.activeBox.offsetWidth));
-      newY = Math.max(0, Math.min(newY, container.offsetHeight - this.imagemap.activeBox.offsetHeight));
+  //     newX = Math.max(0, Math.min(newX, container.offsetWidth - this.imagemap.activeBox.offsetWidth));
+  //     newY = Math.max(0, Math.min(newY, container.offsetHeight - this.imagemap.activeBox.offsetHeight));
 
-      const top = ((newY / container.offsetHeight) * 100).toFixed(2);
-      const left = ((newX / container.offsetWidth) * 100).toFixed(2);
+  //     const top = ((newY / container.offsetHeight) * 100).toFixed(2);
+  //     const left = ((newX / container.offsetWidth) * 100).toFixed(2);
 
-      return [top, left];
-    }
-  }
+  //     return [top, left];
+  //   }
+  // }
 }

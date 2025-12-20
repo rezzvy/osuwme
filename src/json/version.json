@@ -1,9 +1,12 @@
 {
-  "latest_updated": "Dec 12, 2025",
+  "latest_updated": "Dec 20, 2025",
   "changelogs": [
     {
       "date": "Dec 2025",
-      "changes": ["Added support for gradients in links (still buggy sometimes)"]
+      "changes": [
+        "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
+        "Added support for gradients in links"
+      ]
     },
     {
       "date": "May 2025",

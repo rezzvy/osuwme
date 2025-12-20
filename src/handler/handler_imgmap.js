@@ -5,13 +5,8 @@ export default class {
     this.view = this.controller.view;
 
     this.imagemap = this.model.imagemap;
-    this.isUpdating = false;
-    this.isMobile = this.model.isMobileDevice();
-    this.eventName = {
-      move: this.isMobile ? "touchmove" : "mousemove",
-      down: this.isMobile ? "touchstart" : "mousedown",
-      up: this.isMobile ? "touchend" : "mouseup",
-    };
+
+    this.moveable = null;
   }
 
   /* 
@@ -19,7 +14,6 @@ export default class {
      Variables
   ========================================= 
   */
-
   _vars() {
     this.parent = this.view.el('[data-edit="imgmap"]');
 
@@ -27,8 +21,12 @@ export default class {
     this.linkInput = this.view.el("#imgmap-link-input", this.parent);
     this.img = this.view.el("img", this.parent);
 
+    this.autoSnapCheckbox = this.view.el("#imagemap-auto-snap", this.parent);
+
     this.imageMapContainer = this.view.el("#imgmap-edit-container", this.parent);
+    this.imageMapStickyToolbar = this.view.el("#imagemap-sticky-toolbar", this.parent);
     this.imageMapAddItemButton = this.view.el("#add-imgmap-item-btn", this.parent);
+    this.imageMapAddItemButtonShortcut = this.view.el("#imgmap-add-shortcut-btn", this.parent);
 
     this.imageMapItemInputTitle = this.view.el("#imgmap-title-input-item", this.parent);
     this.imageMapItemInputLink = this.view.el("#imgmap-link-input-item", this.parent);
@@ -43,9 +41,74 @@ export default class {
 
   _target() {
     this.targetContainer = this.model.currentEdit.target;
-
     this.targetElement = this.view.el(".imgmap-container", this.targetContainer);
     this.targetImg = this.view.el("img", this.targetContainer);
+  }
+
+  initMoveable() {
+    if (this.moveable) return;
+
+    const directions = {
+      top: true,
+      left: true,
+      bottom: true,
+      right: true,
+      center: true,
+      middle: true,
+    };
+
+    const isAutoSnapOn = this.autoSnapCheckbox ? this.autoSnapCheckbox.checked : true;
+
+    this.moveable = new Moveable(this.imageMapContainer, {
+      target: null,
+      draggable: true,
+      resizable: true,
+      snappable: true,
+      bounds: { left: 0, top: 0, right: 0, bottom: 0, position: "css" },
+      snapContainer: this.imageMapContainer,
+      isDisplaySnapDigit: isAutoSnapOn,
+      isDisplayInnerSnapDigit: false,
+      snapGap: isAutoSnapOn,
+      snapDirections: isAutoSnapOn ? directions : {},
+      elementSnapDirections: isAutoSnapOn ? directions : {},
+      snapThreshold: 10,
+      elementGuidelines: [this.imageMapContainer],
+    });
+
+    this.moveable.on("drag", ({ target, left, top }) => {
+      const parentWidth = this.imageMapContainer.offsetWidth;
+      const parentHeight = this.imageMapContainer.offsetHeight;
+
+      target.style.left = `${(left / parentWidth) * 100}%`;
+      target.style.top = `${(top / parentHeight) * 100}%`;
+
+      this.updateInputValues(target);
+    });
+
+    this.moveable.on("resize", ({ target, width, height, drag }) => {
+      const parentWidth = this.imageMapContainer.offsetWidth;
+      const parentHeight = this.imageMapContainer.offsetHeight;
+
+      target.style.width = `${(width / parentWidth) * 100}%`;
+      target.style.height = `${(height / parentHeight) * 100}%`;
+      target.style.left = `${(drag.left / parentWidth) * 100}%`;
+      target.style.top = `${(drag.top / parentHeight) * 100}%`;
+
+      this.updateInputValues(target);
+    });
+  }
+
+  _updateSnapGuidelines() {
+    if (!this.moveable) return;
+    const allItems = Array.from(this.view.els(".imgmap-edit-item", this.imageMapContainer));
+    this.moveable.elementGuidelines = [this.imageMapContainer, ...allItems];
+  }
+
+  updateInputValues(target) {
+    const width = parseFloat(target.style.width).toFixed(2) + "%";
+    const height = parseFloat(target.style.height).toFixed(2) + "%";
+
+    this.setImageMapItemInputValue(null, null, width, height);
   }
 
   /* 
@@ -112,15 +175,50 @@ export default class {
   ========================================= 
   */
 
+  _addImageMapItem(appendOnView = false) {
+    const newItem = this.view.generateEditImageMapItem();
+    const { title, link } = newItem.dataset;
+    const { width, height } = newItem.style;
+
+    const container = this.imageMapContainer;
+    const sticky = this.imageMapStickyToolbar;
+
+    if (appendOnView && sticky && container) {
+      const stickyRect = sticky.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      const topPx = stickyRect.bottom - containerRect.top + container.scrollTop;
+
+      const rawPercent = (topPx / container.scrollHeight) * 100;
+
+      const topPercent = Math.min(100, Math.max(0, rawPercent));
+
+      newItem.style.top = `${topPercent}%`;
+    }
+
+    this.imagemap.workingElement = newItem;
+    this.moveable.target = newItem;
+
+    this._updateSnapGuidelines();
+
+    this.view.append(container, newItem);
+    this.view.toggle(newItem, "active", true);
+    this.view.disable(false, "#modal-edit-save");
+    this.disableImageMapItemInput(false);
+    this.setImageMapItemInputValue(title, link, parseFloat(width).toFixed(2) + "%", parseFloat(height).toFixed(2) + "%");
+  }
+
   _submitButtonHandler() {
     const value = this.view.val(this.linkInput);
 
-    if (!this.model.isNodeEmpty(this.imageMapContainer, 1)) {
+    if (!this.model.isNodeEmpty(this.imageMapContainer, 2)) {
       if (!this.view.dialog("Existing item will be wiped, continue?")) return;
 
       this.view.els(".imgmap-edit-item", this.imageMapContainer).forEach((item) => {
         this.view.remove(item);
       });
+
+      this.moveable.target = null;
     }
 
     this.view.disable(true, "#modal-edit-save", this.linkInput);
@@ -139,9 +237,11 @@ export default class {
 
   _imgLoadHandler() {
     this.view.buttonLoading(false, this.submitButton);
-    this.view.disable(false, this.linkInput, this.imageMapAddItemButton);
+    this.view.disable(false, this.linkInput, this.imageMapAddItemButton, this.imageMapAddItemButtonShortcut);
     this.view.renderModalEditErrorMessage(false);
     this.view.replacePlaceholder(this.imageMapContainer, true, false);
+
+    setTimeout(() => this.moveable.updateRect(), 100);
   }
 
   _imgErrorHandler() {
@@ -151,65 +251,56 @@ export default class {
     this.view.replacePlaceholder(this.imageMapContainer, false);
   }
 
-  _mouseMoveHandler(e) {
-    if (!this.imagemap.activeBox) {
-      this.isUpdating = false;
-      return;
-    }
-
-    if (this.imagemap.isResizing) {
-      const [width, height] = this.model.calculatePointerData(e, this.imageMapContainer, "resizing");
-
-      this.view.el(this.imagemap.activeBox).style.width = `${width}%`;
-      this.view.el(this.imagemap.activeBox).style.height = `${height}%`;
-
-      this.setImageMapItemInputValue(null, null, `${width}%`, `${height}%`);
-    } else {
-      const [top, left] = this.model.calculatePointerData(e, this.imageMapContainer, "moving");
-
-      this.view.el(this.imagemap.activeBox).style.top = `${top}%`;
-      this.view.el(this.imagemap.activeBox).style.left = `${left}%`;
-    }
-
-    this.isUpdating = false;
-  }
-
-  _mouseDownHandler(e, element) {
+  _itemClickHandler(e, element) {
     const { title, link } = element.dataset;
     const { width, height } = element.style;
 
-    this.model.setImageMapData(e, element);
-    this.view.toggleActiveImageMapItem(element, this.imageMapContainer);
-    this.view.toggle(this.imagemap.activeBox, "resize-cursor", this.imagemap.isResizing);
+    this.imagemap.workingElement = element;
 
     this.disableImageMapItemInput(false);
-    this.setImageMapItemInputValue(title, link, width, height);
-  }
+    this.setImageMapItemInputValue(title, link, parseFloat(width).toFixed(2) + "%", parseFloat(height).toFixed(2) + "%");
 
-  _mouseUpHandler() {
-    this.imagemap.isResizing = false;
-    this.view.toggle(this.imagemap.activeBox, "resize-cursor", this.imagemap.isResizing);
+    this._updateSnapGuidelines();
 
-    this.imagemap.activeBox = null;
+    this.moveable.target = element;
+
+    this.view.clearActiveImageMapItem(this.imageMapContainer);
+    this.view.toggle(element, "active", true);
+
+    this.moveable.dragStart(e);
   }
 
   _removeButtonHandler() {
+    if (!this.imagemap.workingElement) return;
+
     this.disableImageMapItemInput(true);
     this.setImageMapItemInputValue("", "", "", "");
 
     this.view.remove(this.imagemap.workingElement);
-    this.view.disable(this.model.isNodeEmpty(this.imageMapContainer, 1), "#modal-edit-save");
-
+    this.moveable.target = null;
     this.imagemap.workingElement = null;
+
+    this._updateSnapGuidelines();
+
+    this.view.disable(this.model.isNodeEmpty(this.imageMapContainer, 1), "#modal-edit-save");
   }
 
   _duplicateButtonHandler() {
+    if (!this.imagemap.workingElement) return;
+
     this.view.copy(this.imagemap.workingElement, (copied) => {
       this.view.toggle(this.imagemap.workingElement, "active", false);
       this.view.toggle(copied, "active", true);
       this.view.append(this.imageMapContainer, copied);
 
+      copied.style.top = parseFloat(copied.style.top) + 2 + "%";
+      copied.style.left = parseFloat(copied.style.left) + 2 + "%";
+
       this.imagemap.workingElement = copied;
+
+      this._updateSnapGuidelines();
+
+      this.moveable.target = copied;
     });
   }
 
@@ -227,7 +318,7 @@ export default class {
 
     if (!data.image.isAvailable) {
       this.view.disable(false, button);
-      return this.view.renderModalEditErrorMessage(true, "We can't fetch the image. Please check if it's valid or try uploading it elsewhere.");
+      return this.view.renderModalEditErrorMessage(true, "We can't fetch the image.");
     }
 
     const items = data.items.map((item) => {
@@ -242,7 +333,10 @@ export default class {
       await this.view.remove(item);
     }
 
-    this.view.disable(false, this.imageMapAddItemButton, "#modal-edit-save");
+    this.moveable.target = null;
+    this.imagemap.workingElement = null;
+
+    this.view.disable(false, this.imageMapAddItemButton, this.imageMapAddItemButtonShortcut, "#modal-edit-save");
     this.view.el(this.img).src = data.image.url;
     this.view.val(this.linkInput, data.image.url);
 
@@ -261,6 +355,21 @@ export default class {
     this._vars();
     this.view.disable(true, "#imgmap-from-bbcode-execute");
 
+    this.initMoveable();
+
+    this.view.on(this.autoSnapCheckbox, "change", (e) => {
+      if (this.moveable) {
+        const isOn = e.target.checked;
+        const directions = { top: true, left: true, bottom: true, right: true, center: true, middle: true };
+
+        this.moveable.snapGap = isOn;
+        this.moveable.isDisplaySnapDigit = isOn;
+
+        this.moveable.snapDirections = isOn ? directions : {};
+        this.moveable.elementSnapDirections = isOn ? directions : {};
+      }
+    });
+
     this.view.on(this.linkInput, "input", (e) => {
       this.view.disable(!e.target.value, this.submitButton);
     });
@@ -271,93 +380,60 @@ export default class {
 
     this.view.on(this.img, "load", () => {
       if (this.model.currentEdit.key !== "imgmap") return;
-
       this._imgLoadHandler();
     });
 
     this.view.on(this.img, "error", () => {
       if (this.model.currentEdit.key !== "imgmap") return;
-
       this._imgErrorHandler();
     });
 
     this.view.on(this.imageMapAddItemButton, "click", (e) => {
-      this.view.append(this.imageMapContainer, this.view.generateEditImageMapItem());
-      this.view.disable(false, "#modal-edit-save");
+      this._addImageMapItem();
     });
 
-    this.view.on(document, this.eventName.move, (e) => {
-      if (this.isUpdating || !this.imagemap.activeBox) return;
-
-      this.isUpdating = true;
-      requestAnimationFrame((timestamp) => {
-        this._mouseMoveHandler(e);
-      });
+    this.view.on(this.imageMapAddItemButtonShortcut, "click", (e) => {
+      this._addImageMapItem(true);
     });
 
-    this.view.on(document, this.eventName.down, (e) => {
+    this.view.on(this.imageMapContainer, "mousedown", (e) => {
       const imgmapItem = e.target.closest(".imgmap-edit-item");
-      if (!imgmapItem) return;
 
-      this._mouseDownHandler(e, imgmapItem);
-    });
+      if (imgmapItem) {
+        this._itemClickHandler(e, imgmapItem);
+      } else if (e.target === this.imageMapContainer || e.target === this.img) {
+        this.moveable.target = null;
+        this.imagemap.workingElement = null;
 
-    this.view.on(document, this.eventName.up, (e) => {
-      if (!this.imagemap.activeBox) return;
-
-      this._mouseUpHandler(e);
+        this.disableImageMapItemInput(true);
+        this.setImageMapItemInputValue("", "", "", "");
+        this.view.clearActiveImageMapItem(this.imageMapContainer);
+      }
     });
 
     this.view.on(this.imageMapItemInputTitle, "input", (e) => {
       if (!this.imagemap.workingElement) return;
-
       this.view.dataset(this.imagemap.workingElement, "title", e.target.value);
     });
 
     this.view.on(this.imageMapItemInputLink, "input", (e) => {
       if (!this.imagemap.workingElement) return;
-
       this.view.dataset(this.imagemap.workingElement, "link", e.target.value);
     });
 
-    this.view.on(this.imageMapItemInputWidth, "change", (e) => {
+    const updateSizeFromInput = (e, direction) => {
       if (!this.imagemap.workingElement) return;
+      this.view.setImageMapItemSize(e, this.imagemap.workingElement, direction, this.imageMapContainer);
+      this.moveable.updateRect();
+    };
 
-      this.view.setImageMapItemSize(e, this.imagemap.workingElement, "width", this.imageMapContainer);
-    });
+    this.view.on(this.imageMapItemInputWidth, "change", (e) => updateSizeFromInput(e, "width"));
+    this.view.on(this.imageMapItemInputHeight, "change", (e) => updateSizeFromInput(e, "height"));
 
-    this.view.on(this.imageMapItemInputHeight, "change", (e) => {
-      if (!this.imagemap.workingElement) return;
+    this.view.on(this.imageMapItemRemoveButton, "click", () => this._removeButtonHandler());
+    this.view.on(this.imageMapItemDuplicateButton, "click", () => this._duplicateButtonHandler());
 
-      this.view.setImageMapItemSize(e, this.imagemap.workingElement, "height", this.imageMapContainer);
-    });
-
-    this.view.on(this.imageMapItemRemoveButton, "click", (e) => {
-      if (!this.imagemap.workingElement) return;
-
-      this._removeButtonHandler();
-    });
-
-    this.view.on(this.imageMapItemDuplicateButton, "click", (e) => {
-      if (!this.imagemap.workingElement) return;
-
-      this._duplicateButtonHandler();
-    });
-
-    this.view.on(this.imageMapContainer, "dragstart", (e) => {
-      e.preventDefault();
-    });
-
-    this.view.on(this.imageMapContainer, "click", (e) => {
-      const item = e.target.closest(".imgmap-edit-item");
-      if (item && item === this.imagemap.workingElement) return;
-      this.imagemap.workingElement = null;
-
-      this.disableImageMapItemInput(true);
-      this.setImageMapItemInputValue("", "", "", "");
-
-      this.view.clearActiveImageMapItem(this.imageMapContainer);
-    });
+    this.view.on(this.imageMapContainer, "dragstart", (e) => e.preventDefault());
 
     this.view.on(this.importFromBBCodeExecuteButton, "click", async (e) => {
       await this._ImportFromBBCode(e);
@@ -396,12 +472,25 @@ export default class {
       this.view.disable(false, "#modal-edit-save");
     }
 
-    this.view.disable(true, this.imageMapAddItemButton, this.submitButton);
+    this.view.disable(true, this.imageMapAddItemButton, this.imageMapAddItemButtonShortcut, this.submitButton);
     this.disableImageMapItemInput(true);
+
+    if (this.moveable && this.autoSnapCheckbox) {
+      const isOn = this.autoSnapCheckbox.checked;
+      const directions = { top: true, left: true, bottom: true, right: true, center: true, middle: true };
+
+      this.moveable.snappable = true;
+      this.moveable.snapGap = isOn;
+      this.moveable.snapDirections = isOn ? directions : {};
+      this.moveable.elementSnapDirections = isOn ? directions : {};
+    }
+
+    setTimeout(() => this.moveable && this.moveable.updateRect(), 200);
   }
 
   close() {
     this.imagemap.workingElement = null;
+    if (this.moveable) this.moveable.target = null;
 
     this.view.el(this.img).removeAttribute("src");
 

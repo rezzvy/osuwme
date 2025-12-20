@@ -516,7 +516,7 @@ export default class View {
   generateEditImageMapItem(title = "Untitled", link = "#", style = "") {
     const item = document.createElement("a");
     item.classList.add("imgmap-edit-item");
-    item.innerHTML = '<div class="_resizer"></div>';
+    // item.innerHTML = '<div class="_resizer"></div>';
     item.dataset.title = title;
     item.dataset.link = link;
 
