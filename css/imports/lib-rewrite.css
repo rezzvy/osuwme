@@ -211,6 +211,14 @@ a {
   border-color: transparent !important;
 }
 
+li[data-list="ordered"] {
+  list-style-type: decimal !important;
+}
+
+li[data-list="bullet"] {
+  list-style-type: disc !important;
+}
+
 /* =========================================
    Media Queries
    ========================================= */

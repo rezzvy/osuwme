@@ -109,7 +109,7 @@ export default function initLibraries(controller) {
   });
 
   model.registerBBCodeConversion("ol", (api) => {
-    return `[list=1]%NL%${api.content}[/list]%NL%`;
+    return `[list${api.node.dataset?.type === "ordered" ? "=1" : ""}]%NL%${api.content}[/list]%NL%`;
   });
 
   model.registerBBCodeConversion("li", (api) => {

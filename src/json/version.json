@@ -5,7 +5,7 @@
       "date": "Dec 2025",
       "changes": [
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
-        "Added new tools to the text editor (YouTube, Profile, Assets)",
+        "Added new tools to the text editor (YouTube, Profile, Assets, Lists)",
         "Added support for gradients in links",
         "Fixed link form not showing when selecting a link",
         "Fixed auto-save feature not working on mobile",

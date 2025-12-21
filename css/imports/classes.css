@@ -139,13 +139,18 @@ body.on-grabbing [data-action="move"] {
 .ph.ph-quote::before,
 .ph.ph-spoilerbox::before,
 .osu-style details summary:empty:not(:has(*))::after,
-.osu-style li:empty:not(:has(*))::after {
+.osu-style .ph-list li::after
+/*.osu-style li:empty:not(:has(*))::after*/ {
   content: "Drop here";
   display: block;
   color: rgba(255, 255, 255, 0.25);
   letter-spacing: 4px;
   font-size: 12px;
   font-weight: 700;
+}
+
+ol[data-type] li::after {
+  all: unset !important;
 }
 
 .ph::after {

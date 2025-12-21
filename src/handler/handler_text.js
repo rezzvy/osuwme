@@ -117,6 +117,32 @@ export default class {
     });
   }
 
+  seperatedListItems(container) {
+    const originalLists = Array.from(container.querySelectorAll("ol, ul"));
+
+    originalLists.forEach((list) => {
+      const items = Array.from(list.children);
+      let currentType = null;
+      let newList = null;
+
+      items.forEach((item) => {
+        const type = item.getAttribute("data-list");
+
+        if (currentType !== type) {
+          newList = document.createElement("ol");
+          newList.setAttribute("data-type", type);
+
+          list.parentNode.insertBefore(newList, list);
+          currentType = type;
+        }
+
+        newList.appendChild(item);
+      });
+
+      if (!list.hasChildNodes()) list.remove();
+    });
+  }
+
   /* 
   =========================================
      Variables
@@ -215,6 +241,7 @@ export default class {
       this.swapLinks(paragraph);
     });
 
+    this.seperatedListItems(editorContent);
     this.view.html(this.targetContainer, editorContent.innerHTML);
   }
 }
