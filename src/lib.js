@@ -355,6 +355,48 @@ export default function initLibraries(controller) {
   ========================================= 
   */
 
+  const FANCY_NORMAL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  const FANCY_MAPS = {
+    boldscript: "𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃0123456789",
+    double: "𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡",
+    circles: "ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ0①②③④⑤⑥⑦⑧⑨",
+    squares: "🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉0123456789",
+  };
+
+  const normalizeFancy = (text) => {
+    return [...text]
+      .map((char) => {
+        for (const [key, mapString] of Object.entries(FANCY_MAPS)) {
+          const mapArray = [...mapString];
+          const index = mapArray.indexOf(char);
+
+          if (index !== -1) {
+            return FANCY_NORMAL[index] || char;
+          }
+        }
+        return char;
+      })
+      .join("");
+  };
+
+  const transformToFancy = (text, type) => {
+    const cleanText = normalizeFancy(text);
+
+    if (!type || !FANCY_MAPS[type]) return cleanText;
+
+    const targetChars = [...FANCY_MAPS[type]];
+
+    return [...cleanText]
+      .map((char) => {
+        const index = FANCY_NORMAL.indexOf(char);
+        return index !== -1 ? targetChars[index] || char : char;
+      })
+      .join("");
+  };
+
+  // divider
+
   const getLinkBlotAt = (index) => {
     const [leaf] = model.quill.getLeaf(index);
     let blot = leaf;
@@ -467,6 +509,38 @@ export default function initLibraries(controller) {
                 model.quill.format("link", false);
                 view.toggle(".link-form", "d-none", true);
               }
+            }
+          },
+          fancyfont: function (value) {
+            const range = model.quill.getSelection();
+            if (!range || range.length === 0) return;
+
+            const contents = model.quill.getContents(range.index, range.length);
+
+            let hasChanges = false;
+
+            contents.ops.forEach((op) => {
+              if (typeof op.insert === "string") {
+                const original = op.insert;
+                const transformed = transformToFancy(original, value);
+
+                if (original !== transformed) {
+                  op.insert = transformed;
+                  hasChanges = true;
+                }
+              }
+            });
+
+            if (hasChanges) {
+              model.quill.deleteText(range.index, range.length, "api");
+
+              const Delta = Quill.import("delta");
+              const updateDelta = new Delta().retain(range.index).concat(contents);
+
+              model.quill.updateContents(updateDelta, "api");
+
+              const newLength = contents.length();
+              model.quill.setSelection(range.index, newLength);
             }
           },
         },

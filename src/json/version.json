@@ -2,11 +2,12 @@
   "latest_updated": "Dec 26, 2025",
   "changelogs": [
     {
-      "date": "Dec 2025",
+      "date": "Anniversary Update",
       "changes": [
         "Implemented the 'Clone from osu!' feature",
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
         "Added new tools to the text editor (YouTube, Profile, Assets, Lists)",
+        "Added font style to the text editor",
         "Added support for gradients in links",
         "Fixed link form not showing when selecting a link",
         "Fixed auto-save feature not working on mobile",

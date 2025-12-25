@@ -232,3 +232,14 @@ li[data-list="bullet"] {
 .rCS1w3zcxh {
   --moveable-color: rgb(255, 68, 134) !important;
 }
+
+#text-editor-toolbar
+  .input-group
+  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  border-bottom-left-radius: var(--bs-border-radius-sm);
+  border-top-left-radius: var(--bs-border-radius-sm);
+}
+
+#text-editor-toolbar .input-group-sm > .form-select {
+  padding: 0.1rem 0.2rem;
+}

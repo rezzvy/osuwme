@@ -1,138 +1,158 @@
-<p class="alert alert-primary py-1 px-2 mb-2">
-  <i class="fa fa-info-circle"></i>
-  If you want to add color or a gradient to a link, add the link first. Otherwise, the link will override your color.
-</p>
+<div id="text-editor-toolbar" class="ql-toolbar">
+  <p class="alert alert-primary py-1 px-2 mb-2">
+    <i class="fa fa-info-circle"></i>
+    If you want to add color or a gradient to a link, add the link first. And To apply a font style, select the text first, then choose a font style.
+  </p>
 
-<div
-  id="text-editor-toolbar"
-  class="position-sticky top-0 z-3 d-flex flex-column flex-sm-row align-items-sm-start align-items-center justify-content-sm-between flex-wrap gap-3 mb-2"
->
-  <div class="link-form d-none bg-white bg-opacity-25 p-1 rounded-1">
-    <div class="input-group input-group-sm">
-      <input type="text" class="form-control modal-box" placeholder="Link" />
-      <div class="input-group-text">
-        <button class="btn btn-dark btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Save Link">
-          <i class="fa fa-save fa-fw"></i>
-        </button>
+  <div id="text-editor-toolbar" class="position-sticky top-0 z-3">
+    <div class="link-form d-none bg-white bg-opacity-25 p-1 rounded-1">
+      <div class="input-group input-group-sm">
+        <input type="text" class="form-control modal-box" placeholder="Link" />
+        <div class="input-group-text">
+          <button class="btn btn-dark btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Save Link">
+            <i class="fa fa-save fa-fw"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gradient-form d-none bg-white bg-opacity-25 p-1 rounded-1">
+      <div class="modal-box p-1 rounded-1">
+        <select class="form-select form-select-sm" id="gradient-type-select">
+          <option value="horizontal" selected>Horizontal</option>
+          <option value="middle">Middle</option>
+          <option value="threeColored">Three Colored</option>
+          <option value="rainbow">Rainbow</option>
+          <option value="random">Random</option>
+        </select>
+
+        <div class="color-picker-wrapper row row-cols-2 g-1">
+          <div id="gradient-start">
+            <div>Start</div>
+            <button id="gradient-color-start"></button>
+          </div>
+
+          <div id="gradient-middle" class="d-none">
+            <div>Middle</div>
+            <button id="gradient-color-middle"></button>
+          </div>
+
+          <div id="gradient-end">
+            <div>End</div>
+            <button id="gradient-color-end"></button>
+          </div>
+        </div>
+
+        <div class="randomize-btn-container mt-3 d-none">
+          <button id="randomize-selected-text-btn" class="btn btn-dark btn-sm w-100">Randomize</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assets-form d-none bg-white bg-opacity-25 p-1 rounded-1">
+      <div class="modal-box p-1 rounded-1">
+        <div>
+          <div class="badge text-bg-dark">Country Flag</div>
+
+          <div class="input-group input-group-sm gap-1">
+            <input type="text" class="form-control rounded-2" placeholder="Country Name" id="assets-country-input" autocomplete="off" />
+          </div>
+
+          <div id="country-assets-search-result" class="d-flex gap-1 flex-item-no-shrink overflow-auto"></div>
+        </div>
+
+        <div id="assets-render"></div>
+      </div>
+    </div>
+
+    <div class="position-sticky top-0 z-3 mb-2">
+      <div class="d-flex overflow-auto">
+        <div class="d-flex gap-1 flex-wrap flex-fill flex-shrink-0">
+          <button class="ql-bold btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Bold">
+            <i class="fa fa-bold fa-fw"></i>
+          </button>
+          <button class="ql-italic btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Italic">
+            <i class="fa fa-italic fa-fw"></i>
+          </button>
+          <button class="ql-strike btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Strikethrough">
+            <i class="fa fa-strikethrough fa-fw"></i>
+          </button>
+          <button class="ql-underline btn btn-outline-light btn-sm p-1 me-md-3" data-bs-toggle="tooltip" data-bs-title="Underline">
+            <i class="fa fa-underline fa-fw"></i>
+          </button>
+
+          <button class="ql-link btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Link">
+            <i class="fa fa-link fa-fw"></i>
+          </button>
+          <button class="ql-inlinecode btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Inline Code">
+            <i class="fa fa-code fa-fw"></i>
+          </button>
+          <button class="ql-spoiler btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Spoiler">
+            <i class="fa fa-warning fa-fw"></i>
+          </button>
+
+          <button class="ql-image btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Inline Image">
+            <i class="fa fa-picture-o fa-fw"></i>
+          </button>
+
+          <button class="ql-profile btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Profile">
+            <i class="fa fa-user fa-fw"></i>
+          </button>
+
+          <button class="ql-youtube btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Youtube">
+            <i class="fa fa-youtube-play fa-fw"></i>
+          </button>
+
+          <button class="ql-list btn btn-outline-light btn-sm p-1" value="bullet" data-bs-toggle="tooltip" data-bs-title="List Item">
+            <i class="fa fa-list-ul fa-fw"></i>
+          </button>
+
+          <button class="ql-list btn btn-outline-light btn-sm p-1 me-md-3" value="ordered" data-bs-toggle="tooltip" data-bs-title="Ordered List Item">
+            <i class="fa fa-list-ol fa-fw"></i>
+          </button>
+
+          <button class="ql-clean btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Clear Format">
+            <i class="fa fa-trash fa-fw"></i>
+          </button>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+          <button id="text-editor-assets" class="btn btn-outline-light fw-semibold btn-sm px-1">Assets</button>
+          <button id="text-editor-color-gradient" class="btn btn-outline-light fw-semibold btn-sm px-1">Gradient</button>
+          <button id="text-editor-color-picker"></button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="gradient-form d-none bg-white bg-opacity-25 p-1 rounded-1">
-    <div class="modal-box p-1 rounded-1">
-      <select class="form-select form-select-sm" id="gradient-type-select">
-        <option value="horizontal" selected>Horizontal</option>
-        <option value="middle">Middle</option>
-        <option value="threeColored">Three Colored</option>
-        <option value="rainbow">Rainbow</option>
-        <option value="random">Random</option>
-      </select>
+  <div id="text-editor" class="osu-style modal-box rounded-2 mt-2 text-white"></div>
 
-      <div class="color-picker-wrapper row row-cols-2 g-1">
-        <div id="gradient-start">
-          <div>Start</div>
-          <button id="gradient-color-start"></button>
+  <div class="d-flex gap-2 overflow-auto">
+    <div class="flex-shrink-0" style="flex-basis: 200px">
+      <div class="input-group input-group-sm gap-1">
+        <div class="input-group-text">
+          <span class="badge text-bg-dark">Font Size</span>
         </div>
-
-        <div id="gradient-middle" class="d-none">
-          <div>Middle</div>
-          <button id="gradient-color-middle"></button>
-        </div>
-
-        <div id="gradient-end">
-          <div>End</div>
-          <button id="gradient-color-end"></button>
-        </div>
-      </div>
-
-      <div class="randomize-btn-container mt-3 d-none">
-        <button id="randomize-selected-text-btn" class="btn btn-dark btn-sm w-100">Randomize</button>
+        <select class="ql-size form-select">
+          <option value="50%">Tiny</option>
+          <option value="85%">Small</option>
+          <option value="100%" selected>Normal</option>
+          <option value="150%">Large</option>
+        </select>
       </div>
     </div>
-  </div>
 
-  <div class="assets-form d-none bg-white bg-opacity-25 p-1 rounded-1">
-    <div class="modal-box p-1 rounded-1">
-      <div>
-        <div class="badge text-bg-dark">Country Flag</div>
-
-        <div class="input-group input-group-sm gap-1">
-          <input type="text" class="form-control rounded-2" placeholder="Country Name" id="assets-country-input" autocomplete="off" />
-        </div>
-
-        <div id="country-assets-search-result" class="d-flex gap-1 flex-item-no-shrink overflow-auto"></div>
+    <div class="flex-shrink-0" style="flex-basis: 200px">
+      <div class="input-group input-group-sm gap-1">
+        <div class="input-group-text"><span class="badge text-bg-dark">Font Style</span></div>
+        <select class="ql-fancyfont form-select">
+          <option value="">Normal</option>
+          <option value="boldscript">Bold Script (𝓐)</option>
+          <option value="double">Double (𝔸)</option>
+          <option value="circles">Circles (ⓐ)</option>
+          <option value="squares">Squares (🄰)</option>
+        </select>
       </div>
-
-      <div id="assets-render"></div>
     </div>
-  </div>
-
-  <div class="d-flex flex-column flex-sm-row align-items-sm-start align-items-center flex-wrap gap-0 gap-sm-3">
-    <div class="text-center">
-      <button class="ql-bold btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Bold">
-        <i class="fa fa-bold fa-fw"></i>
-      </button>
-      <button class="ql-italic btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Italic">
-        <i class="fa fa-italic fa-fw"></i>
-      </button>
-      <button class="ql-strike btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Strikethrough">
-        <i class="fa fa-strikethrough fa-fw"></i>
-      </button>
-      <button class="ql-underline btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Underline">
-        <i class="fa fa-underline fa-fw"></i>
-      </button>
-    </div>
-
-    <div class="text-center">
-      <button class="ql-link btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Link">
-        <i class="fa fa-link fa-fw"></i>
-      </button>
-      <button class="ql-inlinecode btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Inline Code">
-        <i class="fa fa-code fa-fw"></i>
-      </button>
-      <button class="ql-spoiler btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Spoiler">
-        <i class="fa fa-warning fa-fw"></i>
-      </button>
-
-      <button class="ql-image btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Inline Image">
-        <i class="fa fa-picture-o fa-fw"></i>
-      </button>
-
-      <button class="ql-profile btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Profile">
-        <i class="fa fa-user fa-fw"></i>
-      </button>
-
-      <button class="ql-youtube btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Youtube">
-        <i class="fa fa-youtube-play fa-fw"></i>
-      </button>
-
-      <button class="ql-list btn btn-outline-light btn-sm p-1" value="bullet" data-bs-toggle="tooltip" data-bs-title="List Item">
-        <i class="fa fa-list-ul"></i>
-      </button>
-
-      <button class="ql-list btn btn-outline-light btn-sm p-1" value="ordered" data-bs-toggle="tooltip" data-bs-title="Ordered List Item">
-        <i class="fa fa-list-ol"></i>
-      </button>
-    </div>
-
-    <div class="text-center">
-      <button class="ql-clean btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Clear Format">
-        <i class="fa fa-trash fa-fw"></i>
-      </button>
-    </div>
-  </div>
-
-  <div class="d-flex align-items-center gap-2 flex-wrap flex-sm-nowrap justify-content-center">
-    <button id="text-editor-assets" class="btn btn-outline-light fw-semibold btn-sm px-1">Assets</button>
-    <button id="text-editor-color-gradient" class="btn btn-outline-light fw-semibold btn-sm px-1">Gradient</button>
-    <button id="text-editor-color-picker"></button>
-    <select class="ql-size form-select form-select-sm">
-      <option value="50%">Tiny</option>
-      <option value="85%">Small</option>
-      <option value="100%" selected>Normal</option>
-      <option value="150%">Large</option>
-    </select>
   </div>
 </div>
-
-<div id="text-editor" class="osu-style modal-box rounded-2 mt-2 text-white"></div>
