@@ -9,7 +9,7 @@ const view = new View();
 const controller = new Controller(model, view);
 
 document.addEventListener("DOMContentLoaded", async () => {
+  initClone(controller);
   await controller.init();
   initLibraries(controller);
-  initClone(controller);
 });

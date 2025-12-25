@@ -7,6 +7,7 @@
         "Implemented the 'Clone from osu!' feature",
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
         "Added new tools to the text editor (YouTube, Profile, Assets, Lists)",
+        "Added canvas auto-sync with the user's latest me! page",
         "Added font style to the text editor",
         "Added support for gradients in links",
         "Fixed link form not showing when selecting a link",
