@@ -243,3 +243,7 @@ li[data-list="bullet"] {
 #text-editor-toolbar .input-group-sm > .form-select {
   padding: 0.1rem 0.2rem;
 }
+
+.dropdown-menu {
+  max-height: 350px;
+}

@@ -46,6 +46,15 @@
                     <i class="fa fa-github fa-fw"></i> Source Code
                   </a>
                 </li>
+                <li>
+                  <a
+                    data-bs-toggle="modal"
+                    data-bs-target="#support-modal"
+                    class="link-light border py-1 px-2 d-inline-block rounded-1 link-opacity-75 link-opacity-100-hover"
+                  >
+                    <i class="fa fa-heart fa-fw"></i> Support
+                  </a>
+                </li>
               </ul>
             </nav>
           </div>
@@ -83,19 +92,23 @@
                 <button class="btn btn-light btn-sm" data-bs-toggle="dropdown">
                   <i class="fa fa-bars fa-fw fa-lg"></i>
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu overflow-auto">
+                  <li><button class="dropdown-item" id="open-main-menu-btn">Main Menu</button></li>
                   <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-template">Project Templates</button></li>
-                  <li><button class="dropdown-item" id="import-project-btn">Load Project</button></li>
-                  <li><button class="dropdown-item" id="export-project-btn">Save Project</button></li>
+                  <li><button class="dropdown-item" id="import-project-btn">Load Project (Ctrl + O)</button></li>
+                  <li><button class="dropdown-item" id="export-project-btn">Save Project (Ctrl + S)</button></li>
                   <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#clone-template">Clone from osu!</button></li>
 
                   <li class="mt-2 border">
                     <div class="text-center small text-pink">Canvas Action</div>
-                    <button class="canvas-action dropdown-item" id="expand-all-canvas-btn">Expand All</button>
-                    <button class="canvas-action dropdown-item" id="collapse-all-canvas-btn">Collapse All</button>
-                    <button class="canvas-action dropdown-item" id="clear-canvas-btn">Clear All</button>
-                    <button class="canvas-action dropdown-item" id="clear-canvas-selection-btn">Clear Selection</button>
-                    <button class="canvas-action dropdown-item" id="reset-canvas-size-btn">Reset Size</button>
+                    <button class="canvas-action dropdown-item" id="expand-all-canvas-btn">Expand All (Ctrl + 1)</button>
+                    <button class="canvas-action dropdown-item" id="collapse-all-canvas-btn">Collapse All (Ctrl + 2)</button>
+                    <button class="canvas-action dropdown-item" id="clear-canvas-btn">Clear All (Ctrl + 3)</button>
+                    <button class="canvas-action dropdown-item" id="clear-canvas-selection-btn">Clear Selection (Ctrl + 4)</button>
+                    <button class="canvas-action dropdown-item" id="reset-canvas-size-btn">Reset Size (Ctrl + 5)</button>
+                    <button class="canvas-action dropdown-item" id="edit-mode-canvas-action-btn">Edit Mode (Ctrl + E)</button>
+                    <button class="canvas-action dropdown-item" id="undo-canvas-action-btn">Undo (CTRL + Z)</button>
+                    <button class="canvas-action dropdown-item" id="redo-canvas-action-btn">Redo (CTRL + Y)</button>
                   </li>
 
                   <li>
@@ -451,6 +464,25 @@
               <button id="copy-to-clipboard" class="btn btn-dark btn-sm flex-fill mx-auto" data-bs-toggle="tooltip" data-bs-title="Copy to Clipboard">
                 <i class="fa fa-clipboard fa-fw"></i>
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="support-modal" class="modal" data-bs-backdrop="static" data-bs-focus="false">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header pt-3 pb-0 px-3">
+              <div class="section-heading">
+                <h2 class="h6 fw-bold text-light px-3 pb-1">Support</h2>
+              </div>
+              <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-3">
+              <div class="osu-style">
+                <code></code>
+              </div>
             </div>
           </div>
         </div>

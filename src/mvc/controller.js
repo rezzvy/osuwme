@@ -19,6 +19,7 @@ export default class Controller {
     await this.renderCanvasElementList();
     await this.renderCanvasTemplateList();
     await this.renderChangeLogs();
+    await this.renderSupportText();
     this.attachEvents();
     this.renderLatestCanvasContent();
     this.initWatchCanvasChange();
@@ -242,6 +243,11 @@ export default class Controller {
       this.view.importProjectFileInput.click();
     });
 
+    this.view.on("#open-main-menu-btn", "click", (e) => {
+      this.onModalStarting = true;
+      this.view.modalStarting.show();
+    });
+
     // Project Action: Import File Input Event
     this.view.on("#import-project-input", "change", (e) => {
       const files = e.target.files;
@@ -291,6 +297,20 @@ export default class Controller {
     // Canvas Action: Reset Canvas Size Event
     this.view.on("#reset-canvas-size-btn", "click", () => {
       this.view.css("#canvas", "");
+    });
+
+    this.view.on("#edit-mode-canvas-action-btn", "click", () => {
+      const editModeInput = this.view.el("#canvas-mode-switch");
+      editModeInput.checked = !editModeInput.checked;
+      editModeInput.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    this.view.on("#undo-canvas-action-btn", "click", () => {
+      this.view.el("#undo-canvas-btn").click();
+    });
+
+    this.view.on("#redo-canvas-action-btn", "click", () => {
+      this.view.el("#redo-canvas-btn").click();
     });
 
     // Preference: Sticky menu switch event
@@ -474,7 +494,6 @@ export default class Controller {
   // Handler for undo / redo button click
   historyHandler(type) {
     const item = this.model.getHistory(type);
-
     if (!item) return;
 
     this.pushHistory(type === "undo" ? "redo" : "undo", item);
@@ -951,6 +970,12 @@ export default class Controller {
 
     this.view.text("#last-update-date", data.latest_updated);
     this.view.html("#changelog-wrapper", content);
+  }
+
+  async renderSupportText() {
+    const data = await this.model.fetchData("./src/support.txt", "text");
+
+    this.view.text("#support-modal code", data);
   }
 
   // Get canvas template list JSON and render template item buttons.
