@@ -10,14 +10,127 @@ export default class Controller {
   }
 
   async init() {
+    const isAboutToLogin = this.isOnAboutToLogin();
+    if (isAboutToLogin) {
+      this.view.el("#osu-api-login-btn").textContent = "Logging in...";
+      this.view.disable(true, "#osu-api-login-btn");
+    }
+
     await this.renderCanvasElementList();
     await this.renderCanvasTemplateList();
     await this.renderChangeLogs();
     this.attachEvents();
     this.renderLatestCanvasContent();
     this.initWatchCanvasChange();
-
     this.view.init(this.model.isMobileDevice());
+
+    await this.apiInit(isAboutToLogin);
+  }
+
+  isOnAboutToLogin() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+
+    return code;
+  }
+
+  async apiInit(isAboutToLogin) {
+    const code = isAboutToLogin;
+
+    if (code) {
+      await this.handleLoginCallback(code);
+    }
+
+    const token = localStorage.getItem("access_token");
+    const userString = localStorage.getItem("user_info");
+
+    if (token && userString) {
+      this.view.toggle(document.body, "logged-in", true);
+      const user = JSON.parse(userString);
+
+      this.view.replace("#osu-api-login-btn", "btn-success", "btn-danger");
+      this.view.dataset("#osu-api-login-btn", "bsTitle", "Click to Logout");
+      this.view.el("#osu-api-login-btn").innerHTML = `<img class="avatar-btn-img" src="${user.avatar}"> ${user.username}`;
+    } else {
+      this.view.toggle(document.body, "logged-in", false);
+
+      this.view.replace("#osu-api-login-btn", "btn-danger", "btn-success");
+      this.view.dataset("#osu-api-login-btn", "bsTitle", "Click to Login");
+      this.view.el("#osu-api-login-btn").innerHTML = `<img class="avatar-btn-img" src="https://osu.ppy.sh/images/layout/avatar-guest.png"> Guest`;
+    }
+
+    this.view.disable(false, "#osu-api-login-btn");
+  }
+
+  async getUserByUsername(username) {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      alert("You are not logged in yet. Please log in via osu! first.");
+      return;
+    }
+
+    try {
+      console.log(`Searching for user ${username} via local server...`);
+
+      const url = `http://localhost:3000/api/users/${encodeURIComponent(username)}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 404) {
+        alert(`User '${username}' was not found on osu!`);
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("An error occurred on the proxy server.");
+      }
+
+      const userData = await response.json();
+
+      return userData;
+    } catch (error) {
+      alert("Failed to fetch user data: " + error);
+    }
+  }
+
+  async logout() {
+    this.view.el("#osu-api-login-btn").textContent = "Logging out...";
+    this.view.disable(true, "#osu-api-login-btn");
+
+    const token = localStorage.getItem("access_token");
+
+    if (token) {
+      try {
+        await fetch("http://localhost:3000/api/logout", {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } catch (err) {
+        console.log("Server logout error, ignoring...");
+      }
+    }
+
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user_info");
+
+    let tooltip = bootstrap.Tooltip.getInstance(this.view.el("#osu-api-login-btn"));
+    if (tooltip) tooltip.dispose();
+    this.view.replace("#osu-api-login-btn", "btn-danger", "btn-success");
+    this.view.dataset("#osu-api-login-btn", "bsTitle", "Click to Login");
+    this.view.el("#osu-api-login-btn").innerHTML = `<img class="avatar-btn-img" src="https://osu.ppy.sh/images/layout/avatar-guest.png"> Guest`;
+    this.view.toggle(document.body, "logged-in", false);
+    alert("You've been logged out!");
+
+    this.view.disable(false, "#osu-api-login-btn");
   }
 
   /* 
@@ -289,8 +402,13 @@ export default class Controller {
       this.view.modalTemplate.show();
     });
 
+    this.view.on("#starting-modal-clone-btn", "click", () => {
+      this.view.modalStarting.hide();
+      this.view.modalClone.show();
+    });
+
     this.view.on(document, "keydown", (e) => {
-      const key = e.key.toLowerCase();
+      const key = e.key?.toLowerCase();
       const blockedKeys = ["o", "s", "1", "2", "3", "4", "5", "e"];
 
       if (e.ctrlKey && blockedKeys.includes(key)) {
@@ -571,6 +689,37 @@ export default class Controller {
      Methods
   ========================================= 
   */
+
+  async handleLoginCallback(code) {
+    try {
+      if (localStorage.getItem("access_token")) return;
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      const response = await fetch(this.model.apiConfig.tokenProxyUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: code }),
+      });
+
+      const data = await response.json();
+
+      if (data.access_token) {
+        localStorage.setItem("access_token", data.access_token);
+
+        if (data.user) {
+          localStorage.setItem("user_info", JSON.stringify(data.user));
+        }
+
+        alert("Login successful!");
+      } else {
+        console.error("Server response:", data);
+        alert("Login failed: " + (data.error || "Token was not received"));
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error connecting to the backend.");
+    }
+  }
 
   initWatchCanvasChange() {
     this.observer = new MutationObserver((mutations) => {

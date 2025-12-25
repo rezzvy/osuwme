@@ -36,6 +36,12 @@ export default class Model {
         tempMoveData: [],
       },
     };
+
+    this.apiConfig = {
+      clientID: "46987",
+      redirectURI: "http://127.0.0.1:5500/",
+      tokenProxyUrl: "http://localhost:3000/api/token",
+    };
   }
 
   // Imagemap From BBCode
@@ -136,7 +142,7 @@ export default class Model {
 
   // Generates a unique ID based on the current timestamp
   get uniqueID() {
-    return Date.now();
+    return Date.now() + "-" + Math.floor(Math.random() * 1000000);
   }
 
   // Checks if the current edit key represents a large-size content type
@@ -250,6 +256,15 @@ export default class Model {
 
   registerBBCodeConversion(selector, handler) {
     return this.mation.register({
+      selector: selector,
+      format: (api) => {
+        return handler(api);
+      },
+    });
+  }
+
+  registerClonedBBCodeConversion(selector, handler) {
+    return this.clonedMation.register({
       selector: selector,
       format: (api) => {
         return handler(api);

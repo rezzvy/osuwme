@@ -245,9 +245,14 @@ p > u[style*="color"]:has(a) a {
   font-weight: initial;
 }
 
-.osu-style details summary:not(:has(*)) {
+.osu-style details summary:not(:has(*)),
+.osu-style details summary p:not(:has(strong)) {
   color: rgb(217, 166, 189);
   font-weight: 700;
+}
+
+.osu-style details summary p {
+  color: rgb(217, 166, 189);
 }
 
 .osu-style details summary {
@@ -452,4 +457,10 @@ body.view-mode .collapse {
 
 .flex-item-no-shrink > * > img {
   pointer-events: none;
+}
+
+.avatar-btn-img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
 }

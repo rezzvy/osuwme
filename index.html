@@ -87,6 +87,7 @@
                   <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-template">Project Templates</button></li>
                   <li><button class="dropdown-item" id="import-project-btn">Load Project</button></li>
                   <li><button class="dropdown-item" id="export-project-btn">Save Project</button></li>
+                  <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#clone-template">Clone from osu!</button></li>
 
                   <li class="mt-2 border">
                     <div class="text-center small text-pink">Canvas Action</div>
@@ -198,6 +199,82 @@
         </div>
       </div>
 
+      <div id="clone-template" class="modal" data-bs-backdrop="static" data-bs-focus="false">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header pt-3 pb-0 px-3">
+              <div class="section-heading">
+                <h2 class="h6 fw-bold text-light px-3 pb-1">Clone</h2>
+              </div>
+              <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+              <p class="alert alert-danger py-1 px-2 mb-1"><i class="fa fa-info-circle"></i> Please log in to use this feature.</p>
+
+              <div class="input-group input-group-sm gap-1">
+                <div class="input-group-text">
+                  <i class="fa fa-user fa-fw"></i>
+                </div>
+                <input autocomplete="off" id="clone-link-input" type="text" class="form-control rounded-2" placeholder="Username" />
+                <div class="input-group-text">
+                  <button class="btn btn-light btn-sm pe-none opacity-50" id="clone-link-submit">
+                    <i class="fa fa-send fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="clone-box-avatar-overlay mt-3">
+                <div class="_cover rounded-top-2 overflow-hidden">
+                  <img src="#" class="d-none pe-none" />
+                </div>
+                <div class="d-flex px-2 align-items-center justify-content-between" style="margin-top: -23px">
+                  <div class="d-flex align-items-center flex-fill">
+                    <div class="_avatar">
+                      <img src="#" class="p-2 d-none pe-none" />
+                    </div>
+
+                    <div class="_info pt-3 flex-fill">
+                      <h3 id class="h6 fw-bold">N/A</h3>
+                      <p class="badge text-bg-dark">N/A</p>
+                    </div>
+                  </div>
+
+                  <div class="pt-3">
+                    <button
+                      id="clone-open-userpge"
+                      class="btn btn-outline-light border-0 btn-sm pe-none opacity-50"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Open their profile"
+                    >
+                      <i class="fa fa-link fa-fw"></i>
+                    </button>
+
+                    <button
+                      id="clone-copy-bbcode"
+                      class="btn btn-outline-light border-0 btn-sm pe-none opacity-50"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Copy their raw bbcode"
+                    >
+                      <i class="fa fa-clipboard fa-fw"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                id="cloned-userpage-render"
+                class="btn btn-dark btn-sm w-100 pe-none opacity-50 rounded-top-0 rounded-bottom-2"
+                data-bs-toggle="tooltip"
+                data-bs-title="Clone Userpage"
+              >
+                <i class="fa fa-clone fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="starting-modal" class="modal" data-bs-backdrop="static" data-bs-focus="false">
         <div class="modal-dialog modal-lg">
           <div class="modal-content triangle-bg">
@@ -205,6 +282,12 @@
               <div class="d-flex align-items-end gap-0 gap-sm-2 flex-fill">
                 <h2 class="text-lowercase h2 fw-bold text-light">OSUW<span class="text-pink">me</span></h2>
                 <p class="lead d-none d-sm-block text-light text-opacity-50 fst-italic">bbcode builder for osu!</p>
+              </div>
+
+              <div>
+                <button data-bs-toggle="tooltip" id="osu-api-login-btn" class="btn btn-success btn-sm fw-bold d-flex align-items-center gap-1">
+                  N/A
+                </button>
               </div>
             </div>
 
@@ -274,10 +357,7 @@
                         Templates
                       </button>
 
-                      <button
-                        onclick="alert(`Sowwy >w< this isn't available yet… it'll be available in the anniversary update!`)"
-                        class="btn btn-outline-light btn-sm w-100 fw-semibold text-start"
-                      >
+                      <button id="starting-modal-clone-btn" class="btn btn-outline-light btn-sm w-100 fw-semibold text-start">
                         <i class="fa fa-file-o fa-fw"></i>
                         Clone from osu!
                       </button>

@@ -323,6 +323,16 @@ body:has(#canvas-wrapper:empty) #download-as-text {
   opacity: 0.5 !important;
 }
 
+body.logged-in #clone-template .alert {
+  display: none;
+}
+
+body:not(.logged-in) #clone-template .modal-body input,
+body:not(.logged-in) #clone-template .modal-body button {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* =========================================
    Media Queries
    ========================================= */
@@ -347,4 +357,51 @@ body:has(#canvas-wrapper:empty) #download-as-text {
   font-size: 12px;
   margin-left: 6px;
   display: inline-block;
+}
+
+.clone-box-avatar-overlay {
+  background-color: #382e32;
+  background-image: url(../../assets/triangles.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+.clone-box-avatar-overlay ._cover {
+  height: 116.5px;
+  background-color: #4f4046;
+}
+
+.clone-box-avatar-overlay ._cover img,
+.clone-box-avatar-overlay ._avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.clone-box-avatar-overlay ._avatar {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  z-index: 1;
+}
+.clone-box-avatar-overlay ._avatar::after {
+  content: "?";
+  font-size: 2.5rem;
+  width: max-content;
+  height: max-content;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  z-index: -1;
+}
+
+.clone-box-avatar-overlay ._avatar img {
+  background-color: #382e32;
+  border-radius: 50%;
+}
+
+strong {
+  font-weight: 700;
 }

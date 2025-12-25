@@ -73,26 +73,31 @@ export default class {
   }
 
   swapLinks(parentElement) {
-    const directChildren = Array.from(parentElement.children);
+    const anchors = parentElement.querySelectorAll("a");
 
-    directChildren.forEach((grandWrapper) => {
-      const anchor = grandWrapper.querySelector("a");
+    anchors.forEach((anchor) => {
+      const wrapper = anchor.parentElement;
 
-      if (!anchor) {
-        return;
+      if (wrapper === parentElement || !wrapper) return;
+
+      const newWrapper = wrapper.cloneNode(false);
+
+      while (anchor.firstChild) {
+        newWrapper.appendChild(anchor.firstChild);
       }
 
-      const currentWrapper = anchor.parentNode;
-      const newAnchor = anchor.cloneNode(false);
-      const originalContent = Array.from(anchor.childNodes);
+      anchor.appendChild(newWrapper);
 
-      currentWrapper.innerHTML = "";
-      originalContent.forEach((node) => currentWrapper.appendChild(node));
+      wrapper.parentNode.insertBefore(anchor, wrapper);
+    });
 
-      const grandWrapperClone = grandWrapper.cloneNode(true);
-      newAnchor.appendChild(grandWrapperClone);
+    const wrappers = parentElement.querySelectorAll("*");
+    wrappers.forEach((el) => {
+      const isSpacer = el.classList.contains("inline-splitter") || el.innerHTML === " ";
 
-      parentElement.replaceChild(newAnchor, grandWrapper);
+      if (el.tagName !== "BR" && el.tagName !== "IMG" && !isSpacer && el.children.length === 0 && el.textContent.trim() === "") {
+        el.remove();
+      }
     });
   }
 
@@ -196,6 +201,7 @@ export default class {
     this.view.disable(false, "#modal-edit-save");
 
     let content = this.targetContainer.innerHTML.trim();
+    console.log(content);
     this.view.html(this.editorContainer.firstElementChild, content);
 
     this.editorContainer.querySelectorAll(".inline-splitter").forEach((el) => el.replaceWith(document.createTextNode(" ")));

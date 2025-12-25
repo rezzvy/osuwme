@@ -5,6 +5,7 @@ export default class View {
     this.modalTemplate = new bootstrap.Modal("#modal-template");
     this.modalAudioPlayer = new bootstrap.Modal("#audio-modal");
     this.modalStarting = new bootstrap.Modal("#starting-modal");
+    this.modalClone = new bootstrap.Modal("#clone-template");
 
     // File Input
     this.importProjectFileInput = document.getElementById("import-project-input");

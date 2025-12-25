@@ -61,6 +61,7 @@ export default function initLibraries(controller) {
   // Center
   model.registerBBCodeConversion("center", (api) => {
     const hasCenterBlock = api.node.parentElement?.closest("center");
+
     return hasCenterBlock ? api.content : `[centre]${api.content}[/centre]`;
   });
 
@@ -148,6 +149,7 @@ export default function initLibraries(controller) {
 
   model.registerBBCodeConversion('[style*="color:"]', (api) => {
     if (api.node.matches("a") && model.isOsuProfileLink(api.node.href)) return api.content;
+
     return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
   });
 
@@ -175,8 +177,9 @@ export default function initLibraries(controller) {
       "100%": `[size=100]`,
       "150%": `[size=150]`,
     };
+
     if (api.node.matches("a")) return api.content;
-    return `${sizeMaps[size]}${api.content}[/size]`;
+    return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}${api.content}[/size]`;
   });
 
   // Link
@@ -200,21 +203,23 @@ export default function initLibraries(controller) {
     }
 
     if (model.isOsuProfileLink(link)) {
+      if (api.node.textContent.trim() === "") return "";
+
       if (size) {
-        return `${sizeMaps[size]}[profile]${content}[/profile][/size]`;
+        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}[profile]${api.node.textContent}[/profile][/size]`;
       }
-      return `[profile]${content}[/profile]`;
+      return `[profile]${api.node.textContent}[/profile]`;
     }
 
     if (link.startsWith("mailto:")) {
       if (size) {
-        return `${sizeMaps[size]}[email=${link.substring(7)}]${content}[/email][/size]`;
+        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}[email=${link.substring(7)}]${content}[/email][/size]`;
       }
       return `[email=${link.substring(7)}]${content}[/email]`;
     }
 
     if (size) {
-      return `${sizeMaps[size]}[url=${link}]${content}[/url][/size]`;
+      return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}[url=${link}]${content}[/url][/size]`;
     }
 
     return `[url=${link}]${content}[/url]`;
@@ -430,7 +435,6 @@ export default function initLibraries(controller) {
             var username = prompt("Username:");
             if (username) {
               const range = model.getSmartSelection();
-
               model.quill.updateContents([
                 { retain: range.index },
                 {
@@ -440,7 +444,6 @@ export default function initLibraries(controller) {
                   },
                 },
               ]);
-
               model.quill.setSelection(range.index + username.length + 1);
             }
           },
