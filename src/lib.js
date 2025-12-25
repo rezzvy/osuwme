@@ -176,10 +176,11 @@ export default function initLibraries(controller) {
       "85%": `[size=85]`,
       "100%": `[size=100]`,
       "150%": `[size=150]`,
+      "200%": `[size=200]`,
     };
 
     if (api.node.matches("a")) return api.content;
-    return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}${api.content}[/size]`;
+    return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}${api.content}[/size]`;
   });
 
   // Link
@@ -190,6 +191,7 @@ export default function initLibraries(controller) {
       "85%": `[size=85]`,
       "100%": `[size=100]`,
       "150%": `[size=150]`,
+      "200%": `[size=200]`,
     };
 
     let content = api.content;
@@ -206,20 +208,20 @@ export default function initLibraries(controller) {
       if (api.node.textContent.trim() === "") return "";
 
       if (size) {
-        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}[profile]${api.node.textContent}[/profile][/size]`;
+        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}[profile]${api.node.textContent}[/profile][/size]`;
       }
       return `[profile]${api.node.textContent}[/profile]`;
     }
 
     if (link.startsWith("mailto:")) {
       if (size) {
-        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}[email=${link.substring(7)}]${content}[/email][/size]`;
+        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}[email=${link.substring(7)}]${content}[/email][/size]`;
       }
       return `[email=${link.substring(7)}]${content}[/email]`;
     }
 
     if (size) {
-      return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=150]"}[url=${link}]${content}[/url][/size]`;
+      return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}[url=${link}]${content}[/url][/size]`;
     }
 
     return `[url=${link}]${content}[/url]`;
@@ -432,7 +434,7 @@ export default function initLibraries(controller) {
   model.Delta = Quill.import("delta");
 
   const FontSize = Quill.import("attributors/style/size");
-  FontSize.whitelist = ["50%", "85%", "100%", "150%"];
+  FontSize.whitelist = ["50%", "85%", "100%", "150%", "200%"];
 
   const inlineCodeBlot = model.createInlineBlot({
     blotName: "inlinecode",

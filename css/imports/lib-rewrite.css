@@ -247,3 +247,7 @@ li[data-list="bullet"] {
 .dropdown-menu {
   max-height: 350px;
 }
+
+a.d-inline-block{
+  cursor: pointer;
+}

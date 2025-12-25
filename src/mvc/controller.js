@@ -326,7 +326,8 @@ export default class Controller {
 
     // Get Code Modal on Open Event
     this.view.on("#getcode-modal", "show.bs.modal", () => {
-      this.view.html("#code-output-textarea", this.model.output(this.view.html("#canvas-wrapper")));
+      const fixRepetitiveLinks = this.mergeGradientLinks(this.view.html("#canvas-wrapper"));
+      this.view.html("#code-output-textarea", this.model.output(fixRepetitiveLinks));
     });
 
     // Get Code Modal on Close Event
@@ -835,6 +836,27 @@ export default class Controller {
 
     this.view.download(blob, downloadName);
     this.model.clearBlob(blob);
+  }
+
+  mergeGradientLinks(htmlString) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+
+    const links = Array.from(doc.querySelectorAll("a"));
+
+    links.forEach((currentLink) => {
+      const prevLink = currentLink.previousElementSibling;
+
+      if (prevLink && prevLink.tagName === "A" && prevLink.href === currentLink.href) {
+        while (currentLink.firstChild) {
+          prevLink.appendChild(currentLink.firstChild);
+        }
+
+        currentLink.remove();
+      }
+    });
+
+    return doc.body.innerHTML;
   }
 
   // Format selected text with a gradient, using start and end colors.

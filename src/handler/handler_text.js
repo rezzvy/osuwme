@@ -73,31 +73,26 @@ export default class {
   }
 
   swapLinks(parentElement) {
-    const anchors = parentElement.querySelectorAll("a");
+    const directChildren = Array.from(parentElement.children);
 
-    anchors.forEach((anchor) => {
-      const wrapper = anchor.parentElement;
+    directChildren.forEach((grandWrapper) => {
+      const anchor = grandWrapper.querySelector("a");
 
-      if (wrapper === parentElement || !wrapper) return;
-
-      const newWrapper = wrapper.cloneNode(false);
-
-      while (anchor.firstChild) {
-        newWrapper.appendChild(anchor.firstChild);
+      if (!anchor) {
+        return;
       }
 
-      anchor.appendChild(newWrapper);
+      const currentWrapper = anchor.parentNode;
+      const newAnchor = anchor.cloneNode(false);
+      const originalContent = Array.from(anchor.childNodes);
 
-      wrapper.parentNode.insertBefore(anchor, wrapper);
-    });
+      currentWrapper.innerHTML = "";
+      originalContent.forEach((node) => currentWrapper.appendChild(node));
 
-    const wrappers = parentElement.querySelectorAll("*");
-    wrappers.forEach((el) => {
-      const isSpacer = el.classList.contains("inline-splitter") || el.innerHTML === " ";
+      const grandWrapperClone = grandWrapper.cloneNode(true);
+      newAnchor.appendChild(grandWrapperClone);
 
-      if (el.tagName !== "BR" && el.tagName !== "IMG" && !isSpacer && el.children.length === 0 && el.textContent.trim() === "") {
-        el.remove();
-      }
+      parentElement.replaceChild(newAnchor, grandWrapper);
     });
   }
 

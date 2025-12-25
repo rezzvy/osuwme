@@ -12,6 +12,7 @@
         "Fixed link form not showing when selecting a link",
         "Fixed auto-save feature not working on mobile",
         "Fixed text selection reset when clicking outside the text editor area",
+        "Fixed redundant generated links when a gradient is applied",
         "Fixed Unicode (fancy text) incorrectly rendered when applied with gradients"
       ]
     },
