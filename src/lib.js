@@ -558,10 +558,14 @@ export default function initLibraries(controller) {
     if (!range) return;
 
     const newLink = view.val(".link-form input");
-    const blot = getLinkBlotAt(range.index);
 
-    if (blot) {
-      model.quill.setSelection(model.quill.getIndex(blot), blot.length());
+    if (range.length === 0) {
+      const blot = getLinkBlotAt(range.index);
+      if (blot) {
+        model.quill.setSelection(model.quill.getIndex(blot), blot.length());
+      } else {
+        model.quill.focus();
+      }
     } else {
       model.quill.focus();
     }
