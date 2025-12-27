@@ -405,3 +405,10 @@ body:not(.logged-in) #clone-template .modal-body button {
 strong {
   font-weight: 700;
 }
+
+#element-list-btn-order-setting {
+  width: max-content;
+  height: max-content;
+  right: 0;
+  top: 0;
+}

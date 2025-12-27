@@ -59,7 +59,7 @@ export default (controller) => {
     `;
   };
 
-  view.generateCanvasElementListButton = (key, data) => {
+  view.generateCanvasElementListButton = (key, data, index) => {
     const { editable, icon, tooltipTitle } = data;
     return `
       <button class="canvas-element-list-btn btn btn-dark py-3 px-5" 
@@ -67,7 +67,8 @@ export default (controller) => {
         data-bs-toggle="tooltip" 
         data-bs-title="${tooltipTitle}" 
         data-key="${key}" 
-        data-editable="${editable}">
+        data-editable="${editable}"
+        style="order:${index}">
         <i class="fa ${icon} fa-fw fa-lg"></i>
       </button>
     `;
@@ -122,6 +123,24 @@ export default (controller) => {
         </div>
       </div>
       <div class="_list-content d-none">${content}</div>
+    `;
+
+    return div;
+  };
+
+  view.generateOrderListItem = (title = "") => {
+    const div = document.createElement("div");
+    div.classList.add("order-item");
+    div.innerHTML = `
+      <div class="input-group input-group-sm gap-1">
+        <div class="input-group-text">
+          <button class="btn btn-outline-light btn-sm" data-action="move">
+            <i class="fa fa-arrows fa-fw"></i>
+          </button>
+        </div>
+        <input type="text" class="list-title-input form-control rounded-2" placeholder="Title" value="${title}" readonly />
+      </div>
+   
     `;
 
     return div;

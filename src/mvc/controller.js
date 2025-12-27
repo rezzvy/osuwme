@@ -26,6 +26,6 @@ export default class Controller {
     this.view.init(this.model.isMobileDevice(), isOnAuthRedirect);
 
     await this.authLogin(isOnAuthRedirect);
-    this.checkAuthSession();
+    // this.checkAuthSession();
   }
 }

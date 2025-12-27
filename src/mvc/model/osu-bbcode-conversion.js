@@ -163,6 +163,10 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion("a", (api) => {
+    if (api.node.children?.length === 0 && api.node.textContent.trim() === "" && !api.node.matches(".output-imgmap-item")) {
+      return api.content;
+    }
+
     const size = api.node.style.fontSize;
     const sizeMaps = {
       "50%": `[size=50]`,

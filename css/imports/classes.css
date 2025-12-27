@@ -92,7 +92,7 @@ body.on-grabbing [data-action="move"] {
   position: relative;
 }
 
-.section-heading :first-child::after {
+.section-heading > :first-child::after {
   content: "";
   position: absolute;
   width: 100%;

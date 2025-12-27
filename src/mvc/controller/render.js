@@ -2,27 +2,56 @@ export default (controller) => {
   const model = controller.model;
   const view = controller.view;
 
+  controller.initCanvasButtonOrders = () => {
+    const savedData = localStorage.getItem("canvas-btn-order");
+
+    if (!savedData) return;
+
+    try {
+      const orderKeys = JSON.parse(savedData);
+      const mainList = view.el("#canvas-element-list");
+
+      orderKeys.forEach((key, index) => {
+        const btn = mainList.querySelector(`[data-key="${key}"]`);
+
+        if (btn) {
+          btn.style.order = index + 1;
+
+          mainList.appendChild(btn);
+        }
+      });
+    } catch (error) {
+      localStorage.removeItem("my_canvas_order");
+    }
+  };
+
   controller.fetchAndRenderInitElements = async () => {
     await controller.renderCanvasElementList();
     await controller.renderCanvasTemplateList();
     await controller.renderChangeLogs();
     await controller.renderSupportText();
+    controller.initCanvasButtonOrders();
   };
 
   controller.renderCanvasElementList = async () => {
     const data = await model.fetchData("./src/json/canvas-element-list.json", "json");
     const temp = { modal: [], skeleton: [], handler: [], button: "" };
 
+    let buttonIndex = 1;
+
     for (const key in data) {
+      const currentIndex = buttonIndex;
       const { modalPath, skeletonPath, handlerPath } = data[key];
-      temp.button += view.generateCanvasElementListButton(key, data[key]);
+
+      temp.button += view.generateCanvasElementListButton(key, data[key], currentIndex);
 
       if (modalPath) {
         const promise = model.asyncFetchData(modalPath, "text", (res) => {
-          return view.generateModalEditSection(key, res);
+          return view.generateModalEditSection(key, res, currentIndex);
         });
         temp.modal.push(promise);
       }
+
       if (skeletonPath) {
         const promise = model.asyncFetchData(skeletonPath, "text", (res) => {
           model.registerSkeleton(key, res);
@@ -30,6 +59,7 @@ export default (controller) => {
         });
         temp.skeleton.push(promise);
       }
+
       if (handlerPath) {
         const promise = import(handlerPath).then((module) => {
           const HandlerClass = module.default;
@@ -40,9 +70,10 @@ export default (controller) => {
           }
           return false;
         });
-
         temp.handler.push(promise);
       }
+
+      buttonIndex++;
     }
 
     const modals = (await Promise.all(temp.modal)).join("");

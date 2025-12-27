@@ -1,5 +1,5 @@
 {
-  "latest_updated": "Dec 26, 2025",
+  "latest_updated": "Dec 27, 2025",
   "changelogs": [
     {
       "date": "Anniversary Update (Dec 2025/Jan 2026)",
@@ -7,6 +7,7 @@
         "Implemented the 'Clone from osu!' feature",
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
         "Added new tools to the text editor (YouTube, Profile, Assets, Lists)",
+        "Added functionality to rearrange canvas element menu buttons",
         "Added canvas auto-sync with the user's latest me! page",
         "Added font style to the text editor",
         "Added support for gradients in links",

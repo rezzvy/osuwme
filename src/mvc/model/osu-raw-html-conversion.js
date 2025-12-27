@@ -179,7 +179,7 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("img", (api) => {
-    return `<img src="${api.node.src}"/>`;
+    return `<img onerror="this.remove()" src="${api.node.src}"/>`;
   });
 
   controller.model.registerClonedBBCodeConversion("span", (api) => {

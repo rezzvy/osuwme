@@ -333,6 +333,47 @@ export default (controller) => {
       controller.renderToCanvas(e.target.dataset.key, e.target.dataset.editable, model.uniqueID);
     });
 
+    view.on("#element-list-btn-order-setting", "click", (e) => {
+      view.html("#order-container", "");
+      view.modalOrder.show();
+
+      const fragment = document.createDocumentFragment();
+
+      for (const child of view.el("#canvas-element-list").children) {
+        const item = view.generateOrderListItem(child.dataset.bsTitle);
+
+        item.dataset.key = child.dataset.key;
+
+        fragment.append(item);
+      }
+
+      view.append("#order-container", fragment);
+    });
+
+    view.on("#order-save-btn", "click", (e) => {
+      const modalContainer = view.el("#order-container");
+      const mainList = view.el("#canvas-element-list");
+
+      const sortedItems = modalContainer.querySelectorAll(".order-item");
+
+      const orderKeys = [];
+
+      sortedItems.forEach((modalItem, index) => {
+        const key = modalItem.dataset.key;
+
+        orderKeys.push(key);
+
+        const originalBtn = mainList.querySelector(`[data-key="${key}"]`);
+        if (originalBtn) {
+          originalBtn.style.order = index + 1;
+          mainList.appendChild(originalBtn);
+        }
+      });
+
+      localStorage.setItem("canvas-btn-order", JSON.stringify(orderKeys));
+      view.modalOrder.hide();
+    });
+
     /* 
      =========================================
         Canvas Action Events

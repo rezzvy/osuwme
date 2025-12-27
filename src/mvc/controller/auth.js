@@ -42,12 +42,12 @@ export default (controller) => {
     }, 1000);
   };
 
-  controller.checkAuthSession = () => {
-    if (!model.checkAuthSession()) {
-      alert("Your session is no longer valid. Please log in again. You will be logged out.");
-      controller.logout();
-    }
-  };
+  // controller.checkAuthSession = () => {
+  //   if (!model.checkAuthSession()) {
+  //     alert("Your session is no longer valid. Please log in again. You will be logged out.");
+  //     controller.logout();
+  //   }
+  // };
 
   controller.cloneUserpage = (userData) => {
     const container = document.createElement("div");

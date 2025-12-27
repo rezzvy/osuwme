@@ -248,6 +248,10 @@ li[data-list="bullet"] {
   max-height: 350px;
 }
 
-a.d-inline-block{
+a.d-inline-block {
   cursor: pointer;
+}
+
+.ql-editor img {
+  pointer-events: none;
 }
