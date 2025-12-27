@@ -72,30 +72,6 @@ export default class {
     this.view.html(box, skeleton);
   }
 
-  swapLinks(parentElement) {
-    const directChildren = Array.from(parentElement.children);
-
-    directChildren.forEach((grandWrapper) => {
-      const anchor = grandWrapper.querySelector("a");
-
-      if (!anchor) {
-        return;
-      }
-
-      const currentWrapper = anchor.parentNode;
-      const newAnchor = anchor.cloneNode(false);
-      const originalContent = Array.from(anchor.childNodes);
-
-      currentWrapper.innerHTML = "";
-      originalContent.forEach((node) => currentWrapper.appendChild(node));
-
-      const grandWrapperClone = grandWrapper.cloneNode(true);
-      newAnchor.appendChild(grandWrapperClone);
-
-      parentElement.replaceChild(newAnchor, grandWrapper);
-    });
-  }
-
   getCountries(query) {
     this.view.html(this.countryAssetWrapper, "");
 
@@ -181,6 +157,70 @@ export default class {
 
       this.getCountries(query);
     });
+
+    // Gradient Select Event
+    this.view.on("#gradient-type-select", "change", (e) => {
+      const value = e.target.value;
+      this.model.currentGradient = value;
+
+      if (this.model.latestSelection) {
+        const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
+          (color) => color.getColor().toHEXA().toString()
+        );
+
+        this.controller.formatTextToGradient(value, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
+      }
+
+      const settings = {
+        horizontal: {
+          text: "Start",
+          columns: ["row-cols-3", "row-cols-2"],
+          toggles: { middle: true, start: false, end: false, randomize: true },
+        },
+        middle: {
+          text: "Start/End",
+          columns: ["row-cols-3", "row-cols-2"],
+          toggles: { middle: false, start: false, end: true, randomize: true },
+        },
+        threeColored: {
+          text: "Start",
+          columns: ["row-cols-2", "row-cols-3"],
+          toggles: { middle: false, start: false, end: false, randomize: true },
+        },
+        random: {
+          toggles: { middle: true, start: true, end: true, randomize: false },
+        },
+        default: {
+          toggles: { start: true, middle: true, end: true, randomize: true },
+        },
+      };
+
+      const toggleSettings = settings[value] || settings.default;
+
+      if (toggleSettings.text) this.view.text("#gradient-start div", toggleSettings.text);
+      if (toggleSettings.columns) this.view.replace(".color-picker-wrapper", ...toggleSettings.columns);
+
+      const toggles = toggleSettings.toggles;
+      this.view.toggle("#gradient-start", "d-none", toggles.start);
+      this.view.toggle("#gradient-middle", "d-none", toggles.middle);
+      this.view.toggle("#gradient-end", "d-none", toggles.end);
+      this.view.toggle(".randomize-btn-container", "d-none", toggles.randomize);
+    });
+
+    // Gradient Randomize Button Event
+    this.view.on(
+      "#randomize-selected-text-btn",
+      "click",
+      this.controller.debounce((e) => {
+        if (this.model.latestSelection && this.model.currentGradient !== "random") return;
+
+        const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
+          (color) => color.getColor().toHEXA().toString()
+        );
+
+        this.controller.formatTextToGradient(this.model.currentGradient, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
+      }, 100)
+    );
   }
 
   /* 
@@ -239,7 +279,7 @@ export default class {
         if (el.tagName === "BR") this.view.dataset(el, "spacing", "%SPCITM%");
       }
 
-      this.swapLinks(paragraph);
+      this.controller.swapLinks(paragraph);
     });
 
     this.seperatedListItems(editorContent);

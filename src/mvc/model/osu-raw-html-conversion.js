@@ -1,5 +1,6 @@
-export default function initClone(controller) {
+export default function (controller) {
   controller.model.clonedMation = new MationHTML();
+  controller.model.clonedMation.noRuleFallback = (api) => api.content;
 
   controller.model.registerClonedBBCodeConversion(".imagemap", (api) => {
     const el = generateClonedItem("imgmap", "true");
@@ -278,125 +279,6 @@ export default function initClone(controller) {
     const el = generateClonedItem("text", "true", `<p>${api.content}</p>`);
     return el.outerHTML;
   });
-
-  // divider
-
-  controller.view.on("#cloned-userpage-render", "click", (e) => {
-    if (!controller.model.currentClonedData) return;
-
-    const container = document.createElement("div");
-
-    container.innerHTML = controller.model.currentClonedData.page.html;
-    controller.processRAWOsuHTML(container);
-
-    const html = controller.model.clonedMation.convert(container.innerHTML);
-
-    controller.model.currentClonedData = null;
-    controller.setCanvasContent(html);
-
-    controller.view.modalClone.hide();
-
-    controller.view.disable(true, "#cloned-userpage-render", "#clone-open-userpge", "#clone-copy-bbcode");
-    controller.view.toggle("._cover > img", "d-none", true);
-    controller.view.toggle("._avatar > img", "d-none", true);
-    controller.view.el("._info > h3").textContent = "N/A";
-    controller.view.el("._info > p").textContent = "N/A";
-    controller.view.dataset("#clone-open-userpge", "url", "");
-    controller.view.dataset("#clone-copy-bbcode", "bbcode", "");
-  });
-
-  controller.view.on("._avatar > img", "load", (e) => {
-    controller.view.toggle(e.target, "d-none", false);
-  });
-
-  controller.view.on("._cover > img", "load", (e) => {
-    controller.view.toggle(e.target, "d-none", false);
-  });
-
-  controller.view.on("#clone-link-input", "input", (e) => {
-    controller.view.disable(!e.target.value, "#clone-link-submit");
-  });
-
-  controller.view.on("#clone-copy-bbcode", "click", (e) => {
-    const bbcode = e.currentTarget.dataset.bbcode;
-    if (!bbcode) return;
-
-    const textarea = document.createElement("textarea");
-    textarea.value = bbcode;
-    textarea.style.cssText = "visually-hidden";
-
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-
-    document.execCommand("copy");
-    document.body.removeChild(textarea);
-
-    alert("Copied!");
-  });
-
-  controller.view.on("#clone-open-userpge", "click", (e) => {
-    if (!e.target.dataset.url) return;
-
-    window.open(e.target.dataset.url, "_blank");
-  });
-
-  controller.view.on("#osu-api-login-btn", "click", (e) => {
-    const token = localStorage.getItem("access_token");
-
-    if (token) {
-      controller.logout();
-      return;
-    }
-
-    controller.view.disable(true, e.target);
-
-    const authUrl = `https://osu.ppy.sh/oauth/authorize?client_id=${controller.model.apiConfig.clientID}&redirect_uri=${encodeURIComponent(
-      controller.model.apiConfig.redirectURI
-    )}&response_type=code&scope=public`;
-
-    window.location.href = authUrl;
-  });
-
-  controller.view.on("#clone-link-submit", "click", async (e) => {
-    const token = localStorage.getItem("access_token");
-    if (!token) return;
-
-    controller.view.buttonLoading(true, e.target);
-    controller.view.disable(true, "#clone-link-input", "#clone-open-userpge", "#clone-copy-bbcode");
-    controller.view.toggle("._cover > img", "d-none", true);
-    controller.view.toggle("._avatar > img", "d-none", true);
-    controller.view.el("._info > h3").textContent = "N/A";
-    controller.view.el("._info > p").textContent = "N/A";
-    controller.view.dataset("#clone-open-userpge", "url", "");
-    controller.view.dataset("#clone-copy-bbcode", "bbcode", "");
-
-    const username = controller.view.val("#clone-link-input");
-    controller.model.currentClonedData = await controller.getUserByUsername(username);
-
-    if (!controller.model.currentClonedData) {
-      controller.view.disable(false, "#cloned-userpage-render");
-      return;
-    }
-
-    controller.model.currentClonedData.page.html = controller.replaceLinks(controller.model.currentClonedData);
-
-    const data = controller.model.currentClonedData;
-    controller.view.el("._avatar > img").src = data.avatar;
-    controller.view.el("._cover > img").src = data.cover;
-    controller.view.el("._info > h3").textContent = data.username;
-    controller.view.el("._info > p").textContent = data.country;
-
-    controller.view.dataset("#clone-open-userpge", "url", `https://osu.ppy.sh/users/${data.username}`);
-    controller.view.dataset("#clone-copy-bbcode", "bbcode", data.page.raw);
-
-    controller.view.buttonLoading(false, e.target);
-    controller.view.disable(!data, "#clone-open-userpge", "#clone-copy-bbcode");
-    controller.view.disable(false, "#clone-link-input", "#cloned-userpage-render");
-    controller.view.val("#clone-link-input", "");
-  });
-
-  // Divider
 
   function generateClonedItem(key, editable, html = "") {
     const el = controller.renderToCanvas(key, editable, controller.model.uniqueID, false);

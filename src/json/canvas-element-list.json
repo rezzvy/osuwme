@@ -4,7 +4,7 @@
     "icon": "fa-quote-right",
     "modalPath": "./src/modal/modal_quote.html",
     "skeletonPath": "./src/skeleton/skeleton_quote.html",
-    "handlerPath": "../../src/handler/handler_quote.js",
+    "handlerPath": "../../../src/handler/handler_quote.js",
     "editable": true
   },
 
@@ -13,7 +13,7 @@
     "icon": "fa-map",
     "modalPath": "./src/modal/modal_imgmap.html",
     "skeletonPath": "./src/skeleton/skeleton_imgmap.html",
-    "handlerPath": "../../src/handler/handler_imgmap.js",
+    "handlerPath": "../../../src/handler/handler_imgmap.js",
     "editable": true
   },
   "list": {
@@ -21,7 +21,7 @@
     "icon": "fa-list",
     "modalPath": "./src/modal/modal_list.html",
     "skeletonPath": "./src/skeleton/skeleton_list.html",
-    "handlerPath": "../../src/handler/handler_list.js",
+    "handlerPath": "../../../src/handler/handler_list.js",
     "editable": true
   },
   "heading": {
@@ -29,7 +29,7 @@
     "icon": "fa-header",
     "modalPath": "./src/modal/modal_heading.html",
     "skeletonPath": "./src/skeleton/skeleton_heading.html",
-    "handlerPath": "../../src/handler/handler_heading.js",
+    "handlerPath": "../../../src/handler/handler_heading.js",
     "editable": true
   },
   "text": {
@@ -37,7 +37,7 @@
     "icon": "fa-paragraph",
     "modalPath": "./src/modal/modal_text.html",
     "skeletonPath": "./src/skeleton/skeleton_text.html",
-    "handlerPath": "../../src/handler/handler_text.js",
+    "handlerPath": "../../../src/handler/handler_text.js",
     "editable": true
   },
   "flags": {
@@ -45,7 +45,7 @@
     "icon": "fa-flag",
     "modalPath": "./src/modal/modal_flag.html",
     "skeletonPath": "./src/skeleton/skeleton_flag.html",
-    "handlerPath": "../../src/handler/handler_flag.js",
+    "handlerPath": "../../../src/handler/handler_flag.js",
     "editable": true
   },
   "image": {
@@ -53,7 +53,7 @@
     "icon": "fa-picture-o",
     "modalPath": "./src/modal/modal_image.html",
     "skeletonPath": "./src/skeleton/skeleton_image.html",
-    "handlerPath": "../../src/handler/handler_image.js",
+    "handlerPath": "../../../src/handler/handler_image.js",
     "editable": true
   },
   "audio": {
@@ -61,7 +61,7 @@
     "icon": "fa-music",
     "modalPath": "./src/modal/modal_audio.html",
     "skeletonPath": "./src/skeleton/skeleton_audio.html",
-    "handlerPath": "../../src/handler/handler_audio.js",
+    "handlerPath": "../../../src/handler/handler_audio.js",
     "editable": true
   },
   "youtube": {
@@ -69,7 +69,7 @@
     "icon": "fa-youtube-play",
     "modalPath": "./src/modal/modal_youtube.html",
     "skeletonPath": "./src/skeleton/skeleton_youtube.html",
-    "handlerPath": "../../src/handler/handler_youtube.js",
+    "handlerPath": "../../../src/handler/handler_youtube.js",
     "editable": true
   },
   "notice": {
@@ -87,7 +87,7 @@
   "center": {
     "tooltipTitle": "Center Block",
     "icon": "fa-align-center",
-    "skeletonPath": "./src/skeleton/skeleton_center.html",
+    "skeletonPath": "../../../src/skeleton/skeleton_center.html",
     "editable": false
   },
   "spoilerbox": {
@@ -95,7 +95,7 @@
     "icon": "fa-caret-down",
     "modalPath": "./src/modal/modal_spoilerbox.html",
     "skeletonPath": "./src/skeleton/skeleton_spoilerbox.html",
-    "handlerPath": "../../src/handler/handler_spoilerbox.js",
+    "handlerPath": "../../../src/handler/handler_spoilerbox.js",
     "editable": true
   },
   "codeblock": {
@@ -103,7 +103,7 @@
     "icon": "fa-code",
     "modalPath": "./src/modal/modal_codeblock.html",
     "skeletonPath": "./src/skeleton/skeleton_codeblock.html",
-    "handlerPath": "../../src/handler/handler_codeblock.js",
+    "handlerPath": "../../../src/handler/handler_codeblock.js",
     "editable": true
   },
   "spacing": {
@@ -111,7 +111,7 @@
     "icon": "fa-arrows-v",
     "modalPath": "./src/modal/modal_spacing.html",
     "skeletonPath": "./src/skeleton/skeleton_spacing.html",
-    "handlerPath": "../../src/handler/handler_spacing.js",
+    "handlerPath": "../../../src/handler/handler_spacing.js",
     "editable": true
   }
 }
