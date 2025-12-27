@@ -196,7 +196,7 @@ footer {
    ========================================= */
 #element-list-section {
   --menu-pinned-spacing: 16px;
-  transition: padding 0.25s ease-in-out;
+  transition: padding 0.25s ease-in-out, 0.15s ease-out;
 }
 
 #element-list-section.pinned {
@@ -331,6 +331,14 @@ body:not(.logged-in) #clone-template .modal-body input,
 body:not(.logged-in) #clone-template .modal-body button {
   opacity: 0.5;
   pointer-events: none;
+}
+
+body.auto-hide-canvas-menu .pinned {
+  opacity: 0;
+}
+
+body.auto-hide-canvas-menu .pinned:hover {
+  opacity: 1;
 }
 
 /* =========================================

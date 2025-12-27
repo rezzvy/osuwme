@@ -434,10 +434,20 @@ export default (controller) => {
     view.on("#canvas-menu-sticky-switch", "input", (e) => {
       view.toggle("#element-list-section", "pinned", e.target.checked);
       view.isMenuSticky = e.target.checked;
+
+      localStorage.setItem("preference-sticky-menu", e.target.checked);
     });
 
-    view.on("#hide-on-move-switch ", "input", (e) => {
+    view.on("#hide-on-move-switch", "input", (e) => {
       view.toggle("body", "hide-on-move", e.target.checked);
+
+      localStorage.setItem("preference-hide-on-move", e.target.checked);
+    });
+
+    view.on("#auto-hide-canvas-menu-switch", "input", (e) => {
+      view.toggle("body", "auto-hide-canvas-menu", e.target.checked);
+
+      localStorage.setItem("preference-auto-hide-menu", e.target.checked);
     });
 
     /* 

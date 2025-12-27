@@ -25,12 +25,28 @@ export default (controller) => {
     }
   };
 
+  controller.initPreferenceSettings = () => {
+    const isStickyMenu = localStorage.getItem("preference-sticky-menu") === "true" ? true : false;
+    const isHideOnMove = localStorage.getItem("preference-hide-on-move") === "true" ? true : false;
+    const isAutoHideMenu = localStorage.getItem("preference-auto-hide-menu") === "true" ? true : false;
+
+    view.el("#canvas-menu-sticky-switch").checked = isStickyMenu;
+    view.el("#hide-on-move-switch").checked = isHideOnMove;
+    view.el("#auto-hide-canvas-menu-switch").checked = isAutoHideMenu;
+
+    view.toggle("#element-list-section", "pinned", isStickyMenu);
+    view.isMenuSticky = isStickyMenu;
+    view.toggle("body", "hide-on-move", isHideOnMove);
+    view.toggle("body", "auto-hide-canvas-menu", isAutoHideMenu);
+  };
+
   controller.fetchAndRenderInitElements = async () => {
     await controller.renderCanvasElementList();
     await controller.renderCanvasTemplateList();
     await controller.renderChangeLogs();
     await controller.renderSupportText();
     controller.initCanvasButtonOrders();
+    controller.initPreferenceSettings();
   };
 
   controller.renderCanvasElementList = async () => {
