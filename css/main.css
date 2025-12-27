@@ -62,7 +62,7 @@ footer {
   position: absolute;
   width: 200px;
   max-width: 100%;
-  top: 100%;
+  top: 60%;
   left: 145px;
   z-index: 100;
 }
@@ -419,4 +419,8 @@ strong {
   height: max-content;
   right: 0;
   top: 0;
+}
+
+a {
+  cursor: pointer;
 }

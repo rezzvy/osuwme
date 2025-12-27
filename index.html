@@ -42,11 +42,7 @@
                   </a>
                 </li>
                 <li>
-                  <a
-                    data-bs-toggle="modal"
-                    data-bs-target="#support-modal"
-                    class="link-light border py-1 px-2 d-inline-block rounded-2 link-opacity-75 link-opacity-100-hover"
-                  >
+                  <a data-bs-toggle="modal" data-bs-target="#support-modal" class="link-light link-opacity-75 link-opacity-100-hover">
                     <i class="fa fa-heart fa-fw pe-none"></i> Support
                   </a>
                 </li>
@@ -90,20 +86,40 @@
                 <ul class="dropdown-menu overflow-auto">
                   <li><button class="dropdown-item" id="open-main-menu-btn">Main Menu</button></li>
                   <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-template">Project Templates</button></li>
-                  <li><button class="dropdown-item" id="import-project-btn">Load Project (Ctrl + O)</button></li>
-                  <li><button class="dropdown-item" id="export-project-btn">Save Project (Ctrl + S)</button></li>
+                  <li>
+                    <button class="dropdown-item" id="import-project-btn">Load Project <span class="badge text-bg-dark">(Ctrl + O)</span></button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item" id="export-project-btn">Save Project <span class="badge text-bg-dark">(Ctrl + S)</span></button>
+                  </li>
                   <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#clone-template">Clone from osu!</button></li>
 
                   <li class="mt-2 border">
                     <div class="text-center small text-pink">Canvas Action</div>
-                    <button class="canvas-action dropdown-item" id="expand-all-canvas-btn">Expand All (Ctrl + 1)</button>
-                    <button class="canvas-action dropdown-item" id="collapse-all-canvas-btn">Collapse All (Ctrl + 2)</button>
-                    <button class="canvas-action dropdown-item" id="clear-canvas-btn">Clear All (Ctrl + 3)</button>
-                    <button class="canvas-action dropdown-item" id="clear-canvas-selection-btn">Clear Selection (Ctrl + 4)</button>
-                    <button class="canvas-action dropdown-item" id="reset-canvas-size-btn">Reset Size (Ctrl + 5)</button>
-                    <button class="canvas-action dropdown-item" id="edit-mode-canvas-action-btn">Edit Mode (Ctrl + E)</button>
-                    <button class="canvas-action dropdown-item" id="undo-canvas-action-btn">Undo (CTRL + Z)</button>
-                    <button class="canvas-action dropdown-item" id="redo-canvas-action-btn">Redo (CTRL + Y)</button>
+                    <button class="canvas-action dropdown-item" id="expand-all-canvas-btn">
+                      Expand All <span class="badge text-bg-dark">(Ctrl + 1)</span>
+                    </button>
+                    <button class="canvas-action dropdown-item" id="collapse-all-canvas-btn">
+                      Collapse All <span class="badge text-bg-dark">(Ctrl + 2)</span>
+                    </button>
+                    <button class="canvas-action dropdown-item" id="clear-canvas-btn">
+                      Clear All <span class="badge text-bg-dark">(Ctrl + 3)</span>
+                    </button>
+                    <button class="canvas-action dropdown-item" id="clear-canvas-selection-btn">
+                      Clear Selection <span class="badge text-bg-dark">(Ctrl + 4)</span>
+                    </button>
+                    <button class="canvas-action dropdown-item" id="reset-canvas-size-btn">
+                      Reset Size <span class="badge text-bg-dark">(Ctrl + 5)</span>
+                    </button>
+                    <button class="canvas-action dropdown-item" id="edit-mode-canvas-action-btn">
+                      Edit Mode <span class="badge text-bg-dark">(Ctrl + E)</span>
+                    </button>
+                    <button class="canvas-action dropdown-item" id="undo-canvas-action-btn">
+                      Undo <span class="badge text-bg-dark">(Ctrl + Z)</span>
+                    </button>
+                    <button class="canvas-action dropdown-item" id="redo-canvas-action-btn">
+                      Redo <span class="badge text-bg-dark">(Ctrl + Y)</span>
+                    </button>
                   </li>
 
                   <li>
@@ -227,7 +243,10 @@
             </div>
 
             <div class="modal-body">
-              <p class="alert alert-danger py-1 px-2 mb-1"><i class="fa fa-info-circle"></i> Please log in to use this feature.</p>
+              <p class="alert alert-danger py-1 px-2 mb-1">
+                <i class="fa fa-info-circle"></i> Please <a id="anchor-login-btn" href="javascript:void(0)" class="fw-bold">log in</a> to use this
+                feature.
+              </p>
 
               <div class="input-group input-group-sm gap-1">
                 <div class="input-group-text">

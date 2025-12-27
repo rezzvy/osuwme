@@ -47,6 +47,10 @@ export default (controller) => {
     await controller.renderSupportText();
     controller.initCanvasButtonOrders();
     controller.initPreferenceSettings();
+
+    view.on("#anchor-login-btn", "click", () => {
+      view.el("#osu-api-login-btn").click();
+    });
   };
 
   controller.renderCanvasElementList = async () => {

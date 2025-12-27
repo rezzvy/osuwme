@@ -38,7 +38,8 @@ export default function initLibraries(controller) {
     const isHiding =
       view.menuStickyContainer.classList.contains("pinned") &&
       !el.parentElement?.closest("#list-item-edit-container") &&
-      !el.parentElement.closest("#flag-edit-item-container");
+      !el.parentElement.closest("#flag-edit-item-container") &&
+      !el.parentElement.closest("#order-container");
 
     view.toggle(view.menuStickyContainer, "d-none", isHiding);
 
@@ -80,6 +81,8 @@ export default function initLibraries(controller) {
   });
 
   model.drake.on("drop", (el, target, source, sibling) => {
+    if (el && el.matches(".list-item, .flag-item, .order-item")) return;
+
     if (el.matches(".canvas-element-list-btn")) {
       const { key, editable } = el.dataset;
       const canvasItem = controller.renderToCanvas(key, editable, model.uniqueID, false);

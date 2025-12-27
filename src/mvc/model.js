@@ -35,10 +35,22 @@ export default class Model {
       },
     };
 
+    this.env = {
+      local: {
+        API_BASE: "http://localhost:3000/api",
+        REDIRECT: "http://127.0.0.1:5500/",
+      },
+      public: {
+        APPI_BASE: "https://osuwme-backend.vercel.app/api",
+        REDIRECT: "https://rezzvy.github.io/osuwme/",
+      },
+    };
+
+    this.workEnv = "local";
     this.apiConfig = {
-      OSU_CLIENT_ID: "46987",
-      API_BASE: "http://localhost:3000/api",
-      REDIRECT: "http://127.0.0.1:5500/",
+      OSU_CLIENT_ID: "46987", // OSUWME - BBCode Builder for osu!
+      API_BASE: this.env[this.workEnv].API_BASE,
+      REDIRECT: this.env[this.workEnv].REDIRECT,
     };
   }
 
