@@ -30,7 +30,7 @@ export default function (controller) {
 
   controller.model.registerClonedBBCodeConversion("h2", (api) => {
     if (api.node.firstElementChild) {
-      const el = generateClonedItem("text", "true", `<p><strong style="font-size:150%">${api.content}</strong></p>`);
+      const el = generateClonedItem("text", "true", `<p><span style="font-size:150%">${api.content}</span></p>`);
 
       return el.outerHTML;
     }
@@ -183,10 +183,6 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("span", (api) => {
-    if (api.node.textContent.trim() === "") {
-      return `<span class="inline-splitter"> </span>`;
-    }
-
     const style = api.node.style.cssText ? `style="${api.node.style.cssText}"` : "";
     const className = api.node.classList.length ? `class="${[...api.node.classList].join(" ")}"` : "";
 

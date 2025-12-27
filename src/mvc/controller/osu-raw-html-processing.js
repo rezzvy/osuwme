@@ -10,13 +10,24 @@ export default (controller) => {
     explodeInlineFormatters(container);
     flattenNestedSpans(container);
     processColorSpans(container);
+    markedInlineSplitter(container);
 
-    cleanupRedundantTags(container);
+    controller.cleanupRedundantTags(container);
   };
+
+  function markedInlineSplitter(container) {
+    container.querySelectorAll("*").forEach((el) => {
+      if (el.children.length === 0) {
+        if (el.textContent.trim() === "") {
+          el.innerHTML = "<span class='inline-splitter'> </span>";
+        }
+      }
+    });
+  }
 
   function extractSpacing(container) {
     container.querySelectorAll("*").forEach((el) => {
-      if (el.firstElementChild || (el.tagName === "SPAN" && el.textContent.trim() === "")) return;
+      if (el.firstElementChild || el.textContent.trim() === "") return;
 
       let text = el.textContent;
 
@@ -276,51 +287,8 @@ export default (controller) => {
   //   }
   // }
 
-  function cleanupRedundantTags(container) {
-    const tags = ["STRONG", "B", "EM", "I", "U", "S", "STRIKE"];
-
-    const selector = tags.join(",");
-
-    let hasChanges = true;
-
-    while (hasChanges) {
-      hasChanges = false;
-
-      const elements = Array.from(container.querySelectorAll(selector));
-
-      for (const child of elements) {
-        const tagName = child.tagName;
-        const parent = child.parentElement;
-
-        if (!parent) continue;
-
-        let targetParent = null;
-
-        if (parent.tagName === tagName) {
-          targetParent = parent;
-        } else if (parent.tagName === "A" && parent.parentElement && parent.parentElement.tagName === tagName) {
-          targetParent = parent.parentElement;
-        }
-
-        if (targetParent) {
-          if (child.getAttribute("style")) {
-            targetParent.style.cssText += ";" + child.style.cssText;
-          }
-
-          const fragment = document.createDocumentFragment();
-          while (child.firstChild) {
-            fragment.appendChild(child.firstChild);
-          }
-          child.replaceWith(fragment);
-
-          hasChanges = true;
-        }
-      }
-    }
-  }
-
   function explodeInlineFormatters(container) {
-    const inlineTags = ["STRONG", "B", "EM", "I", "U", "S", "STRIKE"];
+    const inlineTags = ["STRONG", "B", "EM", "I", "U", "S", "STRIKE", "SPAN"];
 
     const selector = inlineTags.join(",");
 

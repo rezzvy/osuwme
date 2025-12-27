@@ -11,12 +11,32 @@ export default (controller) => {
       const prevLink = currentLink.previousElementSibling;
 
       if (prevLink && prevLink.tagName === "A" && prevLink.href === currentLink.href) {
-        while (currentLink.firstChild) {
-          prevLink.appendChild(currentLink.firstChild);
+        if (prevLink.hasAttribute("style")) {
+          const hostSpan = document.createElement("span");
+          hostSpan.style.cssText = prevLink.style.cssText;
+
+          while (prevLink.firstChild) {
+            hostSpan.appendChild(prevLink.firstChild);
+          }
+
+          prevLink.appendChild(hostSpan);
+          prevLink.removeAttribute("style");
         }
 
+        const spanWrapper = document.createElement("span");
+        spanWrapper.style.cssText = currentLink.style.cssText;
+
+        while (currentLink.firstChild) {
+          spanWrapper.appendChild(currentLink.firstChild);
+        }
+
+        prevLink.appendChild(spanWrapper);
         currentLink.remove();
       }
+    });
+
+    Array.from(doc.querySelectorAll("p")).forEach((p) => {
+      controller.cleanupRedundantTags(p);
     });
 
     return doc.body.innerHTML;
@@ -112,5 +132,48 @@ export default (controller) => {
     }
 
     model.quill.updateContents(new model.Delta(operations), Quill.sources.USER);
+  };
+
+  controller.cleanupRedundantTags = (container) => {
+    const tags = ["STRONG", "B", "EM", "I", "U", "S", "STRIKE"];
+
+    const selector = tags.join(",");
+
+    let hasChanges = true;
+
+    while (hasChanges) {
+      hasChanges = false;
+
+      const elements = Array.from(container.querySelectorAll(selector));
+
+      for (const child of elements) {
+        const tagName = child.tagName;
+        const parent = child.parentElement;
+
+        if (!parent) continue;
+
+        let targetParent = null;
+
+        if (parent.tagName === tagName) {
+          targetParent = parent;
+        } else if (parent.tagName === "A" && parent.parentElement && parent.parentElement.tagName === tagName) {
+          targetParent = parent.parentElement;
+        }
+
+        if (targetParent) {
+          if (child.getAttribute("style")) {
+            targetParent.style.cssText += ";" + child.style.cssText;
+          }
+
+          const fragment = document.createDocumentFragment();
+          while (child.firstChild) {
+            fragment.appendChild(child.firstChild);
+          }
+          child.replaceWith(fragment);
+
+          hasChanges = true;
+        }
+      }
+    }
   };
 };

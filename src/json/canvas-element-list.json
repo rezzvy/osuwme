@@ -87,7 +87,7 @@
   "center": {
     "tooltipTitle": "Center Block",
     "icon": "fa-align-center",
-    "skeletonPath": "../../../src/skeleton/skeleton_center.html",
+    "skeletonPath": "./src/skeleton/skeleton_center.html",
     "editable": false
   },
   "spoilerbox": {

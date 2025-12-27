@@ -41,12 +41,12 @@ export default class Model {
         REDIRECT: "http://127.0.0.1:5500/",
       },
       public: {
-        APPI_BASE: "https://osuwme-backend.vercel.app/api",
+        API_BASE: "https://osuwme-backend.vercel.app/api",
         REDIRECT: "https://rezzvy.github.io/osuwme/",
       },
     };
 
-    this.workEnv = "local";
+    this.workEnv = "public";
     this.apiConfig = {
       OSU_CLIENT_ID: "46987", // OSUWME - BBCode Builder for osu!
       API_BASE: this.env[this.workEnv].API_BASE,
