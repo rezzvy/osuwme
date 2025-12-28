@@ -256,10 +256,9 @@ p > u[style*="color"]:has(a) a {
 }
 
 .osu-style details summary {
-  display: flex;
-  align-items: start;
-  gap: 14px;
-  overflow: hidden;
+  position: relative;
+  padding-left: 16px;
+  display: block;
 }
 
 .osu-style details summary > :first-of-type {
@@ -267,16 +266,16 @@ p > u[style*="color"]:has(a) a {
   flex-grow: 1;
 }
 
-.osu-style details summary [data-action="duplicate"] {
-  display: none;
-}
-
 .osu-style center details summary {
   justify-content: center;
 }
 
 .osu-style details summary::before {
-  flex-shrink: 0;
+  position: absolute;
+  width: 5px;
+  height: 14px;
+  left: 5px;
+  top: 0;
   content: "\f0da";
   font-family: "FontAwesome";
   color: #fff;
@@ -363,6 +362,10 @@ p > u[style*="color"]:has(a) a {
   color: rgb(224, 184, 202);
   font-size: 1.5em;
   font-weight: 700;
+}
+
+.osu-style .heading > * {
+  font-weight: inherit;
 }
 
 .osu-style .notice {

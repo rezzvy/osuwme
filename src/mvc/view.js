@@ -424,5 +424,6 @@ export default class View {
     this.text("._info > p", "N/A");
     this.dataset("#clone-open-userpge", "url", "");
     this.dataset("#clone-copy-bbcode", "bbcode", "");
+    this.val("#clone-link-input", "");
   }
 }

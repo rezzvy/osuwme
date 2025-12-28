@@ -10,14 +10,14 @@ export default (controller) => {
     explodeInlineFormatters(container);
     flattenNestedSpans(container);
     processColorSpans(container);
-    markedInlineSplitter(container);
+    flagElements(container);
 
     controller.cleanupRedundantTags(container);
   };
 
-  function markedInlineSplitter(container) {
+  function flagElements(container) {
     container.querySelectorAll("*").forEach((el) => {
-      if (el.matches("p, a, img, br, hr, iframe") || el.closest(".js-spoilerbox__link")) return;
+      if (el.matches("p, a, img, br, hr, iframe, .js-spoilerbox__body") || el.closest(".js-spoilerbox__link")) return;
 
       if (el.children.length === 0) {
         if (el.textContent.trim() === "") {
@@ -42,6 +42,34 @@ export default (controller) => {
           p.classList.add("imposter-text");
         }
       }
+    });
+
+    container.querySelectorAll(".js-spoilerbox.bbcode-spoilerbox").forEach((box) => {
+      const body = box.querySelector(".js-spoilerbox__body.bbcode-spoilerbox__body");
+      const linkIcon = box.querySelector(".bbcode-spoilerbox__link-icon");
+
+      if (linkIcon) linkIcon.remove();
+
+      if (body) {
+        const header = document.createElement("div");
+        header.className = "bbcode-spoilerbox__header";
+
+        while (box.firstChild && box.firstChild !== body) {
+          header.appendChild(box.firstChild);
+        }
+
+        header.querySelectorAll("p.bb-single-content").forEach((p) => {
+          if (p.innerHTML.trim() === "<br>") {
+            p.remove();
+          } else if (p.innerHTML.trim() === "") {
+            p.remove();
+          }
+        });
+
+        box.insertBefore(header, body);
+      }
+
+      console.log(box);
     });
   }
 

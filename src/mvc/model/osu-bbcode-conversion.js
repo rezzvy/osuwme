@@ -76,7 +76,6 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion("p", (api) => {
-    if (api.node.matches(".heading")) return `${api.content}`;
     return `${api.content}%NL%`;
   });
 

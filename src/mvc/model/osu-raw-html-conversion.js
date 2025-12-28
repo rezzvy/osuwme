@@ -32,8 +32,8 @@ export default function (controller) {
     if (api.node.children.length !== 0) {
       const hasFontSize = api.node.querySelector('[style*="font-size"]:not(.h2-fs)');
       const content = hasFontSize
-        ? `<p class="heading costum"><span>${api.content}</span></p>`
-        : `<p class="heading costum"><span class="h2-fs" style="${hasFontSize ? "font-size:150%" : ""}">${api.content}</span></p>`;
+        ? `<h2 class="heading costum">${api.content}</h2>`
+        : `<h2 class="heading costum h2-fs" style=${hasFontSize ? "font-size:150%" : ""}>${api.content}</h2>`;
 
       const el = generateClonedItem("text", "true", content);
 
@@ -99,9 +99,9 @@ export default function (controller) {
     const el = generateClonedItem("spoilerbox", "true");
 
     const details = controller.view.el("details", el);
-    details.removeAttribute("open");
     const summary = controller.view.el("summary", el);
     const content = controller.view.el(".spoilerbox-content", el);
+    details.removeAttribute("open");
 
     if (!controller.model.isNodeEmpty(controller.view.el(".js-spoilerbox__body", api.node))) {
       content.classList.remove("ph");
@@ -110,15 +110,19 @@ export default function (controller) {
     details.dataset.title = "";
     summary.dataset.drop = true;
 
-    const trashSpan = controller.view.el(".bbcode-spoilerbox__link-icon", rawContent.firstElementChild);
-    trashSpan?.remove();
-
-    summary.innerHTML = rawContent.firstElementChild.outerHTML;
-    rawContent.firstElementChild.remove();
-
-    content.innerHTML = rawContent.innerHTML;
+    summary.innerHTML = controller.view.el(".bbcode-spoilerbox__header", rawContent).innerHTML;
+    content.innerHTML = controller.view.el(".bbcode-spoilerbox__body", rawContent).innerHTML;
 
     return el.outerHTML;
+  });
+
+  controller.model.registerClonedBBCodeConversion("div", (api) => {
+    if (api.node.matches(".bbcode-spoilerbox__header, .bbcode-spoilerbox__body")) {
+      const className = api.node.className;
+      return `<div class="${className}">${api.content}</div>`;
+    }
+
+    return api.content;
   });
 
   controller.model.registerClonedBBCodeConversion("code", (api) => {
@@ -258,13 +262,6 @@ export default function (controller) {
 
   controller.model.registerClonedBBCodeConversion("p", (api) => {
     if (api.node.matches(".imposter-text")) return "";
-    if (
-      api.node.matches(".bb-single-content") &&
-      api.node.parentElement?.matches(".js-spoilerbox.bbcode-spoilerbox") &&
-      api.node.firstElementChild?.matches("br")
-    ) {
-      return "";
-    }
 
     if (api.node.firstElementChild?.matches("br") && api.node.children.length === 1) {
       const el = generateClonedItem("spacing", "true");
