@@ -499,10 +499,15 @@ export default (controller) => {
     }
 
     let mediaIndex = 0;
-
     const htmlMediaTagRegex = /<(img|audio)\s+[^>]*?>/gi;
 
     const fixedHtml = htmlContent.replace(htmlMediaTagRegex, (fullTag) => {
+      const isSmiley = fullTag.includes('class="smiley"') || fullTag.includes("/smilies/") || fullTag.includes("bbcode-spoilerbox__link-icon");
+
+      if (isSmiley) {
+        return fullTag;
+      }
+
       if (mediaIndex >= originalUrls.length) return fullTag;
 
       const originalUrl = originalUrls[mediaIndex];
