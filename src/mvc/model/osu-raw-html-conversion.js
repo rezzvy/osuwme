@@ -29,8 +29,13 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("h2", (api) => {
-    if (api.node.firstElementChild) {
-      const el = generateClonedItem("text", "true", `<p><span style="font-size:150%">${api.content}</span></p>`);
+    if (api.node.children.length !== 0) {
+      const hasFontSize = api.node.querySelector('[style*="font-size"]:not(.h2-fs)');
+      const content = hasFontSize
+        ? `<p class="heading costum"><span>${api.content}</span></p>`
+        : `<p class="heading costum"><span class="h2-fs" style="${hasFontSize ? "font-size:150%" : ""}">${api.content}</span></p>`;
+
+      const el = generateClonedItem("text", "true", content);
 
       return el.outerHTML;
     }
@@ -179,7 +184,7 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("img", (api) => {
-    return `<img onerror="this.remove()" src="${api.node.src}"/>`;
+    return `<img src="${api.node.src}"/>`;
   });
 
   controller.model.registerClonedBBCodeConversion("span", (api) => {
@@ -252,6 +257,15 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("p", (api) => {
+    if (api.node.matches(".imposter-text")) return "";
+    if (
+      api.node.matches(".bb-single-content") &&
+      api.node.parentElement?.matches(".js-spoilerbox.bbcode-spoilerbox") &&
+      api.node.firstElementChild?.matches("br")
+    ) {
+      return "";
+    }
+
     if (api.node.firstElementChild?.matches("br") && api.node.children.length === 1) {
       const el = generateClonedItem("spacing", "true");
       const item = controller.view.el(".spacing-item", el);

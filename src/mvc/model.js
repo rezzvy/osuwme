@@ -234,7 +234,7 @@ export default class Model {
   }
 
   isOsuProfileLink(link) {
-    return /https:\/\/osu\.ppy\.sh\/users\/(?!\d+$)[A-Za-z0-9_\-\[\]]+/.test(link);
+    return /https:\/\/osu\.ppy\.sh\/users\/[A-Za-z_\-\[\]][A-Za-z0-9_\-\[\]]*\/?$/.test(link);
   }
 
   createBlob(blobType, content) {

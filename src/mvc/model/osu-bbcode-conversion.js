@@ -76,6 +76,7 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion("p", (api) => {
+    if (api.node.matches(".heading")) return `${api.content}`;
     return `${api.content}%NL%`;
   });
 
@@ -149,17 +150,16 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion('[style*="font-size:"]', (api) => {
-    const size = api.node.style.fontSize;
-    const sizeMaps = {
-      "50%": `[size=50]`,
-      "85%": `[size=85]`,
-      "100%": `[size=100]`,
-      "150%": `[size=150]`,
-      "200%": `[size=200]`,
-    };
+    const rawSize = api.node.style.fontSize;
+
+    let size = parseInt(rawSize, 10);
+
+    if (isNaN(size)) {
+      size = 100;
+    }
 
     if (api.node.matches("a")) return api.content;
-    return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}${api.content}[/size]`;
+    return `[size=${size}]${api.content}[/size]`;
   });
 
   model.registerBBCodeConversion("a", (api) => {
@@ -167,14 +167,17 @@ export default function (controller) {
       return api.content;
     }
 
-    const size = api.node.style.fontSize;
-    const sizeMaps = {
-      "50%": `[size=50]`,
-      "85%": `[size=85]`,
-      "100%": `[size=100]`,
-      "150%": `[size=150]`,
-      "200%": `[size=200]`,
-    };
+    const rawSize = api.node.style.fontSize;
+    let sizePrefix = "";
+    let sizeSuffix = "";
+
+    if (rawSize) {
+      let sizeVal = parseInt(rawSize, 10);
+      if (isNaN(sizeVal)) sizeVal = 100;
+
+      sizePrefix = `[size=${sizeVal}]`;
+      sizeSuffix = `[/size]`;
+    }
 
     let content = api.content;
     let link = decodeURI(api.node.href);
@@ -188,25 +191,14 @@ export default function (controller) {
 
     if (model.isOsuProfileLink(link)) {
       if (api.node.textContent.trim() === "") return "";
-
-      if (size) {
-        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}[profile]${api.node.textContent}[/profile][/size]`;
-      }
-      return `[profile]${api.node.textContent}[/profile]`;
+      return `${sizePrefix}[profile]${api.node.textContent}[/profile]${sizeSuffix}`;
     }
 
     if (link.startsWith("mailto:")) {
-      if (size) {
-        return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}[email=${link.substring(7)}]${content}[/email][/size]`;
-      }
-      return `[email=${link.substring(7)}]${content}[/email]`;
+      return `${sizePrefix}[email=${link.substring(7)}]${content}[/email]${sizeSuffix}`;
     }
 
-    if (size) {
-      return `${sizeMaps[size] !== undefined ? sizeMaps[size] : "[size=100]"}[url=${link}]${content}[/url][/size]`;
-    }
-
-    return `[url=${link}]${content}[/url]`;
+    return `${sizePrefix}[url=${link}]${content}[/url]${sizeSuffix}`;
   });
 
   model.registerBBCodeConversion('[data-spacing="%SPCITM%"]', () => {

@@ -56,5 +56,7 @@ export default (controller) => {
 
     const html = model.clonedMation.convert(container.innerHTML);
     controller.setCanvasContent(html);
+
+    if (!model.isNodeEmpty(container)) view.text("#starting-modal-new-project-btn span", "Continue");
   };
 };

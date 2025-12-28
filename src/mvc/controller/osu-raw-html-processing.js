@@ -17,9 +17,29 @@ export default (controller) => {
 
   function markedInlineSplitter(container) {
     container.querySelectorAll("*").forEach((el) => {
+      if (el.matches("p, a, img, br, hr, iframe") || el.closest(".js-spoilerbox__link")) return;
+
       if (el.children.length === 0) {
         if (el.textContent.trim() === "") {
-          el.innerHTML = "<span class='inline-splitter'> </span>";
+          if (el.tagName === "SPAN") {
+            el.classList.add("inline-splitter");
+            el.textContent = " ";
+          } else {
+            el.innerHTML = "<span class='inline-splitter'> </span>";
+          }
+        }
+      }
+    });
+
+    container.querySelectorAll("p").forEach((p) => {
+      if (p.children.length === 1) {
+        const child = p.firstElementChild;
+        if (!child) return;
+
+        if (["A", "IFRAME", "IMG"].includes(child.tagName)) return;
+
+        if (p.matches(".bb-single-content") && child.firstElementChild?.matches(".inline-splitter")) {
+          p.classList.add("imposter-text");
         }
       }
     });
@@ -27,36 +47,47 @@ export default (controller) => {
 
   function extractSpacing(container) {
     container.querySelectorAll("*").forEach((el) => {
-      if (el.firstElementChild || el.textContent.trim() === "") return;
-
-      let text = el.textContent;
-
-      const leadingMatch = text.match(/^(\s+)/);
-
-      if (leadingMatch) {
-        const spaceContent = leadingMatch[1];
-
-        const span = document.createElement("span");
-        span.textContent = spaceContent;
-
-        el.parentNode.insertBefore(span, el);
-
-        text = text.replace(/^(\s+)/, "");
-        el.textContent = text;
+      if (el.tagName === "CODE" || el.tagName === "PRE" || el.closest("code")) {
+        return;
       }
 
-      const trailingMatch = text.match(/(\s+)$/);
+      const firstNode = el.firstChild;
 
-      if (trailingMatch) {
-        const spaceContent = trailingMatch[1];
+      if (firstNode && firstNode.nodeType === Node.TEXT_NODE) {
+        let text = firstNode.nodeValue;
+        const leadingMatch = text.match(/^(\s+)/);
 
-        const span = document.createElement("span");
-        span.textContent = spaceContent;
+        if (leadingMatch) {
+          const spaceContent = leadingMatch[1];
 
-        el.parentNode.insertBefore(span, el.nextSibling);
+          const span = document.createElement("span");
+          span.textContent = spaceContent;
 
-        text = text.replace(/(\s+)$/, "");
-        el.textContent = text;
+          el.parentNode.insertBefore(span, el);
+          firstNode.nodeValue = text.substring(spaceContent.length);
+        }
+      }
+
+      const lastNode = el.lastChild;
+
+      if (lastNode && lastNode.nodeType === Node.TEXT_NODE) {
+        let text = lastNode.nodeValue;
+        const trailingMatch = text.match(/(\s+)$/);
+
+        if (trailingMatch) {
+          const spaceContent = trailingMatch[1];
+
+          const span = document.createElement("span");
+          span.textContent = spaceContent;
+
+          if (el.nextSibling) {
+            el.parentNode.insertBefore(span, el.nextSibling);
+          } else {
+            el.parentNode.appendChild(span);
+          }
+
+          lastNode.nodeValue = text.substring(0, text.length - spaceContent.length);
+        }
       }
     });
   }
