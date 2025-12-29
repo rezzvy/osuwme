@@ -289,6 +289,12 @@ p > u[style*="color"]:has(a) a {
   transform: rotate(90deg);
 }
 
+.osu-style details summary ._content > p:empty::after {
+  content: "<NO TITLE/TEXT>";
+  display: block;
+  opacity: 0.5;
+}
+
 .osu-style details .spoilerbox-content {
   padding-left: 20px;
   margin-top: 0px;

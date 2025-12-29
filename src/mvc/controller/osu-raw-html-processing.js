@@ -553,7 +553,9 @@ export default (controller) => {
     let match;
 
     while ((match = bbCodeMediaRegex.exec(rawContent)) !== null) {
-      const url = (match[1] || match[2] || match[3]).trim();
+      const rawUrl = match[1] ?? match[2] ?? match[3] ?? "";
+      const url = rawUrl.trim();
+
       originalUrls.push(url);
     }
 
@@ -571,6 +573,10 @@ export default (controller) => {
 
       const originalUrl = originalUrls[mediaIndex];
       mediaIndex++;
+
+      if (originalUrl.length === 0) {
+        return fullTag;
+      }
 
       let newTag = fullTag.replace(/src="([^"]*)"/, `src="${originalUrl}"`);
 
