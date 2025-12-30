@@ -265,8 +265,8 @@
                 </div>
               </div>
 
-              <div class="clone-box-avatar-overlay mt-3">
-                <div class="_cover rounded-top-2 overflow-hidden">
+              <div class="clone-box-avatar-overlay mt-3 rounded-2 overflow-hidden">
+                <div class="_cover">
                   <img src="#" class="d-none pe-none" />
                 </div>
                 <div class="d-flex px-2 align-items-center justify-content-between" style="margin-top: -23px">
@@ -290,27 +290,23 @@
                     >
                       <i class="fa fa-link fa-fw"></i>
                     </button>
-
-                    <button
-                      id="clone-copy-bbcode"
-                      class="btn btn-outline-light border-0 btn-sm pe-none opacity-50"
-                      data-bs-toggle="tooltip"
-                      data-bs-title="Copy their raw bbcode"
-                    >
-                      <i class="fa fa-clipboard fa-fw"></i>
-                    </button>
                   </div>
                 </div>
               </div>
 
-              <button
-                id="cloned-userpage-render"
-                class="btn btn-dark btn-sm w-100 pe-none opacity-50 rounded-top-0 rounded-bottom-2"
-                data-bs-toggle="tooltip"
-                data-bs-title="Clone Userpage"
-              >
-                <i class="fa fa-clone fa-fw"></i>
-              </button>
+              <div class="row row-cols-1 row-cols-md-2 g-1 mt-md-1">
+                <div>
+                  <button id="clone-copy-bbcode" class="btn btn-outline-light btn-sm pe-none opacity-50 w-100">
+                    <i class="fa fa-clipboard fa-fw"></i> Copy RAW BBCode
+                  </button>
+                </div>
+
+                <div>
+                  <button id="cloned-userpage-render" class="btn btn-dark btn-sm pe-none opacity-50 w-100">
+                    <i class="fa fa-clone fa-fw"></i> Clone
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -549,6 +545,6 @@
     <script src="./lib/quiljs/quill.js"></script>
     <script src="./lib/moveable/moveable.min.js"></script>
 
-    <script src="./src/main.js?v=DEC_21_2025" type="module"></script>
+    <script src="./src/main.js?v=DEC_30_2025" type="module"></script>
   </body>
 </html>

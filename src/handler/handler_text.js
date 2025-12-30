@@ -236,7 +236,7 @@ export default class {
     this.view.disable(false, "#modal-edit-save");
 
     let content = this.targetContainer.innerHTML.trim();
-    console.log(content);
+
     this.view.html(this.editorContainer.firstElementChild, content);
 
     this.editorContainer.querySelectorAll(".inline-splitter").forEach((el) => el.replaceWith(document.createTextNode(" ")));
@@ -275,7 +275,6 @@ export default class {
         .replace(/(?<=>)(\s|&nbsp;)+(?=<)/g, '<span class="inline-splitter"> </span>');
 
       for (const el of paragraph.children) {
-        if (el.parentElement.tagName !== "P") span.parentElement.replaceWith(span);
         if (el.tagName === "BR") this.view.dataset(el, "spacing", "%SPCITM%");
       }
 

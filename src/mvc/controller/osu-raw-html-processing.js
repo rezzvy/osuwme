@@ -18,7 +18,7 @@ export default (controller) => {
 
   function flagElements(container) {
     container.querySelectorAll("*").forEach((el) => {
-      if (el.matches("p, a, img, br, hr, iframe, .js-spoilerbox__body") || el.closest(".js-spoilerbox__link")) return;
+      if (el.matches("p, a, img, br, hr, iframe, .js-spoilerbox__body, center") || el.closest(".js-spoilerbox__link")) return;
 
       if (el.children.length === 0) {
         if (el.textContent.trim() === "") {
@@ -83,8 +83,14 @@ export default (controller) => {
 
   function extractSpacing(container) {
     container.querySelectorAll("*").forEach((el) => {
-      if (el.tagName === "CODE" || el.tagName === "PRE" || el.closest("code")) {
+      if (el.tagName === "CODE" || el.tagName === "PRE" || el.closest("code") || el.classList.contains("inline-splitter")) {
         return;
+      }
+
+      if (el.childNodes.length === 1 && el.firstChild.nodeType === Node.TEXT_NODE) {
+        if (el.firstChild.nodeValue.trim() === "") {
+          return;
+        }
       }
 
       const firstNode = el.firstChild;
@@ -95,6 +101,10 @@ export default (controller) => {
 
         if (leadingMatch) {
           const spaceContent = leadingMatch[1];
+
+          if (text.length === spaceContent.length && el.childNodes.length === 1) {
+            return;
+          }
 
           const span = document.createElement("span");
           span.textContent = spaceContent;
@@ -112,6 +122,8 @@ export default (controller) => {
 
         if (trailingMatch) {
           const spaceContent = trailingMatch[1];
+
+          if (text.trim().length === 0) return;
 
           const span = document.createElement("span");
           span.textContent = spaceContent;
@@ -435,8 +447,34 @@ export default (controller) => {
     const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
 
     let node;
+    const validTags = [
+      "quote",
+      "imagemap",
+      "list",
+      "heading",
+      "b",
+      "i",
+      "u",
+      "c",
+      "strike",
+      "url",
+      "profile",
+      "email",
+      "size",
+      "color",
+      "spoiler",
+      "img",
+      "audio",
+      "youtube",
+      "notice",
+      "centre",
+      "spoilerbox",
+      "box",
+      "code",
+    ];
 
-    const regex = /\[\/?[a-zA-Z0-9-_]+(?:=[^\]]*)?\]/g;
+    const tagsPattern = validTags.join("|");
+    const regex = new RegExp(`\\[\\/?(${tagsPattern})(?:=[^\\]]*)?\\]`, "gi");
 
     while ((node = walker.nextNode())) {
       if (regex.test(node.nodeValue)) {
@@ -555,15 +593,16 @@ export default (controller) => {
     const rawContent = userData.page.raw;
     const htmlContent = userData.page.html;
 
-    const bbCodeMediaRegex = /\[img\](.*?)\[\/img\]|\[imagemap\]\s*(https?:\/\/[^\s]+)|\[audio\](.*?)\[\/audio\]/gi;
+    const bbCodeMediaRegex = /\[img\]([\s\S]*?)\[\/img\]|\[imagemap\]\s*(https?:\/\/[^\s]+)|\[audio\]([\s\S]*?)\[\/audio\]/gi;
 
     const originalUrls = [];
     let match;
 
     while ((match = bbCodeMediaRegex.exec(rawContent)) !== null) {
       const rawUrl = match[1] ?? match[2] ?? match[3] ?? "";
-      const url = rawUrl.trim();
+      if (rawUrl === "") continue;
 
+      const url = rawUrl.trim();
       originalUrls.push(url);
     }
 
