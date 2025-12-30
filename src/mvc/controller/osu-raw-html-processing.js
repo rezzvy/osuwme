@@ -11,6 +11,7 @@ export default (controller) => {
     flattenNestedSpans(container);
     processColorSpans(container);
     flagElements(container);
+    cleanDomContainer(container);
 
     controller.cleanupRedundantTags(container);
   };
@@ -32,6 +33,15 @@ export default (controller) => {
     });
 
     container.querySelectorAll("p").forEach((p) => {
+      if (
+        p.children.length === 2 &&
+        p.firstElementChild?.matches(".bbcode-spoilerbox__link") &&
+        !p.firstElementChild.textContent.trim() &&
+        p.lastElementChild?.matches(".inline-splitter")
+      ) {
+        p.innerHTML = "";
+      }
+
       if (p.children.length === 1) {
         const child = p.firstElementChild;
         if (!child) return;
@@ -68,8 +78,6 @@ export default (controller) => {
 
         box.insertBefore(header, body);
       }
-
-      console.log(box);
     });
   }
 
@@ -588,5 +596,44 @@ export default (controller) => {
     });
 
     return fixedHtml;
+  }
+
+  function cleanDomContainer(container) {
+    const spoilers = container.querySelectorAll(".js-spoilerbox.bbcode-spoilerbox");
+
+    spoilers.forEach((spoiler) => {
+      const children = Array.from(spoiler.childNodes);
+      const elementsToMove = document.createDocumentFragment();
+
+      children.forEach((child) => {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          const isHeader = child.classList.contains("bbcode-spoilerbox__header");
+          const isBody = child.classList.contains("bbcode-spoilerbox__body");
+
+          if (!isHeader && !isBody) {
+            elementsToMove.appendChild(child);
+          }
+        } else if (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== "") {
+          elementsToMove.appendChild(child);
+        }
+      });
+
+      if (elementsToMove.childNodes.length > 0) {
+        spoiler.after(elementsToMove);
+      }
+    });
+
+    function unwrapNested(parentSelector, childSelector) {
+      while (container.querySelector(`${parentSelector} ${childSelector}`)) {
+        const nestedElements = container.querySelectorAll(`${parentSelector} ${childSelector}`);
+
+        nestedElements.forEach((element) => {
+          element.replaceWith(...element.childNodes);
+        });
+      }
+    }
+
+    unwrapNested(".well", ".well");
+    unwrapNested("center", "center");
   }
 };

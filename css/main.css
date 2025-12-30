@@ -323,7 +323,11 @@ body:has(#canvas-wrapper:empty) #download-as-text {
   opacity: 0.5 !important;
 }
 
-body.logged-in #clone-template .alert {
+body:not(.logged-in) #clone-template .alert:first-of-type {
+  display: none;
+}
+
+body.logged-in #clone-template .alert:last-of-type {
   display: none;
 }
 

@@ -293,6 +293,7 @@ p > u[style*="color"]:has(a) a {
   content: "<NO TITLE/TEXT>";
   display: block;
   opacity: 0.5;
+  min-height: 21px;
 }
 
 .osu-style details .spoilerbox-content {
