@@ -189,8 +189,36 @@ export default function (controller) {
     }
 
     if (model.isOsuProfileLink(link)) {
-      if (api.node.textContent.trim() === "") return "";
-      return `${sizePrefix}[profile]${api.node.textContent}[/profile]${sizeSuffix}`;
+      const text = api.node.textContent.trim();
+      if (text === "") return "";
+
+      const child = api.node.firstElementChild;
+      let isSpoiler = false;
+      let isCode = false;
+
+      if (child) {
+        if (child.matches(".spoiler")) {
+          isSpoiler = true;
+
+          if (child.querySelector(".inline")) {
+            isCode = true;
+          }
+        } else if (child.matches(".inline")) {
+          isCode = true;
+        }
+      }
+
+      let output = `[profile]${text}[/profile]`;
+
+      if (isCode) {
+        output = `[c]${output}[/c]`;
+      }
+
+      if (isSpoiler) {
+        output = `[spoiler]${output}[/spoiler]`;
+      }
+
+      return `${sizePrefix}${output}${sizeSuffix}`;
     }
 
     if (link.startsWith("mailto:")) {

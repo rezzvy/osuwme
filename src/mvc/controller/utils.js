@@ -52,17 +52,40 @@ export default (controller) => {
         return;
       }
 
-      const currentWrapper = anchor.parentNode;
+      if (!grandWrapper.style.color) {
+        return;
+      }
+
+      const wrapperText = grandWrapper.textContent.trim();
+      const anchorText = anchor.textContent.trim();
+
+      const isExactMatch = wrapperText.length === anchorText.length;
+
+      let hasContentBefore = false;
+      let sibling = anchor.previousSibling;
+
+      while (sibling) {
+        if (sibling.nodeType === 1 || (sibling.nodeType === 3 && sibling.textContent.trim() !== "")) {
+          hasContentBefore = true;
+          break;
+        }
+        sibling = sibling.previousSibling;
+      }
+
+      if (!isExactMatch && hasContentBefore) {
+        return;
+      }
+
       const newAnchor = anchor.cloneNode(false);
-      const originalContent = Array.from(anchor.childNodes);
+      const anchorParent = anchor.parentNode;
 
-      currentWrapper.innerHTML = "";
-      originalContent.forEach((node) => currentWrapper.appendChild(node));
+      while (anchor.firstChild) {
+        anchorParent.insertBefore(anchor.firstChild, anchor);
+      }
 
-      const grandWrapperClone = grandWrapper.cloneNode(true);
-      newAnchor.appendChild(grandWrapperClone);
-
+      anchorParent.removeChild(anchor);
       parentElement.replaceChild(newAnchor, grandWrapper);
+      newAnchor.appendChild(grandWrapper);
     });
   };
 
