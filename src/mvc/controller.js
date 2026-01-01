@@ -16,7 +16,9 @@ export default class Controller {
   */
 
   async init() {
-    const isOnAuthRedirect = this.isOnAboutToLogin();
+    const isAlreadyLoggedIn = this.model.getAuthData();
+    const isOnAuthRedirect = isAlreadyLoggedIn ? false : this.isOnAboutToLogin();
+
     if (isOnAuthRedirect) this.view.authLoginRedirectState(true);
 
     await this.fetchAndRenderInitElements();

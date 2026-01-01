@@ -3,13 +3,21 @@ export default (controller) => {
   const view = controller.view;
 
   controller.login = async (code) => {
+    const isAlreadyLoggedIn = model.getAuthData();
+    if (isAlreadyLoggedIn) return;
+
     const res = await controller.osuApiRequest("login", code);
     if (!res) return;
 
-    controller.cloneUserpage(res.user);
+    const clonedUserpage = controller.cloneUserpage(res.user);
     model.clearUserPageAuthData();
 
-    alert("Login successful! The canvas is now synced with your latest me! page");
+    if (clonedUserpage) {
+      view.text("#starting-modal-new-project-btn span", "Continue");
+      alert("Login successful! Your page is synced. Click 'Continue' to edit, or clone a me! page.");
+    } else {
+      alert("Login successful! Click 'New Project' or clone a user page to begin.");
+    }
   };
 
   controller.authLogin = async (isOnAuthRedirect) => {
@@ -57,6 +65,7 @@ export default (controller) => {
     const html = model.clonedMation.convert(container.innerHTML);
     controller.setCanvasContent(html);
 
-    if (!model.isNodeEmpty(container)) view.text("#starting-modal-new-project-btn span", "Continue");
+    return !model.isNodeEmpty(container);
+    // if (!model.isNodeEmpty(container)) view.text("#starting-modal-new-project-btn span", "Continue");
   };
 };
