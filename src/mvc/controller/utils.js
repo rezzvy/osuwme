@@ -157,6 +157,13 @@ export default (controller) => {
     model.quill.updateContents(new model.Delta(operations), Quill.sources.USER);
   };
 
+  controller.validateUsername = (username) => {
+    const regex = /^[a-zA-Z0-9_\[\] \-]{1,15}$/;
+    if (!username) return false;
+
+    return regex.test(username);
+  };
+
   controller.cleanupRedundantTags = (container) => {
     const tags = ["STRONG", "B", "EM", "I", "U", "S", "STRIKE"];
 

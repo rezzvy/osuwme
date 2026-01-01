@@ -240,12 +240,14 @@ export default (controller) => {
     });
 
     view.on("#clone-link-submit", "click", async (e) => {
+      const username = view.val("#clone-link-input");
+      if (!controller.validateUsername(username)) return alert("Opsiee! the username is not valid >.<");
+
       const authData = model.getAuthData();
       if (!authData) return;
 
       view.clone("OnSubmitted");
 
-      const username = view.val("#clone-link-input");
       model.currentClonedData = await controller.osuApiRequest("get-user", username);
 
       const data = model.currentClonedData;
