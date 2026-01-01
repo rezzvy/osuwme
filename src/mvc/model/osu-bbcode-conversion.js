@@ -64,15 +64,19 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion(".play-audio-btn", (api) => {
-    return `[audio]${api.node.dataset.src}[/audio]`;
+    const source = api.node.dataset.originalSrc || api.node.dataset.src;
+
+    return `[audio]${source}[/audio]`;
   });
 
   model.registerBBCodeConversion("img", (api) => {
     const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S"];
+    const source = api.node.dataset.originalSrc || api.node.src;
+
     if (inline.includes(api.node.parentElement.tagName)) {
-      return `[img]${api.node.src}[/img]`;
+      return `[img]${source}[/img]`;
     }
-    return `[img]${api.node.src}[/img]%NL%`;
+    return `[img]${source}[/img]%NL%`;
   });
 
   model.registerBBCodeConversion("p", (api) => {
@@ -106,7 +110,9 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion(".imgmap-container > img", (api) => {
-    return `${api.node.src}%NL%`;
+    const source = api.node.dataset.originalSrc || api.node.src;
+
+    return `${source}%NL%`;
   });
 
   model.registerBBCodeConversion("blockquote", (api) => {

@@ -21,6 +21,8 @@ export default function (controller) {
     });
 
     img.src = origImg.src;
+    img.dataset.cachedSrc = origImg.dataset.cachedSrc;
+    img.dataset.originalSrc = origImg.dataset.originalSrc;
     container.innerHTML += item;
     ph.classList.remove("ph");
     container.classList.remove("d-none");
@@ -71,6 +73,9 @@ export default function (controller) {
     const playButton = controller.view.el(".play-audio-btn", el);
     playButton.dataset.src = audioSource;
     playButton.dataset.bsTitle = `This audio was generated using the clone feature. Please try re-saving it through the editor to see if it works.`;
+
+    playButton.dataset.cachedSrc = api.node.dataset.cachedSrc;
+    playButton.dataset.originalSrc = api.node.dataset.originalSrc;
 
     return el.outerHTML;
   });
@@ -188,7 +193,7 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("img", (api) => {
-    return `<img src="${api.node.src}"/>`;
+    return `<img data-cached-src="${api.node.dataset.cachedSrc}" data-original-src="${api.node.dataset.originalSrc}" src="${api.node.src}"/>`;
   });
 
   controller.model.registerClonedBBCodeConversion("span", (api) => {
@@ -278,6 +283,9 @@ export default function (controller) {
       img.src = api.node.firstElementChild.src;
       img.dataset.src = api.node.firstElementChild.src;
       img.classList.add("single");
+
+      img.dataset.cachedSrc = api.node.firstElementChild.dataset.cachedSrc;
+      img.dataset.originalSrc = api.node.firstElementChild.dataset.originalSrc;
       controller.view.el(".ph-img", el).classList.remove("ph");
 
       return el.outerHTML;

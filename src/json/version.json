@@ -1,9 +1,10 @@
 {
-  "latest_updated": "Dec 30, 2025",
+  "latest_updated": "Jan 1, 2026",
   "changelogs": [
     {
       "date": "Anniversary Update (Dec 2025/Jan 2026)",
       "changes": [
+        "Implemented mirrored media sources for the clone feature. Media now uses cached links from osu-web and will be reverted to the original links when exported to BBCode",
         "Implemented the 'Clone from osu!' feature",
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
         "Added new tools to the text editor (YouTube, Profile, Assets, Lists)",

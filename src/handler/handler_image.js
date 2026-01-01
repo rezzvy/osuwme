@@ -117,6 +117,13 @@ export default class {
   }
 
   save() {
+    const cachedSrc = this.targetElement.dataset.cachedSrc;
+
+    if (this.img.src !== cachedSrc) {
+      this.targetElement.dataset.originalSrc = "";
+      this.targetElement.dataset.cachedSrc = "";
+    }
+
     this.view.replacePlaceholder(this.targetElement, true, false);
 
     this.view.el(this.targetElement).src = this.img.src;

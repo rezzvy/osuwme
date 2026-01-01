@@ -601,9 +601,7 @@ export default (controller) => {
     while ((match = bbCodeMediaRegex.exec(rawContent)) !== null) {
       const rawUrl = match[1] ?? match[2] ?? match[3] ?? "";
       if (rawUrl === "") continue;
-
-      const url = rawUrl.trim();
-      originalUrls.push(url);
+      originalUrls.push(rawUrl.trim());
     }
 
     let mediaIndex = 0;
@@ -625,18 +623,15 @@ export default (controller) => {
         return fullTag;
       }
 
-      let newTag = fullTag.replace(/src="([^"]*)"/, `src="${originalUrl}"`);
-
-      if (newTag.includes("data-src=")) {
-        newTag = newTag.replace(/data-src="([^"]*)"/, `data-src="${originalUrl}"`);
-      }
+      let newTag = fullTag.replace(/src="([^"]*)"/, (matchStr, currentCachedUrl) => {
+        return `src="${currentCachedUrl}" data-cached-src="${currentCachedUrl}" data-original-src="${originalUrl}"`;
+      });
 
       return newTag;
     });
 
     return fixedHtml;
   }
-
   function cleanDomContainer(container) {
     const spoilers = container.querySelectorAll(".js-spoilerbox.bbcode-spoilerbox");
 

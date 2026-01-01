@@ -151,6 +151,13 @@ export default class {
   save(costumSrc) {
     this.view.dataset(this.targetElement, "src", costumSrc ? costumSrc : this.audio.src);
 
+    const cachedSrc = this.targetElement.dataset.cachedSrc;
+
+    if (this.targetElement.dataset.src !== cachedSrc) {
+      this.targetElement.dataset.originalSrc = "";
+      this.targetElement.dataset.cachedSrc = "";
+    }
+
     if (costumSrc) {
       this.view.el(this.targetElement).dataset.bsTitle = "Preview is not available for costum audio source (e.g Google Drive Direct Link)";
       this.view.el(this.targetElement).dataset.bsToggle = "tooltip";

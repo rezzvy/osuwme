@@ -507,7 +507,14 @@ export default class {
   }
 
   save() {
-    let content = `<img src="${this.img.src}">`;
+    const cachedSrc = this.targetImg.dataset.cachedSrc;
+
+    if (this.img.src !== cachedSrc) {
+      this.targetImg.dataset.originalSrc = "";
+      this.targetImg.dataset.cachedSrc = "";
+    }
+
+    let content = `<img data-cached-src="${this.targetImg.dataset.cachedSrc}" data-original-src="${this.targetImg.dataset.originalSrc}" src="${this.img.src}">`;
 
     this.view.els(".imgmap-edit-item").forEach((item) => {
       const { title, link } = item.dataset;
