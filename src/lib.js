@@ -207,7 +207,7 @@ export default function initLibraries(controller) {
   model.Delta = Quill.import("delta");
 
   const FontSize = Quill.import("attributors/style/size");
-  FontSize.whitelist = ["50%", "85%", "100%", "150%", "200%"];
+  FontSize.whitelist = Array.from({ length: 151 }, (_, i) => `${50 + i}%`);
 
   const inlineCodeBlot = model.createInlineBlot({
     blotName: "inlinecode",

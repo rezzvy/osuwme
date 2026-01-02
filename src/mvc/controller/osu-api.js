@@ -89,7 +89,10 @@ export default (controller) => {
 
   function handleApiError(res) {
     if (res.code === "OSU_AUTH_FAILED" || res.code === "MISSING_TOKEN") {
-      alert("Your session is no longer valid. Please log in again. You will be logged out.");
+      alert(
+        "Your session has expired. Please log in again. You will be logged out shortly. I have not implemented auto session refresh yet, so you need to log in again after 24 hours."
+      );
+
       controller.logout();
       return;
     }

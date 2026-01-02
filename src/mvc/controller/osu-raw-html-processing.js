@@ -48,7 +48,7 @@ export default (controller) => {
 
         if (["A", "IFRAME", "IMG"].includes(child.tagName)) return;
 
-        if (p.matches(".bb-single-content") && child.firstElementChild?.matches(".inline-splitter")) {
+        if (p.matches(".bb-single-content") && (child.firstElementChild?.matches(".inline-splitter") || child.matches(".inline-splitter"))) {
           p.classList.add("imposter-text");
         }
       }
@@ -83,9 +83,8 @@ export default (controller) => {
 
   function extractSpacing(container) {
     container.querySelectorAll("*").forEach((el) => {
-      if (el.tagName === "CODE" || el.tagName === "PRE" || el.closest("code") || el.classList.contains("inline-splitter")) {
-        return;
-      }
+      if (el.closest("code") || el.classList.contains("inline-splitter")) return;
+      if (["OL", "LI", "PRE"].includes(el.tagName)) return;
 
       if (el.childNodes.length === 1 && el.firstChild.nodeType === Node.TEXT_NODE) {
         if (el.firstChild.nodeValue.trim() === "") {

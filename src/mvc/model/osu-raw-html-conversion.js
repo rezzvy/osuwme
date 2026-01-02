@@ -63,6 +63,10 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("li", (api) => {
+    if (api.node.parentElement?.matches(".bbcode__list-title")) {
+      return api.content;
+    }
+
     return `<li data-list-item="${controller.model.uniqueID}" data-title="" data-drop>${api.content}</li>`;
   });
 
