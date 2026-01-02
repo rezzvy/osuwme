@@ -18,7 +18,7 @@ export default (controller) => {
 
   function flagElements(container) {
     container.querySelectorAll("*").forEach((el) => {
-      if (el.matches("p, a, img, br, hr, iframe, .js-spoilerbox__body, center") || el.closest(".js-spoilerbox__link")) return;
+      if (el.matches("p, a, img, br, hr, iframe, .js-spoilerbox__body, center, .inline-splitter") || el.closest(".js-spoilerbox__link")) return;
 
       if (el.children.length === 0) {
         if (el.textContent.trim() === "") {
@@ -106,6 +106,7 @@ export default (controller) => {
           }
 
           const span = document.createElement("span");
+          span.classList.add("inline-splitter");
           span.textContent = spaceContent;
 
           el.parentNode.insertBefore(span, el);
@@ -125,6 +126,7 @@ export default (controller) => {
           if (text.trim().length === 0) return;
 
           const span = document.createElement("span");
+          span.classList.add("inline-splitter");
           span.textContent = spaceContent;
 
           if (el.nextSibling) {

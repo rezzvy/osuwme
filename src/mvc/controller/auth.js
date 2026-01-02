@@ -45,17 +45,14 @@ export default (controller) => {
     view.authLoginRedirectState(false);
   };
 
-  controller.logout = () => {
+  controller.logout = async (alreadyExpired = false) => {
     view.text("#osu-api-login-btn", "Logging out...");
     view.disable(true, "#osu-api-login-btn");
 
-    controller.osuApiRequest("logout");
-    setTimeout(() => {
-      view.login(false);
-      view.disable(false, "#osu-api-login-btn");
+    await controller.osuApiRequest("logout", alreadyExpired);
 
-      alert("You've been logged out!");
-    }, 1000);
+    view.login(false);
+    view.disable(false, "#osu-api-login-btn");
   };
 
   // controller.checkAuthSession = () => {

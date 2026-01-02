@@ -5,9 +5,29 @@ export default (controller) => {
     if (type === "get-user") return await fetchUser(val);
     if (type === "login") return await handleAuthCallback(val);
 
-    model.clearAuthData();
-    return true;
+    await logoutAndClearAuthData(val);
   };
+
+  async function logoutAndClearAuthData(alreadyExpired = false) {
+    if (alreadyExpired) {
+      model.clearAuthData();
+
+      alert("You've been logged out!");
+      return true;
+    }
+
+    const res = await osuApiFetch("/logout", {
+      method: "DELETE",
+    });
+
+    model.clearAuthData();
+
+    if (!res.ok) {
+      alert("Opsiee! there is a problem connecting to the server. Performing local logout instead. Your token will expire automatically.");
+    } else {
+      alert("You've been logged out!");
+    }
+  }
 
   async function osuApiFetch(endpoint, options = {}) {
     const authData = model.getAuthData();
@@ -89,11 +109,9 @@ export default (controller) => {
 
   function handleApiError(res) {
     if (res.code === "OSU_AUTH_FAILED" || res.code === "MISSING_TOKEN") {
-      alert(
-        "Your session has expired. Please log in again. You will be logged out shortly. I have not implemented auto session refresh yet, so you need to log in again after 24 hours."
-      );
+      alert("Your session has expired. Please log in again. You will be logged out shortly.");
 
-      controller.logout();
+      controller.logout(true);
       return;
     }
 

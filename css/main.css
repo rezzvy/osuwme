@@ -373,7 +373,7 @@ body.auto-hide-canvas-menu .pinned:hover {
 
 .clone-box-avatar-overlay {
   background-color: #382e32;
-  background-image: url(../../assets/triangles.png);
+  background-image: url(../assets/triangles.png);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom;
