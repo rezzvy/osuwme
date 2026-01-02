@@ -233,7 +233,8 @@ export default (controller) => {
     view.on("#cloned-userpage-render", "click", (e) => {
       if (!model.currentClonedData) return;
 
-      controller.cloneUserpage(model.currentClonedData);
+      const userpage = controller.cloneUserpage(model.currentClonedData);
+      controller.setCanvasContent(userpage.html);
 
       view.clone("onReset");
       view.modalClone.hide();

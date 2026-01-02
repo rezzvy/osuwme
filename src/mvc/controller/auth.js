@@ -12,11 +12,19 @@ export default (controller) => {
     const clonedUserpage = controller.cloneUserpage(res.user);
     model.clearUserPageAuthData();
 
-    if (clonedUserpage) {
-      view.text("#starting-modal-new-project-btn span", "Continue");
-      alert("Login successful! Your page is synced. Click 'Continue' to edit, or clone a me! page.");
-    } else {
-      alert("Login successful! Click 'New Project' or clone a user page to begin.");
+    const { isEmpty, html } = clonedUserpage;
+
+    alert("Login successful!");
+
+    if (view.dialog("Do you want to sync this app with your latest me! page? This will overwrite any existing project.")) {
+      if (!isEmpty) {
+        controller.setCanvasContent(html);
+        view.text("#starting-modal-new-project-btn span", "Start Editing");
+
+        alert("Synced! You may proceed by clicking the 'Start Editing' button.");
+      } else {
+        alert("Opsiee! It looks like you don't have any me! page content yet. You can either clone someone else's userpage or create your own.");
+      }
     }
   };
 
@@ -61,11 +69,8 @@ export default (controller) => {
     const container = document.createElement("div");
 
     controller.cleanRawOsuPage(userData, container);
-
     const html = model.clonedMation.convert(container.innerHTML);
-    controller.setCanvasContent(html);
 
-    return !model.isNodeEmpty(container);
-    // if (!model.isNodeEmpty(container)) view.text("#starting-modal-new-project-btn span", "Continue");
+    return { isEmpty: model.isNodeEmpty(container), html: html || "" };
   };
 };
