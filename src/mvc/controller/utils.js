@@ -8,6 +8,8 @@ export default (controller) => {
     const links = Array.from(doc.querySelectorAll("a"));
 
     links.forEach((currentLink) => {
+      if (currentLink.matches(".output-imgmap-item")) return;
+
       const prevLink = currentLink.previousElementSibling;
 
       if (prevLink && prevLink.tagName === "A" && prevLink.href === currentLink.href) {

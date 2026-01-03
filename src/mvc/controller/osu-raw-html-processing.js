@@ -4,6 +4,7 @@ export default (controller) => {
 
     cleanGarbageBBCode(container);
     extractSpacing(container);
+    unwrapNestedBreaks(container);
     wrapText(container);
     splitParagraphByBr(container);
     convertInterElementSpaces(container);
@@ -15,6 +16,23 @@ export default (controller) => {
 
     controller.cleanupRedundantTags(container);
   };
+
+  function unwrapNestedBreaks(container) {
+    const selector = "strong, em, del, u, a, code, span";
+    const elements = container.querySelectorAll(selector);
+
+    for (const el of elements) {
+      if (el.textContent.trim() !== "") continue;
+      if (el.children.length === 0) continue;
+
+      const children = Array.from(el.children);
+      const isAllBr = children.every((child) => child.tagName === "BR");
+
+      if (isAllBr) {
+        el.replaceWith(...children);
+      }
+    }
+  }
 
   function flagElements(container) {
     container.querySelectorAll("*").forEach((el) => {

@@ -416,6 +416,9 @@ export default class View {
   }
 
   cloneResetUi() {
+    this.el("._avatar > img").removeAttribute("src");
+    this.el("._cover > img").removeAttribute("src");
+
     this.disable(false, "#clone-link-input");
     this.disable(true, "#clone-open-userpge", "#clone-copy-bbcode", "#clone-link-submit", "#cloned-userpage-render");
     this.toggle("._cover > img", "d-none", true);

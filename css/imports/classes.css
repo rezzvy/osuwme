@@ -243,9 +243,13 @@ p > u[style*="color"]:has(a) a {
   color: inherit !important;
 }
 
-.osu-style strong a,
 .osu-style a[href*="https://osu.ppy.sh/users/"]:not([href*="https://osu.ppy.sh/users/0"]):not([href*="https://osu.ppy.sh/users/1"]):not([href*="https://osu.ppy.sh/users/2"]):not([href*="https://osu.ppy.sh/users/3"]):not([href*="https://osu.ppy.sh/users/4"]):not([href*="https://osu.ppy.sh/users/5"]):not([href*="https://osu.ppy.sh/users/6"]):not([href*="https://osu.ppy.sh/users/7"]):not([href*="https://osu.ppy.sh/users/8"]):not([href*="https://osu.ppy.sh/users/9"])
 {
+  color: rgb(217, 166, 189) !important;
+  font-weight: 700 !important;
+}
+
+.osu-style strong a {
   font-weight: 700 !important;
 }
 
