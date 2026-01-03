@@ -61,8 +61,30 @@ export default (controller) => {
   };
 
   controller.initWatchCanvasChange = () => {
-    controller.observer = new MutationObserver((mutations) => {
+    const saveContentDebounced = controller.debounce(() => {
       model.latestCanvasContent = view.html("#canvas-wrapper");
+    }, 1000);
+
+    controller.observer = new MutationObserver((mutations) => {
+      if (document.body.classList.contains("on-grabbing")) return;
+
+      const isIrrelevant = mutations.every((mutation) => {
+        const ignoredAttributes = ["aria-describedby", "title", "data-bs-original-title", "data-original-title"];
+
+        if (mutation.type === "attributes" && ignoredAttributes.includes(mutation.attributeName)) {
+          return true;
+        }
+
+        if (mutation.target?.classList?.contains("tooltip")) {
+          return true;
+        }
+
+        return false;
+      });
+
+      if (isIrrelevant) return;
+
+      saveContentDebounced();
     });
 
     controller.observer.observe(view.canvasWrapperElement, {

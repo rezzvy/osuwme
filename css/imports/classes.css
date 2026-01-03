@@ -33,11 +33,11 @@ body.on-grabbing {
   cursor: grabbing;
 }
 
-body.on-grabbing #canvas-wrapper .canvas-item:has([data-drop]:not(li)) > ._edit {
+body:not(.modal-open).on-grabbing #canvas-wrapper .canvas-item:has([data-drop]:not(li)) > ._edit {
   background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-body.on-grabbing #canvas-wrapper .canvas-item:has([data-drop]:not(li)) {
+body:not(.modal-open).on-grabbing #canvas-wrapper .canvas-item:has([data-drop]:not(li)) {
   border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
