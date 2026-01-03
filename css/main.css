@@ -358,6 +358,10 @@ body.auto-hide-canvas-menu .pinned:hover {
   #canvas-element-list {
     overflow: hidden !important;
   }
+
+  #faq-text::after {
+    content: "FAQ" !important;
+  }
 }
 
 /* =========================================
@@ -427,4 +431,8 @@ strong {
 
 a {
   cursor: pointer;
+}
+
+#faq-text::after {
+  content: "Frequently Asked Questions";
 }

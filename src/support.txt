@@ -1,13 +1,43 @@
-Hii! i'm rezzvy, the creator of OSUWME, and i'm here to talk about how you can support this project!
+FAQ (Frequently Asked Questions)
+= = = = = = = = = = = = = = = = =
 
-But wait, let me yap for a bit >w<
-so uhm, i made this project mostly because i wanted to simplify the "making" process for content on the osu! web. i rlly love customizing my userpage, and i know there are lots of ppl on osu! who feel the same way.
+Q: How can I support OSUWME?
+A: By telling a friend to use this tool >.< or simply using it yourself for your BBCode needs. And if you find a bug, please post a comment on the forum!
 
-I also wanted to contribute to the community. this is my way of helping out, and i hope it solves your bbcode problems!
+= = =
 
-If you want to support the project, just use it! that's really all i ask :3
-or you can help me spread the word! whenever a friend asks, "how do i do this?" or "how do i do that?" (bbcode-related), just tell them: "use osuwme!" >w<
+Q: Where can I contact you if I have ideas for improvement or find bugs?
+A: For bug reports, you can post a comment on the OSUWME forum thread. If you use GitHub, feel free to open an issue there. Or, if you prefer to chat with me personally, just DM me on Discord @rezzvy.
 
-I'm rlly open to feedback and happy to help with any bugs you find, so please feel free to text me!
+= = =
 
--Rezzvy (Dec 26, 2025)
+Q: If I log in, will you be able to hack me or steal my personal information?
+A: Nopee, not a chance qmq... When you log in, OSUWME just asks the osu! server for a "key". I then use that key to interact with the osu! server on your behalf. This key is very limited and can only access publicly available information. I can't read your private details, and I definitely can't see or steal your password >.<
+
+= = =
+
+Q: Why was I logged out suddenly?
+A: This happens because the key stored in your browser has expired. When OSUWME tries to use it, the osu! server refuses it, so you get logged out and need to log in again to get a new key :3 (Actually... this is just my skill issue LOL. I still don't fully understand how to implement the 'auto-refresh key' feature yet qmq)
+
+= = =
+
+Q: Do you collect my data?
+A: Only minimal data is collected, and nothing is collected when you are not logged in. Please read the details below.
+
+[*] To prevent abuse: When you log in, the OSUWME server generates an anonymous identifier. This is used to prevent spamming so the server can keep running smoothly. (And if you intend to spam or abuse the server... please don't qmq. I don't have money for a proper server yet, I am strictly using Vercel's free plan >.< pls spare me!)
+
+Quick note for this point: I do NOT keep your raw IP address. Instead, I keep a hashed (encrypted) version of your identifier. This allows me to prevent spam/abuse on the server without knowing who you are or where you live.
+
+[*] To fix bugs: I may use your public username to verify that OSUWME handles me! content correctly. This helps me quickly identify and fix issues if something goes wrong.
+
+Quick note: This purely uses data that is already publicly available qmq. I just wrote it here because I want to be really, really honest and transparent >.<
+
+= = =
+
+Note: The data is never shared publicly or sold. It is used purely to keep the OSUWME backend running and to improve features like "Clone" and "Auto Sync".
+
+Another note: If you're not comfortable with this, feel free to skip logging in. OSUWME's main functionality is not tied to your account. You can still use it just fine without logging in, just like always >.<
+
+Another note: Changed your mind? Send me an email at rezzvyuwu@gmail.com if you want me to delete your log data from my database. No hard feelings!
+
+- Rezzvy (Jan 3, 2026)
