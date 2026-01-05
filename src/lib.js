@@ -497,9 +497,16 @@ export default function initLibraries(controller) {
 
   const pickrComponents = {
     preview: true,
-    opacity: false,
+    opacity: true,
     hue: true,
-    interaction: { input: true },
+    interaction: {
+      hex: true,
+      rgba: true,
+      hsva: true,
+      hsla: true,
+      cmyk: true,
+      input: true,
+    },
   };
 
   model.pickr = Pickr.create({

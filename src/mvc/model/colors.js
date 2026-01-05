@@ -22,10 +22,14 @@ export default (controller) => {
   };
 
   model.rgbToHex = (rgbString) => {
-    const isValidRgb = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/.test(rgbString);
-    if (!isValidRgb) return "#FFFFFF";
+    const match = rgbString.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
 
-    const [r, g, b] = rgbString.match(/\d+/g).map(Number);
+    if (!match) return "#FFFFFF";
+
+    const r = parseInt(match[1], 10);
+    const g = parseInt(match[2], 10);
+    const b = parseInt(match[3], 10);
+
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
   };
 

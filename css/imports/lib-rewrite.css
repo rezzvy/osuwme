@@ -255,3 +255,24 @@ a.d-inline-block {
 .ql-editor img {
   pointer-events: none;
 }
+
+.pcr-result::selection {
+  color: #ff66ab !important;
+}
+
+.pcr-app .pcr-interaction .pcr-type.active {
+  background: #ff66ab !important;
+}
+
+.pcr-app .pcr-interaction input:focus {
+  box-shadow: unset !important;
+}
+
+.pcr-app .pcr-interaction .pcr-result{
+  min-width: unset !important;
+  flex: unset !important;
+  flex-basis: 100% !important;
+}
+.pcr-type{
+  flex-grow: 1;
+}
