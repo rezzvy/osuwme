@@ -612,7 +612,7 @@ export default (controller) => {
     const rawContent = userData.page.raw;
     const htmlContent = userData.page.html;
 
-    const bbCodeMediaRegex = /\[img\]([\s\S]*?)\[\/img\]|\[imagemap\]\s*(https?:\/\/[^\s]+)|\[audio\]([\s\S]*?)\[\/audio\]/gi;
+    const bbCodeMediaRegex = /\[img\]([\s\S]*?)\[\/img\]|\[imagemap\](?:\s*[\r\n]+\s*)(https?:\/\/[^\s]+)|\[audio\]([\s\S]*?)\[\/audio\]/gi;
 
     const originalUrls = [];
     let match;
@@ -620,6 +620,11 @@ export default (controller) => {
     while ((match = bbCodeMediaRegex.exec(rawContent)) !== null) {
       const rawUrl = match[1] ?? match[2] ?? match[3] ?? "";
       if (rawUrl === "") continue;
+
+      if (match[3] !== undefined && /[\r\n]/.test(rawUrl)) {
+        continue;
+      }
+
       originalUrls.push(rawUrl.trim());
     }
 
@@ -651,6 +656,7 @@ export default (controller) => {
 
     return fixedHtml;
   }
+
   function cleanDomContainer(container) {
     const spoilers = container.querySelectorAll(".js-spoilerbox.bbcode-spoilerbox");
 
