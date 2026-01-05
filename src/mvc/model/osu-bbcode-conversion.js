@@ -190,7 +190,7 @@ export default function (controller) {
     if (api.node.parentElement.classList.contains("imgmap-container")) {
       link = model.isValidURL(api.node.dataset.link) ? encodeURI(api.node.dataset.link) : "https://google.com";
       const { width, height, top, left } = api.node.style;
-      const title = api.node.dataset.bsTitle;
+      const title = api.node.dataset.title || "";
       return `${left.replace("%", "")} ${top.replace("%", "")} ${width.replace("%", "")} ${height.replace("%", "")} ${link} ${title}%NL%`;
     }
 

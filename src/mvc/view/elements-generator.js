@@ -166,9 +166,22 @@ export default (controller) => {
   };
 
   view.generateOutputImageMapItem = (title, link, style) => {
+    const tooltip = title ? `data-bs-toggle="tooltip" data-bs-title="${title}"` : "";
+
+    const hasLink = link ? 'target="_blank"' : "";
+    const href = link || "javascript:void(0)";
+
     return `
-      <a class="output-imgmap-item" target="_blank" data-link="${link}" href="${link}" style="${style}" data-title="${title}" data-bs-toggle="tooltip" data-bs-title="${title}"></a>
-    `;
+    <a
+      class="output-imgmap-item"
+      href="${href}"
+      data-link="${link || ""}"
+      data-title="${title || ""}"
+      style="${style}"
+      ${tooltip}
+      ${hasLink}
+    ></a>
+  `;
   };
 
   view.generateModalEditSection = (key, content) => {
