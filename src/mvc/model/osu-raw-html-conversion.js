@@ -31,20 +31,26 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("h2", (api) => {
-    if (api.node.children.length !== 0) {
-      const hasFontSize = api.node.querySelector('[style*="font-size"]:not(.h2-fs)');
-      const content = hasFontSize
-        ? `<h2 class="heading costum">${api.content}</h2>`
-        : `<h2 class="heading costum h2-fs" style=${hasFontSize ? "font-size:150%" : ""}>${api.content}</h2>`;
+    const { node, content } = api;
 
-      const el = generateClonedItem("text", "true", content);
-
-      return el.outerHTML;
+    if (node.children.length === 0) {
+      const html = `<div class='heading'>${content}</div>`;
+      return generateClonedItem("heading", "true", html).outerHTML;
     }
 
-    const el = generateClonedItem("heading", "true", `<div class='heading'>${api.content}</div>`);
+    const hasCustomSize = node.querySelector('[style*="font-size"]:not(.h2-fs)');
+    const color = node.style.color;
 
-    return el.outerHTML;
+    const cssClasses = ["heading", "costum"];
+    if (!hasCustomSize) cssClasses.push("h2-fs");
+
+    const inlineStyles = [];
+    if (color) inlineStyles.push(`color:${color}`);
+
+    const styleAttr = inlineStyles.length > 0 ? `style="${inlineStyles.join(";")}"` : "";
+
+    const finalHtml = `<h2 class="${cssClasses.join(" ")}" ${styleAttr}>${content}</h2>`;
+    return generateClonedItem("text", "true", finalHtml).outerHTML;
   });
 
   controller.model.registerClonedBBCodeConversion("ol", (api) => {

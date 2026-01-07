@@ -261,7 +261,7 @@ export default function initLibraries(controller) {
                   },
                 },
               ]);
-              model.quill.setSelection(range.index + username.length + 1);
+              model.quill.setSelection(range.index + username.length);
             }
           },
           link: function (value) {

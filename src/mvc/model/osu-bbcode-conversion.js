@@ -70,12 +70,13 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion("img", (api) => {
-    const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S"];
+    const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S", "LI"];
     const source = api.node.dataset.originalSrc || api.node.src;
 
     if (inline.includes(api.node.parentElement.tagName)) {
       return `[img]${source}[/img]`;
     }
+
     return `[img]${source}[/img]%NL%`;
   });
 
@@ -84,6 +85,10 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion(".heading", (api) => {
+    if (api.node.style.color) {
+      return api.content;
+    }
+
     return `[heading]${api.content}[/heading]%NL%`;
   });
 
@@ -134,6 +139,10 @@ export default function (controller) {
 
   model.registerBBCodeConversion('[style*="color:"]', (api) => {
     if (api.node.matches("a") && model.isOsuProfileLink(api.node.href)) return api.content;
+
+    if (api.node.matches("h2") && api.node.style.color) {
+      return `[heading][color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color][/heading]`;
+    }
 
     return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
   });

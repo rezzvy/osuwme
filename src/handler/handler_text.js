@@ -268,7 +268,7 @@ export default class {
       item.classList.remove("text-editor-item-selected");
     });
 
-    this.view.els("p", editorContent).forEach((paragraph) => {
+    this.view.els("p, ol > li", editorContent).forEach((paragraph) => {
       paragraph.innerHTML = paragraph.innerHTML
         .replace(/\&nbsp;/g, " ") // Normalize all &nbsp; to regular space
         .replace(/\s+/g, " ") // Normalize multiple spaces
