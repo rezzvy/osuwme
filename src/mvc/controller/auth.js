@@ -14,7 +14,7 @@ export default (controller) => {
 
     const { isEmpty, html } = clonedUserpage;
 
-    alert("Login successful!");
+    // alert("Login successful!");
 
     if (view.dialog("Do you want to sync this app with your latest me! page? This will overwrite any existing project.")) {
       if (!isEmpty) {
