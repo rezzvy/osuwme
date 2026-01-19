@@ -46,6 +46,10 @@ export default class {
         "./assets/gamemode_icons/taiko.png",
         "./assets/gamemode_icons/catch.png",
         "./assets/gamemode_icons/mania.png",
+        "./assets/gamemode_icons/osu_white.png",
+        "./assets/gamemode_icons/taiko_white.png",
+        "./assets/gamemode_icons/catch_white.png",
+        "./assets/gamemode_icons/mania_white.png",
       ],
     };
   }
@@ -165,7 +169,7 @@ export default class {
 
       if (this.model.latestSelection) {
         const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
-          (color) => color.getColor().toHEXA().toString()
+          (color) => color.getColor().toHEXA().toString(),
         );
 
         this.controller.formatTextToGradient(value, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
@@ -215,11 +219,11 @@ export default class {
         if (this.model.latestSelection && this.model.currentGradient !== "random") return;
 
         const [colorStart, colorMiddle, colorEnd] = [this.model.gradientColorStart, this.model.gradientColorMiddle, this.model.gradientColorEnd].map(
-          (color) => color.getColor().toHEXA().toString()
+          (color) => color.getColor().toHEXA().toString(),
         );
 
         this.controller.formatTextToGradient(this.model.currentGradient, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
-      }, 100)
+      }, 100),
     );
   }
 
