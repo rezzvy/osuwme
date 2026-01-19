@@ -10,6 +10,10 @@ export default (controller) => {
     links.forEach((currentLink) => {
       if (currentLink.matches(".output-imgmap-item")) return;
 
+      if (!currentLink.style.color && !currentLink.querySelector('[style*="color:"]')) {
+        return;
+      }
+
       const prevLink = currentLink.previousElementSibling;
 
       if (prevLink && prevLink.tagName === "A" && prevLink.href === currentLink.href) {

@@ -1,6 +1,7 @@
 export default function initLibraries(controller) {
   const { model, view } = controller;
   model.isInsideTextEditor = false;
+  model.isEmojiRendered = false;
 
   /* 
   =========================================
@@ -123,6 +124,39 @@ export default function initLibraries(controller) {
 
     view.replaceContainerPlaceHolder(model.isNodeEmpty(source), source, target);
   });
+
+  /* 
+  =========================================
+     Emoji Thingy
+  ========================================= 
+  */
+
+  const initEmojiThingy = () => {
+    if (model.isEmojiRendered) return;
+
+    model.emojiMart = new EmojiMart.Picker({
+      set: "native",
+      locale: "en",
+      theme: "dark",
+      dynamicWidth: true,
+      previewPosition: "none",
+      onEmojiSelect: (emoji) => {
+        const range = model.getSmartSelection();
+        model.quill.updateContents([
+          { retain: range.index },
+          {
+            insert: emoji.native,
+          },
+        ]);
+        model.quill.setSelection(range.index + emoji.native.length);
+
+        view.toggle("#emoji-picker-container", "d-none", true);
+      },
+    });
+
+    view.append("#emoji-picker-container", model.emojiMart);
+    view.toggle("#emoji-picker-container", "d-none", true);
+  };
 
   /* 
   =========================================
@@ -286,6 +320,20 @@ export default function initLibraries(controller) {
               }
             }
           },
+          emoji: function () {
+            if (!model.isEmojiRendered) {
+              initEmojiThingy();
+              model.isEmojiRendered = true;
+            }
+
+            const container = view.el("#emoji-picker-container");
+            view.toggle(container, "d-none", !container.classList.contains("d-none"));
+
+            view.toggle(".gradient-form", "d-none", true);
+            view.toggle(".assets-form", "d-none", true);
+            view.dataset("#text-editor-color-gradient", "open", false);
+            view.dataset("#text-editor-assets", "open", false);
+          },
           fancyfont: function (value) {
             const range = model.quill.getSelection();
             if (!range || range.length === 0) return;
@@ -383,6 +431,8 @@ export default function initLibraries(controller) {
     model.isInsideTextEditor = true;
     model.currentSelectedElement = null;
 
+    view.toggle("#emoji-picker-container", "d-none", true);
+
     if (view.el("#text-editor-assets").dataset.open === "true") {
       view.html(model.handler.text.countryAssetWrapper, "");
       model.handler.text.cuontryAssetInput.value = "";
@@ -457,6 +507,7 @@ export default function initLibraries(controller) {
 
     view.toggle(".assets-form", "d-none", !state);
     view.toggle(".gradient-form", "d-none", true);
+    view.toggle("#emoji-picker-container", "d-none", true);
     view.dataset("#text-editor-color-gradient", "open", false);
   });
 
@@ -480,6 +531,7 @@ export default function initLibraries(controller) {
 
     view.toggle(".gradient-form", "d-none", !state);
     view.toggle(".assets-form", "d-none", true);
+    view.toggle("#emoji-picker-container", "d-none", true);
     view.dataset("#text-editor-assets", "open", false);
 
     const colorStart = model.gradientColorStart.getColor().toHEXA().toString();
@@ -593,7 +645,7 @@ export default function initLibraries(controller) {
       if (model.latestSelection) {
         controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
       }
-    }, 50)
+    }, 50),
   );
 
   model.gradientColorMiddle.on(
@@ -608,7 +660,7 @@ export default function initLibraries(controller) {
       if (model.latestSelection) {
         controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
       }
-    }, 50)
+    }, 50),
   );
 
   model.gradientColorEnd.on(
@@ -623,6 +675,6 @@ export default function initLibraries(controller) {
       if (model.latestSelection) {
         controller.formatTextToGradient(model.currentGradient, model.latestSelection, colorStart, colorMiddle, colorEnd);
       }
-    }, 50)
+    }, 50),
   );
 }
