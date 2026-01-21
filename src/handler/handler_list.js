@@ -91,7 +91,7 @@ export default class {
       const title = this.view.el(".list-title-input", item);
       const content = this.view.el("._list-content", item);
 
-      li += this.view.generateListItem(title.value, content.innerHTML, `${Date.now()}${index}`);
+      li += this.view.generateListItem(title.value, content.innerHTML, `${this.model.uniqueID}${index}`);
     }
 
     this.view.toggle(this.targetElement, "ol", this.orderedListSwitch.checked);

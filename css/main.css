@@ -88,6 +88,7 @@ em-emoji-picker {
 
 #text-editor-toolbar .assets-form {
   right: 8%;
+  max-height: unset;
 }
 
 #text-editor-toolbar #emoji-picker-container {

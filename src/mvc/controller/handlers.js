@@ -75,7 +75,7 @@ export default (controller) => {
       view.toggle(
         item.container,
         "ph",
-        model.isNodeEmpty(item.container) && !item.container.matches("#canvas-wrapper") && !item.container.matches("li")
+        model.isNodeEmpty(item.container) && !item.container.matches("#canvas-wrapper") && !item.container.matches("li"),
       );
     }
   };
@@ -136,6 +136,11 @@ export default (controller) => {
   controller.canvasItemDuplicateHandler = (e) => {
     view.copy(e.closest(".canvas-item"), (copied, original) => {
       view.updateBootstrapCollapseId(copied, model.uniqueID);
+
+      view.els("[data-list-item]", copied).forEach((li) => {
+        li.dataset.listItem = model.uniqueID;
+      });
+
       view.appendAfter(copied, original);
 
       controller.pushHistory("undo", {
