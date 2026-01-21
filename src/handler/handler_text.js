@@ -267,20 +267,12 @@ export default class {
   save() {
     const editorContent = this.editorContainer.firstElementChild;
 
-    const latestSelectedChilds = this.view.els(".text-editor-item-selected", editorContent);
-    latestSelectedChilds.forEach((item) => {
-      item.classList.remove("text-editor-item-selected");
-    });
-
     this.view.els("p, ol > li", editorContent).forEach((paragraph) => {
       paragraph.innerHTML = paragraph.innerHTML
         .replace(/\&nbsp;/g, " ") // Normalize all &nbsp; to regular space
         .replace(/\s+/g, " ") // Normalize multiple spaces
-        .replace(/(?<=>)(\s|&nbsp;)+(?=<)/g, '<span class="inline-splitter"> </span>');
-
-      for (const el of paragraph.children) {
-        if (el.tagName === "BR") this.view.dataset(el, "spacing", "%SPCITM%");
-      }
+        .replace(/(?<=>)(\s|&nbsp;)+(?=<)/g, '<span class="inline-splitter"> </span>')
+        .replace(/<br\s*\/?>/gi, '<br data-spacing="%SPCITM%">');
 
       this.controller.swapLinks(paragraph);
     });
