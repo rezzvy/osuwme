@@ -274,6 +274,19 @@ export default class {
         .replace(/(?<=>)(\s|&nbsp;)+(?=<)/g, '<span class="inline-splitter"> </span>')
         .replace(/<br\s*\/?>/gi, '<br data-spacing="%SPCITM%">');
 
+      this.view.els(`[data-spacing-color][style*="color"], .ql-cursor`, paragraph).forEach((el) => {
+        if (el.matches(".ql-cursor")) {
+          el.remove();
+          return;
+        }
+
+        if (el.matches("a") || el.querySelector("a")) {
+          return;
+        }
+
+        el.style.color = null;
+      });
+
       this.controller.swapLinks(paragraph);
     });
 

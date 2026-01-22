@@ -1,5 +1,5 @@
 {
-  "latest_updated": "Jan 19, 2026",
+  "latest_updated": "Jan 22, 2026",
   "changelogs": [
     {
       "date": "Anniversary Update (Dec 2025/Jan 2026)",
@@ -7,6 +7,7 @@
         "Implemented mirrored media sources for the clone feature. Media now uses cached links from osu-web and will be reverted to the original links when exported to BBCode",
         "Implemented the 'Clone from osu!' feature",
         "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
+        "Improved Gradients (for a smoother transition from start to finish)",
         "Added emoji picker to the text editor",
         "Added new tools to the text editor (YouTube, Profile, Assets, Lists)",
         "Added functionality to rearrange canvas element menu buttons",

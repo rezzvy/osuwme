@@ -228,7 +228,7 @@ export default function initLibraries(controller) {
     const formats = model.quill.getFormat(range);
     const color = formats.color;
 
-    if (color && !Array.isArray(color) && model.isInsideTextEditor) model.pickr.setColor(color);
+    if (color && !Array.isArray(color) && model.isInsideTextEditor && !formats["spacing-color"]) model.pickr.setColor(color);
 
     const link = formats.link;
     view.toggle(".link-form", "d-none", !link);
@@ -258,6 +258,14 @@ export default function initLibraries(controller) {
   Quill.register(inlineCodeBlot);
   Quill.register(spoilerBlot);
   Quill.register(FontSize, true);
+
+  const Parchment = Quill.import("parchment");
+
+  const SpacingColor = new Parchment.Attributor("spacing-color", "data-spacing-color", {
+    scope: Parchment.Scope.INLINE,
+  });
+
+  Quill.register(SpacingColor, true);
 
   model.quill = new Quill("#text-editor", {
     modules: {

@@ -1,113 +1,144 @@
 export default (controller) => {
   const model = controller.model;
 
+  model.rgbToHex = (rgbString) => {
+    const match = rgbString.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+    if (!match) return "#FFFFFF";
+    return model.rgbToHexRaw(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]));
+  };
+
+  model.hexToRgb = (hex) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : { r: 0, g: 0, b: 0 };
+  };
+
+  model.rgbToHexRaw = (r, g, b) => {
+    const toHex = (c) => {
+      const hex = Math.round(c).toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
+    };
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  };
+
   model.hslToRgb = (h, s, l) => {
     const c = (1 - Math.abs(2 * l - 1)) * s;
     const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
     const m = l - c / 2;
     let r, g, b;
-
     if (h < 60) [r, g, b] = [c, x, 0];
     else if (h < 120) [r, g, b] = [x, c, 0];
     else if (h < 180) [r, g, b] = [0, c, x];
     else if (h < 240) [r, g, b] = [0, x, c];
     else if (h < 300) [r, g, b] = [x, 0, c];
     else [r, g, b] = [c, 0, x];
+    return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
+  };
 
+  const interpolateColor = (color1, color2, factor) => {
     return {
-      r: Math.round((r + m) * 255),
-      g: Math.round((g + m) * 255),
-      b: Math.round((b + m) * 255),
+      r: color1.r + (color2.r - color1.r) * factor,
+      g: color1.g + (color2.g - color1.g) * factor,
+      b: color1.b + (color2.b - color1.b) * factor,
     };
   };
 
-  model.rgbToHex = (rgbString) => {
-    const match = rgbString.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+  const isSpace = (char) => /\s/.test(char);
 
-    if (!match) return "#FFFFFF";
-
-    const r = parseInt(match[1], 10);
-    const g = parseInt(match[2], 10);
-    const b = parseInt(match[3], 10);
-
-    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+  const countVisibleSegments = (segments) => {
+    return segments.filter((s) => !isSpace(s)).length;
   };
 
-  model.hexToRgb = (hex) => {
-    return {
-      r: parseInt(hex.substring(1, 3), 16),
-      g: parseInt(hex.substring(3, 5), 16),
-      b: parseInt(hex.substring(5, 7), 16),
+  model.getSegments = (text) => {
+    const segments = [];
+
+    const isProblematicSequence = (txt, i) => {
+      const fourChar = txt.slice(i, i + 4);
+      if (fourChar === "<---" || fourChar === "--->") return 4;
+      const threeChar = txt.slice(i, i + 3);
+      if (threeChar === "<--" || threeChar === "-->") return 3;
+      const twoChar = txt.slice(i, i + 2);
+      if (twoChar === "<-" || twoChar === "->") return 2;
+      return 0;
     };
+
+    const isSurrogatePair = (txt, i) => {
+      const code = txt.charCodeAt(i);
+      return code >= 0xd800 && code <= 0xdbff;
+    };
+
+    for (let i = 0; i < text.length; ) {
+      let len = isProblematicSequence(text, i);
+      if (len === 0) len = isSurrogatePair(text, i) ? 2 : 1;
+
+      segments.push(text.slice(i, i + len));
+      i += len;
+    }
+    return segments;
   };
 
   model.generateGradient = (text, colorStart = "#FF0000", colorEnd = "#0000FF") => {
+    const segments = model.getSegments(text);
+    if (segments.length === 0) return [];
+
+    const visibleCount = countVisibleSegments(segments);
+    const startRgb = model.hexToRgb(colorStart);
+    const endRgb = model.hexToRgb(colorEnd);
     const colors = [];
 
-    const chars = [...text];
-    const textLength = chars.length;
+    let visibleIndex = 0;
 
-    const colorStartRgb = model.hexToRgb(colorStart);
-    const colorEndRgb = model.hexToRgb(colorEnd);
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
 
-    if (textLength === 0) return [];
+      if (isSpace(segment)) {
+        colors.push("THIS_IS_SPACE");
+        continue;
+      }
 
-    const rinc = (colorEndRgb.r - colorStartRgb.r) / textLength;
-    const ginc = (colorEndRgb.g - colorStartRgb.g) / textLength;
-    const binc = (colorEndRgb.b - colorStartRgb.b) / textLength;
+      const factor = visibleCount <= 1 ? 0 : visibleIndex / (visibleCount - 1);
+      const c = interpolateColor(startRgb, endRgb, factor);
+      colors.push(model.rgbToHexRaw(c.r, c.g, c.b));
 
-    for (let i = 0; i < textLength; i++) {
-      const r = Math.round(colorStartRgb.r + rinc * i);
-      const g = Math.round(colorStartRgb.g + ginc * i);
-      const b = Math.round(colorStartRgb.b + binc * i);
-
-      colors.push(model.rgbToHex(`rgb(${r}, ${g}, ${b})`));
+      visibleIndex++;
     }
-
     return colors;
   };
 
   model.generateMiddleGradient = (text, colorStart = "#FF0000", colorMiddle = "#00FF00", colorEnd = colorStart) => {
+    const segments = model.getSegments(text);
+    if (segments.length === 0) return [];
+
+    const visibleCount = countVisibleSegments(segments);
+    const startRgb = model.hexToRgb(colorStart);
+    const midRgb = model.hexToRgb(colorMiddle);
+    const endRgb = model.hexToRgb(colorEnd);
     const colors = [];
 
-    const chars = [...text];
-    const textLength = chars.length;
+    let visibleIndex = 0;
 
-    if (textLength === 0) return [];
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
 
-    const midPoint = Math.floor(textLength / 2);
-
-    const colorStartRgb = model.hexToRgb(colorStart);
-    const colorMiddleRgb = model.hexToRgb(colorMiddle);
-    const colorEndRgb = model.hexToRgb(colorEnd);
-
-    const firstHalfLength = midPoint === 0 ? 1 : midPoint;
-    const secondHalfLength = textLength - midPoint === 0 ? 1 : textLength - midPoint;
-
-    const rinc1 = (colorMiddleRgb.r - colorStartRgb.r) / firstHalfLength;
-    const ginc1 = (colorMiddleRgb.g - colorStartRgb.g) / firstHalfLength;
-    const binc1 = (colorMiddleRgb.b - colorStartRgb.b) / firstHalfLength;
-
-    const rinc2 = (colorEndRgb.r - colorMiddleRgb.r) / secondHalfLength;
-    const ginc2 = (colorEndRgb.g - colorMiddleRgb.g) / secondHalfLength;
-    const binc2 = (colorEndRgb.b - colorMiddleRgb.b) / secondHalfLength;
-
-    for (let i = 0; i < textLength; i++) {
-      let r, g, b;
-
-      if (i < midPoint) {
-        r = Math.round(colorStartRgb.r + rinc1 * i);
-        g = Math.round(colorStartRgb.g + ginc1 * i);
-        b = Math.round(colorStartRgb.b + binc1 * i);
-      } else {
-        r = Math.round(colorMiddleRgb.r + rinc2 * (i - midPoint));
-        g = Math.round(colorMiddleRgb.g + ginc2 * (i - midPoint));
-        b = Math.round(colorMiddleRgb.b + binc2 * (i - midPoint));
+      if (isSpace(segment)) {
+        colors.push("THIS_IS_SPACE");
+        continue;
       }
 
-      colors.push(model.rgbToHex(`rgb(${r}, ${g}, ${b})`));
-    }
+      const factor = visibleCount <= 1 ? 0 : visibleIndex / (visibleCount - 1);
+      let c;
 
+      if (factor <= 0.5) {
+        const localFactor = factor * 2;
+        c = interpolateColor(startRgb, midRgb, localFactor);
+      } else {
+        const localFactor = (factor - 0.5) * 2;
+        c = interpolateColor(midRgb, endRgb, localFactor);
+      }
+      colors.push(model.rgbToHexRaw(c.r, c.g, c.b));
+      visibleIndex++;
+    }
     return colors;
   };
 
@@ -116,48 +147,44 @@ export default (controller) => {
   };
 
   model.generateRainbowColors = (text, lightness = 0.625) => {
+    const segments = model.getSegments(text);
+    const visibleCount = countVisibleSegments(segments);
     const colors = [];
+    let visibleIndex = 0;
 
-    const chars = [...text];
-    const textLength = chars.length;
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
 
-    for (let i = 0; i < textLength; i++) {
-      const fraction = i / textLength;
-      const hue = Math.round(fraction * 360);
+      if (isSpace(segment)) {
+        colors.push("THIS_IS_SPACE");
+        continue;
+      }
+
+      const hue = visibleCount <= 1 ? 0 : (visibleIndex / visibleCount) * 360;
       const rgb = model.hslToRgb(hue, 1, lightness);
-      colors.push(model.rgbToHex(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`));
+      colors.push(model.rgbToHexRaw(rgb.r, rgb.g, rgb.b));
+      visibleIndex++;
     }
-
     return colors;
   };
 
   model.generateRandomColors = (text) => {
+    const segments = model.getSegments(text);
     const colors = [];
 
-    const chars = [...text];
-    const textLength = chars.length;
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
 
-    for (let i = 0; i < textLength; i++) {
+      if (isSpace(segment)) {
+        colors.push("THIS_IS_SPACE");
+        continue;
+      }
+
       const r = Math.floor(Math.random() * 128) + 128;
       const g = Math.floor(Math.random() * 128) + 128;
       const b = Math.floor(Math.random() * 128) + 128;
-      colors.push(model.rgbToHex(`rgb(${r}, ${g}, ${b})`));
+      colors.push(model.rgbToHexRaw(r, g, b));
     }
-
-    return colors;
-  };
-
-  model.generateRandomColors = (text) => {
-    const colors = [];
-    const textLength = text.length;
-
-    for (let i = 0; i < textLength; i++) {
-      const r = Math.floor(Math.random() * 128) + 128;
-      const g = Math.floor(Math.random() * 128) + 128;
-      const b = Math.floor(Math.random() * 128) + 128;
-      colors.push(model.rgbToHex(`rgb(${r}, ${g}, ${b})`));
-    }
-
     return colors;
   };
 };

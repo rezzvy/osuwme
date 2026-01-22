@@ -14,6 +14,17 @@ export default (controller) => {
         return;
       }
 
+      let spacingColor = null;
+      if (currentLink.hasAttribute("data-spacing-color")) {
+        spacingColor = currentLink;
+      } else {
+        spacingColor = currentLink.querySelector("[data-spacing-color]");
+      }
+
+      if (spacingColor) {
+        spacingColor.style.color = null;
+      }
+
       const prevLink = currentLink.previousElementSibling;
 
       if (prevLink && prevLink.tagName === "A" && prevLink.href === currentLink.href) {
@@ -99,65 +110,44 @@ export default (controller) => {
     if (!range) return;
 
     const text = model.quill.getText(range.index, range.length);
-    let gradients = [];
+    let colors = [];
 
-    if (type === "horizontal") gradients = model.generateGradient(text, colorStart, colorEnd);
-    if (type === "middle") gradients = model.generateMiddleGradient(text, colorStart, colorMiddle);
-    if (type === "threeColored") gradients = model.generateThreeColorGradient(text, colorStart, colorMiddle, colorEnd);
-    if (type === "rainbow") gradients = model.generateRainbowColors(text);
-    if (type === "random") gradients = model.generateRandomColors(text);
+    if (type === "horizontal") colors = model.generateGradient(text, colorStart, colorEnd);
+    if (type === "middle") colors = model.generateMiddleGradient(text, colorStart, colorMiddle);
+    if (type === "threeColored") colors = model.generateThreeColorGradient(text, colorStart, colorMiddle, colorEnd);
+    if (type === "rainbow") colors = model.generateRainbowColors(text);
+    if (type === "random") colors = model.generateRandomColors(text);
+
+    const segments = model.getSegments(text);
 
     const operations = [];
-    let colorIndex = 0;
     let lastRetain = 0;
+    let currentTextIndex = 0;
 
-    const isProblematicSequence = (text, i) => {
-      const fourChar = text.slice(i, i + 4);
-      if (fourChar === "<---" || fourChar === "--->") return 4;
+    for (let i = 0; i < segments.length; i++) {
+      const segmentStr = segments[i];
+      const colorCode = colors[i];
+      const len = segmentStr.length;
 
-      const threeChar = text.slice(i, i + 3);
-      if (threeChar === "<--" || threeChar === "-->") return 3;
-
-      const twoChar = text.slice(i, i + 2);
-      if (twoChar === "<-" || twoChar === "->") return 2;
-
-      return 0;
-    };
-
-    const isSurrogatePair = (text, i) => {
-      const code = text.charCodeAt(i);
-      return code >= 0xd800 && code <= 0xdbff;
-    };
-
-    for (let i = 0; i < text.length; ) {
-      let len = isProblematicSequence(text, i);
-
-      if (len === 0) {
-        if (isSurrogatePair(text, i)) {
-          len = 2;
-        } else {
-          len = 1;
-        }
-      }
-
-      const globalIndex = range.index + i;
-
+      const globalIndex = range.index + currentTextIndex;
       const retainOffset = globalIndex - lastRetain;
+
       if (retainOffset > 0) {
         operations.push({ retain: retainOffset });
       }
 
-      const colorToApply = gradients[colorIndex % gradients.length];
+      const op = { retain: len };
 
-      operations.push({
-        retain: len,
-        attributes: { color: colorToApply },
-      });
+      if (colorCode === "THIS_IS_SPACE") {
+        op.attributes = { color: "#fff", "spacing-color": "true" };
+      } else if (colorCode) {
+        op.attributes = { color: colorCode };
+      }
+
+      operations.push(op);
 
       lastRetain = globalIndex + len;
-
-      colorIndex++;
-      i += len;
+      currentTextIndex += len;
     }
 
     model.quill.updateContents(new model.Delta(operations), Quill.sources.USER);
