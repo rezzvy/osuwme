@@ -169,26 +169,18 @@ export default (controller) => {
 
     while (hasChanges) {
       hasChanges = false;
-
       const elements = Array.from(container.querySelectorAll(selector));
 
       for (const child of elements) {
         const tagName = child.tagName;
-        const parent = child.parentElement;
 
-        if (!parent) continue;
+        if (!child.parentElement) continue;
 
-        let targetParent = null;
+        const ancestor = child.parentElement.closest(tagName);
 
-        if (parent.tagName === tagName) {
-          targetParent = parent;
-        } else if (parent.tagName === "A" && parent.parentElement && parent.parentElement.tagName === tagName) {
-          targetParent = parent.parentElement;
-        }
-
-        if (targetParent) {
+        if (ancestor) {
           if (child.getAttribute("style")) {
-            targetParent.style.cssText += ";" + child.style.cssText;
+            ancestor.style.cssText += ";" + child.style.cssText;
           }
 
           const fragment = document.createDocumentFragment();
