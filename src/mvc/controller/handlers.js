@@ -183,4 +183,40 @@ export default (controller) => {
     view.el("#audio-modal-preview").src = e.dataset.src;
     view.el("#audio-modal-preview").play();
   };
+
+  controller.compressBBCode = async (bool, storeOriginal = true) => {
+    const textarea = view.el("#code-output-textarea");
+    view.toggle("#clipboard-alert", "d-none", true);
+
+    if (bool) {
+      if (storeOriginal) view.dataset(textarea, "original", textarea.value);
+      view.disable(false, "#merged-inline-code-check");
+      const fixRepetitiveLinks = controller.mergeGradientLinks(view.html("#canvas-wrapper"));
+
+      try {
+        view.disable(true, "#bbcode-cleaned-switch", "#merged-inline-code-check");
+        const cleanedHTML = await model.optimizer.processAsync(fixRepetitiveLinks);
+        const output = model.output(cleanedHTML);
+
+        view.text("#before-compression-text", model.calculateStringChars(textarea.dataset.original) + " characters");
+        view.text("#after-compression-text", model.calculateStringChars(output) + " characters");
+        view.html(textarea, output);
+      } catch (e) {
+        alert("Opsieee!!! Something went wrong qmq");
+        console.log(e);
+      } finally {
+        view.disable(false, "#bbcode-cleaned-switch", "#merged-inline-code-check");
+      }
+
+      return;
+    }
+
+    view.disable(true, "#merged-inline-code-check");
+
+    view.html(textarea, textarea.dataset.original);
+    textarea.dataset.original = "";
+
+    view.text("#before-compression-text", "N/A");
+    view.text("#after-compression-text", "N/A");
+  };
 };

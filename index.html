@@ -465,6 +465,34 @@
                 <i class="fa fa-info-circle fa-fw"></i> Successfully copied to clipboard!
               </p>
 
+              <div style="background-color: #4e4248" class="p-3 mb-2 rounded-2">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-1">
+                  <div
+                    class="form-check form-switch d-flex align-items-center gap-2 m-0 p-0"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Please note that this feature is still experimental and may break in some cases."
+                  >
+                    <input id="bbcode-cleaned-switch" class="form-check-input fs-4 m-0 p-0" type="checkbox" role="switch" />
+                    <label class="form-check-label" for="bbcode-cleaned-switch">Compress</label>
+                  </div>
+
+                  <div
+                    class="form-check"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="This option is for aesthetic styling. If you turn it off, each separated inline code will not be merged, making the letters appear more spaced out. It's best to uncheck this if you want the text to look more aesthetic when mixing inline code and gradients."
+                  >
+                    <input class="form-check-input" type="checkbox" id="merged-inline-code-check" checked disabled />
+                    <label class="form-check-label" for="merged-inline-code-check"> Merged Inline Code</label>
+                  </div>
+                </div>
+
+                <p class="osu-style">
+                  Before: <code class="inline"> <span id="before-compression-text">N/A</span></code> <br class="d-sm-none" />
+                  After:
+                  <code class="inline"> <span id="after-compression-text">N/A</span></code>
+                </p>
+              </div>
+
               <div class="modal-box rounded-2">
                 <textarea
                   id="code-output-textarea"
@@ -545,7 +573,8 @@
     <script src="./lib/quiljs/quill.js"></script>
     <script src="./lib/moveable/moveable.min.js"></script>
     <script src="./lib/emoji/emoji-mart.js"></script>
+    <script src="./lib/normalizer.js"></script>
 
-    <script src="./src/main.js?v=JAN_22_2026" type="module"></script>
+    <script src="./src/main.js?v=JAN_23_2026" type="module"></script>
   </body>
 </html>

@@ -63,7 +63,7 @@ export default (controller) => {
   controller.initWatchCanvasChange = () => {
     const saveContentDebounced = controller.debounce(() => {
       model.latestCanvasContent = view.html("#canvas-wrapper");
-    }, 1000);
+    }, 250);
 
     controller.observer = new MutationObserver((mutations) => {
       if (document.body.classList.contains("on-grabbing")) return;

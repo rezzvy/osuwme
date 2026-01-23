@@ -103,9 +103,23 @@ export default (controller) => {
       view.renderModalEditSection(model.currentEdit.key, model.isLargeSize);
     });
 
-    view.on("#getcode-modal", "show.bs.modal", () => {
+    view.on("#bbcode-cleaned-switch", "input", async (e) => {
+      await controller.compressBBCode(e.target.checked);
+    });
+
+    view.on("#getcode-modal", "show.bs.modal", async () => {
       const fixRepetitiveLinks = controller.mergeGradientLinks(view.html("#canvas-wrapper"));
       view.html("#code-output-textarea", model.output(fixRepetitiveLinks));
+    });
+
+    view.on("#merged-inline-code-check", "input", async (e) => {
+      if (e.target.checked) {
+        model.addArrayItem(model.optimizer.config.tagsToMerge, "code");
+      } else {
+        model.removeArrayItem(model.optimizer.config.tagsToMerge, "code");
+      }
+
+      await controller.compressBBCode(true, false);
     });
 
     view.on("#modal-edit", "hide.bs.modal", () => {
@@ -118,6 +132,14 @@ export default (controller) => {
 
     view.on("#getcode-modal", "hide.bs.modal", () => {
       view.toggle("#clipboard-alert", "d-none", true);
+
+      view.dataset("#code-output-textarea", "original", "");
+      view.html("#code-output-textarea", "");
+      view.text("#before-compression-text", "N/A");
+      view.text("#after-compression-text", "N/A");
+
+      view.el("#bbcode-cleaned-switch").checked = false;
+      view.disable(true, "#merged-inline-code-check");
     });
 
     view.on("#clone-template", "hide.bs.modal", () => {

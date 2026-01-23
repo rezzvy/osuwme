@@ -685,4 +685,13 @@ export default function initLibraries(controller) {
       }
     }, 50),
   );
+
+  // Divider
+
+  model.optimizer = new Normalizer({
+    targetSelector: "._content > p, ._content > ol > li",
+    tagsToMerge: ["strong", "em", "s", "u", "span", "code"],
+    stylesToHoist: ["font-size"],
+    stylesToPushDown: ["color"],
+  });
 }

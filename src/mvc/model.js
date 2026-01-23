@@ -268,6 +268,21 @@ export default class Model {
     return boolean ? value.replace(/ /g, "&nbsp;") : value.replace(/&nbsp;/g, " ");
   }
 
+  calculateStringChars(str) {
+    let count = 0;
+    for (const _ of str) count++;
+    return count;
+  }
+
+  removeArrayItem(arr, value) {
+    const index = arr.indexOf(value);
+    if (index !== -1) arr.splice(index, 1);
+  }
+
+  addArrayItem(arr, value) {
+    arr.push(value);
+  }
+
   /* 
   =========================================
     Auth
