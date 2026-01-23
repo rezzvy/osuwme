@@ -6,6 +6,36 @@ export default function (controller) {
   model.mation.ignoreSelectors = ["._duration", "blockquote > ._source", "._edit"];
   model.mation.noRuleFallback = (api) => api.content;
 
+  const getEffectiveLastNode = (node) => {
+    if (!node) return null;
+
+    const group = node.querySelector("._content > .group");
+
+    if (group) {
+      const items = group.querySelectorAll(":scope > .canvas-item");
+      if (items.length > 0) {
+        return getEffectiveLastNode(items[items.length - 1]);
+      }
+    }
+
+    return node;
+  };
+
+  const getEffectiveFirstNode = (node) => {
+    if (!node) return null;
+
+    const group = node.querySelector("._content > .group");
+
+    if (group) {
+      const items = group.querySelectorAll(":scope > .canvas-item");
+      if (items.length > 0) {
+        return getEffectiveFirstNode(items[0]);
+      }
+    }
+
+    return node;
+  };
+
   model.registerBBCodeConversion(".spacing-item", (api) => {
     const container = api.node.closest(".canvas-item");
     const prevContainer = container.previousElementSibling;
@@ -15,9 +45,12 @@ export default function (controller) {
     let level = value > 0 ? value : 1;
 
     if (prevContainer && nextContainer) {
+      const actualPrev = getEffectiveLastNode(prevContainer);
+      const actualNext = getEffectiveFirstNode(nextContainer);
+
       const conditions = [
-        view.el("ul", prevContainer) && view.el("ul", nextContainer),
-        view.el("blockquote", prevContainer) && view.el("blockquote", nextContainer),
+        view.el("ul", actualPrev) && view.el("ul", actualNext),
+        view.el("blockquote", actualPrev) && view.el("blockquote", actualNext),
       ];
 
       level += conditions.filter(Boolean).length;
