@@ -34,13 +34,14 @@ export default function initLibraries(controller) {
 
   model.drake.on("drag", (el) => {
     view.toggle(document.body, "on-grabbing", true);
-    if (el.closest(".canvas-element-list-btn, .list-item, .flag-item, .order-item")) return;
+    if (el.closest(".canvas-element-list-btn, .list-item, .flag-item, .order-item, .font-size-item")) return;
 
     const isHiding =
       view.menuStickyContainer.classList.contains("pinned") &&
       !el.parentElement?.closest("#list-item-edit-container") &&
       !el.parentElement.closest("#flag-edit-item-container") &&
-      !el.parentElement.closest("#order-container");
+      !el.parentElement.closest("#order-container") &&
+      !el.parentElement.closest("#define-font-size-item-container");
 
     view.toggle(view.menuStickyContainer, "d-none", isHiding);
 
@@ -82,7 +83,7 @@ export default function initLibraries(controller) {
   });
 
   model.drake.on("drop", (el, target, source, sibling) => {
-    if (el.closest(".list-item, .flag-item, .order-item")) return;
+    if (el.closest(".list-item, .flag-item, .order-item, .font-size-item")) return;
 
     if (el.matches(".canvas-element-list-btn")) {
       const { key, editable } = el.dataset;

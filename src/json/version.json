@@ -4,10 +4,7 @@
     {
       "date": "Anniversary Update (Dec 2025/Jan 2026)",
       "changes": [
-        "Implemented mirrored media sources for the clone feature. Media now uses cached links from osu-web and will be reverted to the original links when exported to BBCode",
-        "Implemented the 'Clone from osu!' feature",
-        "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
-        "Improved Gradients (for a smoother transition from start to finish)",
+        "Added Define Costum Font Size feature (from 50 to 200)",
         "Added BBCode Output Compression feature",
         "Added emoji picker to the text editor",
         "Added new tools to the text editor (YouTube, Profile, Assets, Lists)",
@@ -20,7 +17,10 @@
         "Fixed auto-save feature not working on mobile",
         "Fixed text selection reset when clicking outside the text editor area",
         "Fixed redundant generated links when a gradient is applied",
-        "Fixed Unicode (fancy text) incorrectly rendered when applied with gradients"
+        "Fixed Unicode (fancy text) incorrectly rendered when applied with gradients",
+        "Implemented the 'Clone from osu!' feature",
+        "Improved Image Map Editor (better resize handles, a new auto-snap feature, and a sticky 'Add Item' button",
+        "Improved Gradients (for a smoother transition from start to finish)"
       ]
     },
     {

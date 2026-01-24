@@ -105,6 +105,29 @@ export default (controller) => {
     return div;
   };
 
+  view.generateCostumFontSizeEdit = (title = "", size = "") => {
+    const div = document.createElement("div");
+    div.classList.add("font-size-item");
+    div.innerHTML = `
+      <div class="input-group input-group-sm gap-1">
+        <div class="input-group-text">
+          <button class="btn btn-outline-light btn-sm" data-action="move">
+            <i class="fa fa-arrows fa-fw"></i>
+          </button>
+        </div>
+          <input type="text" class="font-size-title-input form-control rounded-2" placeholder="Title" value="${title}"/>
+          <input type="number" min="50" max="200" value="${size}" class="font-size-size-input form-control rounded-2" placeholder="Size"/>
+        <div class="input-group-text">
+          <button class="btn btn-outline-light btn-sm" data-action="remove">
+            <i class="fa fa-trash fa-fw"></i>
+          </button>
+        </div>
+      </div>
+`;
+
+    return div;
+  };
+
   view.generateListItemEdit = (title = "", content = "") => {
     const div = document.createElement("div");
     div.classList.add("list-item");

@@ -2,6 +2,23 @@ export default (controller) => {
   const model = controller.model;
   const view = controller.view;
 
+  controller.renderFontSizeItems = () => {
+    const savedData = localStorage.getItem("font-size");
+    if (savedData) model.fontSizes = JSON.parse(savedData);
+
+    let options = "";
+
+    const fragment = document.createDocumentFragment();
+    model.fontSizes.forEach((font) => {
+      const el = view.generateCostumFontSizeEdit(font.name, font.size);
+      options += `<option value="${font.size}%" ${font.name === "Normal" ? "selected" : ""}>${font.name}</option>`;
+      fragment.appendChild(el);
+    });
+
+    view.append("#define-font-size-item-container", fragment);
+    view.html(".ql-size.form-select", options);
+  };
+
   controller.initCanvasButtonOrders = () => {
     const savedData = localStorage.getItem("canvas-btn-order");
 
@@ -47,6 +64,7 @@ export default (controller) => {
     await controller.renderSupportText();
     controller.initCanvasButtonOrders();
     controller.initPreferenceSettings();
+    controller.renderFontSizeItems();
 
     view.on("#anchor-login-btn", "click", () => {
       view.el("#osu-api-login-btn").click();

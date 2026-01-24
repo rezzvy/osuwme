@@ -76,6 +76,40 @@ export default class {
     this.view.html(box, skeleton);
   }
 
+  collectAddedFontSize() {
+    let data = [];
+    let options = "";
+
+    Array.from(this.fontSizeContainer.children).forEach((el) => {
+      const title = this.view.el(".font-size-title-input", el).value;
+      let size = Number(this.view.el(".font-size-size-input", el).value);
+
+      if (Number.isNaN(size) || size < 50 || size > 200) {
+        size = 100;
+      }
+
+      options += `<option value="${size}%" ${title === "Normal" ? "selected" : ""}>${title}</option>`;
+      data.push({ name: title, size: size });
+    });
+
+    if (data.length === 0) {
+      const fragment = document.createDocumentFragment();
+      data = [...this.model.fontSizesDefault];
+
+      data.forEach((item) => {
+        const el = this.view.generateCostumFontSizeEdit(item.name, item.size);
+        fragment.appendChild(el);
+
+        options += `<option value="${item.size}%" ${item.name === "Normal" ? "selected" : ""}>${item.name}</option>`;
+      });
+
+      this.view.append(this.fontSizeContainer, fragment);
+      this.view.toggle(this.fontSizeContainer, "ph", false);
+    }
+
+    return { array: data, html: options };
+  }
+
   getCountries(query) {
     this.view.html(this.countryAssetWrapper, "");
 
@@ -137,6 +171,8 @@ export default class {
     this.assetContainer = this.view.el(".assets-form", this.parent);
     this.cuontryAssetInput = this.view.el("#assets-country-input", this.parent);
     this.countryAssetWrapper = this.view.el("#country-assets-search-result", this.parent);
+
+    this.fontSizeContainer = this.view.el("#define-font-size-item-container", this.parent);
   }
 
   _target() {
@@ -225,6 +261,57 @@ export default class {
         this.controller.formatTextToGradient(this.model.currentGradient, this.model.latestSelection, colorStart, colorMiddle, colorEnd);
       }, 100),
     );
+
+    this.view.on("#define-costum-font-size-modal-btn", "click", (e) => {
+      this.view.toggle("#text-editor-toolbar", "d-none", true);
+      this.view.toggle("#modal-edit-save", "d-none", true);
+      this.view.toggle("#modal-edit .btn-close", "d-none", true);
+      this.view.toggle("#define-font-size-container", "d-none", false);
+    });
+
+    this.view.on("#define-font-size-close-container-btn", "click", (e) => {
+      this.view.toggle("#text-editor-toolbar", "d-none", false);
+      this.view.toggle("#modal-edit-save", "d-none", false);
+      this.view.toggle("#modal-edit .btn-close", "d-none", false);
+      this.view.toggle("#define-font-size-container", "d-none", true);
+
+      const collected = this.collectAddedFontSize();
+
+      this.model.fontSizes = collected.array;
+      localStorage.setItem("font-size", JSON.stringify(this.model.fontSizes));
+
+      this.view.html(".ql-size.form-select", collected.html);
+    });
+
+    this.view.on("#define-font-size-add-btn", "click", (e) => {
+      const el = this.view.generateCostumFontSizeEdit("Untitled", "100");
+      this.view.append(this.fontSizeContainer, el);
+      this.view.toggle(this.fontSizeContainer, "ph", false);
+    });
+
+    this.view.on(this.fontSizeContainer, "click", (e) => {
+      const action = e.target.dataset.action;
+      if (!action) return;
+
+      if (action === "remove") {
+        this.view.remove(e.target.closest(".font-size-item"));
+        this.view.toggle(this.fontSizeContainer, "ph", this.model.isNodeEmpty(this.fontSizeContainer));
+      }
+    });
+
+    this.view.on(this.fontSizeContainer, "change", (e) => {
+      if (!e.target.matches(".font-size-size-input")) return;
+
+      let value = Number(e.target.value);
+
+      if (Number.isNaN(value)) {
+        e.target.value = 100;
+        return;
+      }
+
+      if (value < 50) e.target.value = 50;
+      if (value > 200) e.target.value = 200;
+    });
   }
 
   /* 

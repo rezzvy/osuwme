@@ -52,6 +52,16 @@ export default class Model {
       API_BASE: this.env[this.workEnv].API_BASE,
       REDIRECT: this.env[this.workEnv].REDIRECT,
     };
+
+    this.fontSizesDefault = [
+      { name: "Tiny", size: "50" },
+      { name: "Small", size: "85" },
+      { name: "Normal", size: "100" },
+      { name: "Large", size: "150" },
+      { name: "Extra Large", size: "200" },
+    ];
+
+    this.fontSizes = [...this.fontSizesDefault];
   }
 
   /* 

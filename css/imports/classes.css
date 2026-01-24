@@ -168,6 +168,10 @@ ol[data-type] li::after {
   display: block;
 }
 
+.ph.ph-font::after {
+  content: "\f031";
+}
+
 .ph.ph-img::after {
   content: "\f03e";
 }
