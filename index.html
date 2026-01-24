@@ -461,17 +461,17 @@
             </div>
 
             <div class="modal-body p-3">
+              <p class="alert alert-warning p-2 mb-1">
+                <i class="fa fa-info-circle fa-fw"></i> You can reduce the BBCode output length by turning on the compress switch.
+              </p>
+
               <p id="clipboard-alert" class="alert alert-success p-2 mb-3 d-none">
                 <i class="fa fa-info-circle fa-fw"></i> Successfully copied to clipboard!
               </p>
 
               <div style="background-color: #4e4248" class="p-3 mb-2 rounded-2">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-1">
-                  <div
-                    class="form-check form-switch d-flex align-items-center gap-2 m-0 p-0"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="Please note that this feature is still experimental and may break in some cases."
-                  >
+                  <div class="form-check form-switch d-flex align-items-center gap-2 m-0 p-0">
                     <input id="bbcode-cleaned-switch" class="form-check-input fs-4 m-0 p-0" type="checkbox" role="switch" />
                     <label class="form-check-label" for="bbcode-cleaned-switch">Compress</label>
                   </div>
@@ -501,6 +501,9 @@
                   readonly
                 ></textarea>
               </div>
+              <p class="osu-style">
+                Output: <code class="inline"> <span id="output-length-text"></span></code>
+              </p>
             </div>
 
             <div class="modal-footer pb-3 pt-0 px-3 gap-2">
@@ -575,6 +578,6 @@
     <script src="./lib/emoji/emoji-mart.js"></script>
     <script src="./lib/normalizer.js"></script>
 
-    <script src="./src/main.js?v=JAN_23_2026" type="module"></script>
+    <script src="./src/main.js?v=JAN_24_2026" type="module"></script>
   </body>
 </html>

@@ -198,8 +198,11 @@ export default (controller) => {
         const cleanedHTML = await model.optimizer.processAsync(fixRepetitiveLinks);
         const output = model.output(cleanedHTML);
 
+        const compressedLength = model.calculateStringChars(output);
+
         view.text("#before-compression-text", model.calculateStringChars(textarea.dataset.original) + " characters");
-        view.text("#after-compression-text", model.calculateStringChars(output) + " characters");
+        view.text("#after-compression-text", compressedLength + " characters");
+        view.text("#output-length-text", compressedLength + " characters");
         view.html(textarea, output);
       } catch (e) {
         alert("Opsieee!!! Something went wrong qmq");
@@ -207,7 +210,6 @@ export default (controller) => {
       } finally {
         view.disable(false, "#bbcode-cleaned-switch", "#merged-inline-code-check");
       }
-
       return;
     }
 
@@ -216,7 +218,10 @@ export default (controller) => {
     view.html(textarea, textarea.dataset.original);
     textarea.dataset.original = "";
 
+    const outputLengthTextElement = view.el("#output-length-text");
+
     view.text("#before-compression-text", "N/A");
     view.text("#after-compression-text", "N/A");
+    view.text(outputLengthTextElement, outputLengthTextElement.dataset.originalLength + " characters");
   };
 };

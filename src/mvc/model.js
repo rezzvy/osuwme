@@ -271,7 +271,7 @@ export default class Model {
   calculateStringChars(str) {
     let count = 0;
     for (const _ of str) count++;
-    return count;
+    return count.toLocaleString("id-ID");
   }
 
   removeArrayItem(arr, value) {

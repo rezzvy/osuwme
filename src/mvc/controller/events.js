@@ -109,7 +109,13 @@ export default (controller) => {
 
     view.on("#getcode-modal", "show.bs.modal", async () => {
       const fixRepetitiveLinks = controller.mergeGradientLinks(view.html("#canvas-wrapper"));
-      view.html("#code-output-textarea", model.output(fixRepetitiveLinks));
+
+      const textarea = view.el("#code-output-textarea");
+      view.html(textarea, model.output(fixRepetitiveLinks));
+
+      const outputLength = model.calculateStringChars(textarea.value);
+      view.text("#output-length-text", outputLength + " characters");
+      view.dataset("#output-length-text", "originalLength", outputLength);
     });
 
     view.on("#merged-inline-code-check", "input", async (e) => {
