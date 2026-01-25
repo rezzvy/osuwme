@@ -1,9 +1,10 @@
 {
-  "latest_updated": "Jan 24, 2026",
+  "latest_updated": "Jan 26, 2026",
   "changelogs": [
     {
       "date": "Anniversary Update (Dec 2025/Jan 2026)",
       "changes": [
+        "Added new flag-style icons for assets and the flag wrapper (same icons as on osu! web)",
         "Added Define Costum Font Size feature (from 50 to 200)",
         "Added BBCode Output Compression feature",
         "Added emoji picker to the text editor",

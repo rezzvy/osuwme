@@ -153,10 +153,10 @@ em-emoji-picker {
   cursor: pointer;
 }
 
-.country-input-wrapper ._auto-complete ._item img {
+/* .country-input-wrapper ._auto-complete ._item img {
   width: 16px;
   height: 11px;
-}
+} */
 
 .country-input-wrapper ._auto-complete ._item:hover,
 .flag-item-content.active {

@@ -74,7 +74,7 @@ export default (controller) => {
     `;
   };
 
-  view.generateFlagItem = (username, countryId, countryName) => {
+  view.generateFlagItem = (username, countryId, countryName, flagUrl) => {
     const div = document.createElement("div");
 
     div.className = "flag-item d-flex align-items-center gap-1";
@@ -91,7 +91,7 @@ export default (controller) => {
     data-code="${countryId}" 
     class="flag-item-content flex-fill rounded-2 px-2 d-flex align-items-center gap-1" 
     style="background:rgba(255, 255, 255, 0.125); min-height:31px;">
-      <img class="pe-none" src="./assets/countries/${countryId}.gif"> 
+      <img class="pe-none" src="${flagUrl}"> 
       <span class="pe-none d-block flex-fill fw-bold link-pink">${username}</span>
     </div>
  

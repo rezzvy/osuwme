@@ -52,6 +52,8 @@ export default class {
         "./assets/gamemode_icons/mania_white.png",
       ],
     };
+
+    this.type === "new";
   }
 
   renderAssets() {
@@ -119,11 +121,11 @@ export default class {
     }
 
     filteredCountries.forEach((country, index) => {
-      const { img, name } = country;
+      const { code, name } = country;
 
       const skeleton = `
-     <button class="btn btn-outline-light btn-sm" data-action="assets">
-              <img class="pe-none" src="./assets/countries/${img}" alt="${name}" />
+     <button class="country-item-assets btn btn-outline-light btn-sm" data-action="assets" data-code="${code}">
+              <img class="pe-none" src="${this.model.handler.flags.buildSrc(this.type, code)}"  alt="${name}" />
       </button>
     `;
 
@@ -168,11 +170,14 @@ export default class {
     this.editorContainer = this.view.el("#text-editor", this.parent);
 
     this.countries = this.model.handler.flags.countries;
+
     this.assetContainer = this.view.el(".assets-form", this.parent);
     this.cuontryAssetInput = this.view.el("#assets-country-input", this.parent);
     this.countryAssetWrapper = this.view.el("#country-assets-search-result", this.parent);
 
     this.fontSizeContainer = this.view.el("#define-font-size-item-container", this.parent);
+
+    this.useNewFlagSwitch = this.view.el("#switch-flag-style-icons-te", this.parent);
   }
 
   _target() {
@@ -311,6 +316,12 @@ export default class {
 
       if (value < 50) e.target.value = 50;
       if (value > 200) e.target.value = 200;
+    });
+
+    this.view.on(this.useNewFlagSwitch, "input", (e) => {
+      this.type = e.target.checked === true ? "new" : "old";
+
+      this.model.handler.flags.updateRenderedFlag(".country-item-assets", this.assetContainer, this.type);
     });
   }
 

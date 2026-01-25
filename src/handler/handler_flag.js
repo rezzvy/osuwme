@@ -5,216 +5,216 @@ export default class {
     this.view = this.controller.view;
 
     this.countries = [
-      { img: "ad.gif", name: "Andorra" },
-      { img: "ae.gif", name: "United Arab Emirates" },
-      { img: "af.gif", name: "Afghanistan" },
-      { img: "ag.gif", name: "Antigua and Barbuda" },
-      { img: "ai.gif", name: "Anguilla" },
-      { img: "al.gif", name: "Albania" },
-      { img: "am.gif", name: "Armenia" },
-      { img: "an.gif", name: "Netherlands Antilles" },
-      { img: "ao.gif", name: "Angola" },
-      { img: "ar.gif", name: "Argentina" },
-      { img: "as.gif", name: "American Samoa" },
-      { img: "at.gif", name: "Austria" },
-      { img: "au.gif", name: "Australia" },
-      { img: "aw.gif", name: "Aruba" },
-      { img: "az.gif", name: "Azerbaijan" },
-      { img: "ba.gif", name: "Bosnia and Herzegovina" },
-      { img: "bb.gif", name: "Barbados" },
-      { img: "bd.gif", name: "Bangladesh" },
-      { img: "be.gif", name: "Belgium" },
-      { img: "bf.gif", name: "Burkina Faso" },
-      { img: "bg.gif", name: "Bulgaria" },
-      { img: "bh.gif", name: "Bahrain" },
-      { img: "bi.gif", name: "Burundi" },
-      { img: "bj.gif", name: "Benin" },
-      { img: "bm.gif", name: "Bermuda" },
-      { img: "bn.gif", name: "Brunei" },
-      { img: "bo.gif", name: "Bolivia" },
-      { img: "br.gif", name: "Brazil" },
-      { img: "bs.gif", name: "Bahamas" },
-      { img: "bt.gif", name: "Bhutan" },
-      { img: "bw.gif", name: "Botswana" },
-      { img: "by.gif", name: "Belarus" },
-      { img: "bz.gif", name: "Belize" },
-      { img: "ca.gif", name: "Canada" },
-      { img: "cd.gif", name: "Congo (Kinshasa)" },
-      { img: "cf.gif", name: "Central African Republic" },
-      { img: "cg.gif", name: "Congo (Brazzaville)" },
-      { img: "ch.gif", name: "Switzerland" },
-      { img: "ci.gif", name: "Ivory Coast" },
-      { img: "ck.gif", name: "Cook Islands" },
-      { img: "cl.gif", name: "Chile" },
-      { img: "cm.gif", name: "Cameroon" },
-      { img: "cn.gif", name: "China" },
-      { img: "co.gif", name: "Colombia" },
-      { img: "cr.gif", name: "Costa Rica" },
-      { img: "cu.gif", name: "Cuba" },
-      { img: "cv.gif", name: "Cape Verde" },
-      { img: "cy.gif", name: "Cyprus" },
-      { img: "cz.gif", name: "Czech Republic" },
-      { img: "de.gif", name: "Germany" },
-      { img: "dj.gif", name: "Djibouti" },
-      { img: "dk.gif", name: "Denmark" },
-      { img: "dm.gif", name: "Dominica" },
-      { img: "do.gif", name: "Dominican Republic" },
-      { img: "dz.gif", name: "Algeria" },
-      { img: "ec.gif", name: "Ecuador" },
-      { img: "ee.gif", name: "Estonia" },
-      { img: "eg.gif", name: "Egypt" },
-      { img: "eh.gif", name: "Western Sahara" },
-      { img: "er.gif", name: "Eritrea" },
-      { img: "es.gif", name: "Spain" },
-      { img: "et.gif", name: "Ethiopia" },
-      { img: "fi.gif", name: "Finland" },
-      { img: "fj.gif", name: "Fiji" },
-      { img: "fm.gif", name: "Micronesia" },
-      { img: "fr.gif", name: "France" },
-      { img: "ga.gif", name: "Gabon" },
-      { img: "gb.gif", name: "United Kingdom" },
-      { img: "gd.gif", name: "Grenada" },
-      { img: "ge.gif", name: "Georgia" },
-      { img: "gh.gif", name: "Ghana" },
-      { img: "gi.gif", name: "Gibraltar" },
-      { img: "gl.gif", name: "Greenland" },
-      { img: "gm.gif", name: "Gambia" },
-      { img: "gn.gif", name: "Guinea" },
-      { img: "gq.gif", name: "Equatorial Guinea" },
-      { img: "gr.gif", name: "Greece" },
-      { img: "gt.gif", name: "Guatemala" },
-      { img: "gw.gif", name: "Guinea-Bissau" },
-      { img: "gy.gif", name: "Guyana" },
-      { img: "hk.gif", name: "Hong Kong" },
-      { img: "hn.gif", name: "Honduras" },
-      { img: "hr.gif", name: "Croatia" },
-      { img: "ht.gif", name: "Haiti" },
-      { img: "hu.gif", name: "Hungary" },
-      { img: "id.gif", name: "Indonesia" },
-      { img: "ie.gif", name: "Ireland" },
-      { img: "il.gif", name: "Israel" },
-      { img: "in.gif", name: "India" },
-      { img: "iq.gif", name: "Iraq" },
-      { img: "ir.gif", name: "Iran" },
-      { img: "is.gif", name: "Iceland" },
-      { img: "it.gif", name: "Italy" },
-      { img: "jm.gif", name: "Jamaica" },
-      { img: "jo.gif", name: "Jordan" },
-      { img: "jp.gif", name: "Japan" },
-      { img: "ke.gif", name: "Kenya" },
-      { img: "kg.gif", name: "Kyrgyzstan" },
-      { img: "kh.gif", name: "Cambodia" },
-      { img: "ki.gif", name: "Kiribati" },
-      { img: "km.gif", name: "Comoros" },
-      { img: "kn.gif", name: "Saint Kitts and Nevis" },
-      { img: "kp.gif", name: "North Korea" },
-      { img: "kr.gif", name: "South Korea" },
-      { img: "kw.gif", name: "Kuwait" },
-      { img: "kz.gif", name: "Kazakhstan" },
-      { img: "la.gif", name: "Laos" },
-      { img: "lb.gif", name: "Lebanon" },
-      { img: "lc.gif", name: "Saint Lucia" },
-      { img: "li.gif", name: "Liechtenstein" },
-      { img: "lk.gif", name: "Sri Lanka" },
-      { img: "lr.gif", name: "Liberia" },
-      { img: "ls.gif", name: "Lesotho" },
-      { img: "lt.gif", name: "Lithuania" },
-      { img: "lu.gif", name: "Luxembourg" },
-      { img: "lv.gif", name: "Latvia" },
-      { img: "ly.gif", name: "Libya" },
-      { img: "ma.gif", name: "Morocco" },
-      { img: "mc.gif", name: "Monaco" },
-      { img: "md.gif", name: "Moldova" },
-      { img: "mg.gif", name: "Madagascar" },
-      { img: "mh.gif", name: "Marshall Islands" },
-      { img: "mk.gif", name: "North Macedonia" },
-      { img: "ml.gif", name: "Mali" },
-      { img: "mm.gif", name: "Myanmar" },
-      { img: "mn.gif", name: "Mongolia" },
-      { img: "mo.gif", name: "Macau" },
-      { img: "mr.gif", name: "Mauritania" },
-      { img: "mt.gif", name: "Malta" },
-      { img: "mu.gif", name: "Mauritius" },
-      { img: "mv.gif", name: "Maldives" },
-      { img: "mw.gif", name: "Malawi" },
-      { img: "mx.gif", name: "Mexico" },
-      { img: "my.gif", name: "Malaysia" },
-      { img: "mz.gif", name: "Mozambique" },
-      { img: "na.gif", name: "Namibia" },
-      { img: "ne.gif", name: "Niger" },
-      { img: "ng.gif", name: "Nigeria" },
-      { img: "ni.gif", name: "Nicaragua" },
-      { img: "nl.gif", name: "Netherlands" },
-      { img: "no.gif", name: "Norway" },
-      { img: "np.gif", name: "Nepal" },
-      { img: "nr.gif", name: "Nauru" },
-      { img: "nz.gif", name: "New Zealand" },
-      { img: "om.gif", name: "Oman" },
-      { img: "pa.gif", name: "Panama" },
-      { img: "pe.gif", name: "Peru" },
-      { img: "pg.gif", name: "Papua New Guinea" },
-      { img: "ph.gif", name: "Philippines" },
-      { img: "pk.gif", name: "Pakistan" },
-      { img: "pl.gif", name: "Poland" },
-      { img: "pr.gif", name: "Puerto Rico" },
-      { img: "ps.gif", name: "Palestine" },
-      { img: "pt.gif", name: "Portugal" },
-      { img: "pw.gif", name: "Palau" },
-      { img: "py.gif", name: "Paraguay" },
-      { img: "qa.gif", name: "Qatar" },
-      { img: "ro.gif", name: "Romania" },
-      { img: "ru.gif", name: "Russia" },
-      { img: "rw.gif", name: "Rwanda" },
-      { img: "sa.gif", name: "Saudi Arabia" },
-      { img: "sb.gif", name: "Solomon Islands" },
-      { img: "sc.gif", name: "Seychelles" },
-      { img: "sd.gif", name: "Sudan" },
-      { img: "se.gif", name: "Sweden" },
-      { img: "sg.gif", name: "Singapore" },
-      { img: "si.gif", name: "Slovenia" },
-      { img: "sk.gif", name: "Slovakia" },
-      { img: "sl.gif", name: "Sierra Leone" },
-      { img: "sm.gif", name: "San Marino" },
-      { img: "sn.gif", name: "Senegal" },
-      { img: "so.gif", name: "Somalia" },
-      { img: "sr.gif", name: "Suriname" },
-      { img: "st.gif", name: "Sao Tome and Principe" },
-      { img: "sv.gif", name: "El Salvador" },
-      { img: "sy.gif", name: "Syria" },
-      { img: "sz.gif", name: "Eswatini" },
-      { img: "tc.gif", name: "Turks and Caicos Islands" },
-      { img: "td.gif", name: "Chad" },
-      { img: "tg.gif", name: "Togo" },
-      { img: "th.gif", name: "Thailand" },
-      { img: "tj.gif", name: "Tajikistan" },
-      { img: "tk.gif", name: "Tokelau" },
-      { img: "tl.gif", name: "East Timor" },
-      { img: "tm.gif", name: "Turkmenistan" },
-      { img: "tn.gif", name: "Tunisia" },
-      { img: "to.gif", name: "Tonga" },
-      { img: "tr.gif", name: "Turkey" },
-      { img: "tt.gif", name: "Trinidad and Tobago" },
-      { img: "tv.gif", name: "Tuvalu" },
-      { img: "tw.gif", name: "Taiwan" },
-      { img: "tz.gif", name: "Tanzania" },
-      { img: "ua.gif", name: "Ukraine" },
-      { img: "ug.gif", name: "Uganda" },
-      { img: "us.gif", name: "United States" },
-      { img: "uy.gif", name: "Uruguay" },
-      { img: "uz.gif", name: "Uzbekistan" },
-      { img: "va.gif", name: "Vatican City" },
-      { img: "vc.gif", name: "Saint Vincent and the Grenadines" },
-      { img: "ve.gif", name: "Venezuela" },
-      { img: "vn.gif", name: "Vietnam" },
-      { img: "vu.gif", name: "Vanuatu" },
-      { img: "ws.gif", name: "Samoa" },
-      { img: "ye.gif", name: "Yemen" },
-      { img: "za.gif", name: "South Africa" },
-      { img: "zm.gif", name: "Zambia" },
-      { img: "zw.gif", name: "Zimbabwe" },
+      { code: "ad", name: "Andorra" },
+      { code: "ae", name: "United Arab Emirates" },
+      { code: "af", name: "Afghanistan" },
+      { code: "ag", name: "Antigua and Barbuda" },
+      { code: "ai", name: "Anguilla" },
+      { code: "al", name: "Albania" },
+      { code: "am", name: "Armenia" },
+      { code: "ao", name: "Angola" },
+      { code: "ar", name: "Argentina" },
+      { code: "as", name: "American Samoa" },
+      { code: "at", name: "Austria" },
+      { code: "au", name: "Australia" },
+      { code: "aw", name: "Aruba" },
+      { code: "az", name: "Azerbaijan" },
+      { code: "ba", name: "Bosnia and Herzegovina" },
+      { code: "bb", name: "Barbados" },
+      { code: "bd", name: "Bangladesh" },
+      { code: "be", name: "Belgium" },
+      { code: "bf", name: "Burkina Faso" },
+      { code: "bg", name: "Bulgaria" },
+      { code: "bh", name: "Bahrain" },
+      { code: "bi", name: "Burundi" },
+      { code: "bj", name: "Benin" },
+      { code: "bm", name: "Bermuda" },
+      { code: "bn", name: "Brunei" },
+      { code: "bo", name: "Bolivia" },
+      { code: "br", name: "Brazil" },
+      { code: "bs", name: "Bahamas" },
+      { code: "bt", name: "Bhutan" },
+      { code: "bw", name: "Botswana" },
+      { code: "by", name: "Belarus" },
+      { code: "bz", name: "Belize" },
+      { code: "ca", name: "Canada" },
+      { code: "cd", name: "Congo (Kinshasa)" },
+      { code: "cf", name: "Central African Republic" },
+      { code: "cg", name: "Congo (Brazzaville)" },
+      { code: "ch", name: "Switzerland" },
+      { code: "ci", name: "Ivory Coast" },
+      { code: "ck", name: "Cook Islands" },
+      { code: "cl", name: "Chile" },
+      { code: "cm", name: "Cameroon" },
+      { code: "cn", name: "China" },
+      { code: "co", name: "Colombia" },
+      { code: "cr", name: "Costa Rica" },
+      { code: "cu", name: "Cuba" },
+      { code: "cv", name: "Cape Verde" },
+      { code: "cy", name: "Cyprus" },
+      { code: "cz", name: "Czech Republic" },
+      { code: "de", name: "Germany" },
+      { code: "dj", name: "Djibouti" },
+      { code: "dk", name: "Denmark" },
+      { code: "dm", name: "Dominica" },
+      { code: "do", name: "Dominican Republic" },
+      { code: "dz", name: "Algeria" },
+      { code: "ec", name: "Ecuador" },
+      { code: "ee", name: "Estonia" },
+      { code: "eg", name: "Egypt" },
+      { code: "eh", name: "Western Sahara" },
+      { code: "er", name: "Eritrea" },
+      { code: "es", name: "Spain" },
+      { code: "et", name: "Ethiopia" },
+      { code: "fi", name: "Finland" },
+      { code: "fj", name: "Fiji" },
+      { code: "fm", name: "Micronesia" },
+      { code: "fr", name: "France" },
+      { code: "ga", name: "Gabon" },
+      { code: "gb", name: "United Kingdom" },
+      { code: "gd", name: "Grenada" },
+      { code: "ge", name: "Georgia" },
+      { code: "gh", name: "Ghana" },
+      { code: "gi", name: "Gibraltar" },
+      { code: "gl", name: "Greenland" },
+      { code: "gm", name: "Gambia" },
+      { code: "gn", name: "Guinea" },
+      { code: "gq", name: "Equatorial Guinea" },
+      { code: "gr", name: "Greece" },
+      { code: "gt", name: "Guatemala" },
+      { code: "gw", name: "Guinea-Bissau" },
+      { code: "gy", name: "Guyana" },
+      { code: "hk", name: "Hong Kong" },
+      { code: "hn", name: "Honduras" },
+      { code: "hr", name: "Croatia" },
+      { code: "ht", name: "Haiti" },
+      { code: "hu", name: "Hungary" },
+      { code: "id", name: "Indonesia" },
+      { code: "ie", name: "Ireland" },
+      { code: "il", name: "Israel" },
+      { code: "in", name: "India" },
+      { code: "iq", name: "Iraq" },
+      { code: "ir", name: "Iran" },
+      { code: "is", name: "Iceland" },
+      { code: "it", name: "Italy" },
+      { code: "jm", name: "Jamaica" },
+      { code: "jo", name: "Jordan" },
+      { code: "jp", name: "Japan" },
+      { code: "ke", name: "Kenya" },
+      { code: "kg", name: "Kyrgyzstan" },
+      { code: "kh", name: "Cambodia" },
+      { code: "ki", name: "Kiribati" },
+      { code: "km", name: "Comoros" },
+      { code: "kn", name: "Saint Kitts and Nevis" },
+      { code: "kp", name: "North Korea" },
+      { code: "kr", name: "South Korea" },
+      { code: "kw", name: "Kuwait" },
+      { code: "kz", name: "Kazakhstan" },
+      { code: "la", name: "Laos" },
+      { code: "lb", name: "Lebanon" },
+      { code: "lc", name: "Saint Lucia" },
+      { code: "li", name: "Liechtenstein" },
+      { code: "lk", name: "Sri Lanka" },
+      { code: "lr", name: "Liberia" },
+      { code: "ls", name: "Lesotho" },
+      { code: "lt", name: "Lithuania" },
+      { code: "lu", name: "Luxembourg" },
+      { code: "lv", name: "Latvia" },
+      { code: "ly", name: "Libya" },
+      { code: "ma", name: "Morocco" },
+      { code: "mc", name: "Monaco" },
+      { code: "md", name: "Moldova" },
+      { code: "mg", name: "Madagascar" },
+      { code: "mh", name: "Marshall Islands" },
+      { code: "mk", name: "North Macedonia" },
+      { code: "ml", name: "Mali" },
+      { code: "mm", name: "Myanmar" },
+      { code: "mn", name: "Mongolia" },
+      { code: "mo", name: "Macau" },
+      { code: "mr", name: "Mauritania" },
+      { code: "mt", name: "Malta" },
+      { code: "mu", name: "Mauritius" },
+      { code: "mv", name: "Maldives" },
+      { code: "mw", name: "Malawi" },
+      { code: "mx", name: "Mexico" },
+      { code: "my", name: "Malaysia" },
+      { code: "mz", name: "Mozambique" },
+      { code: "na", name: "Namibia" },
+      { code: "ne", name: "Niger" },
+      { code: "ng", name: "Nigeria" },
+      { code: "ni", name: "Nicaragua" },
+      { code: "nl", name: "Netherlands" },
+      { code: "no", name: "Norway" },
+      { code: "np", name: "Nepal" },
+      { code: "nr", name: "Nauru" },
+      { code: "nz", name: "New Zealand" },
+      { code: "om", name: "Oman" },
+      { code: "pa", name: "Panama" },
+      { code: "pe", name: "Peru" },
+      { code: "pg", name: "Papua New Guinea" },
+      { code: "ph", name: "Philippines" },
+      { code: "pk", name: "Pakistan" },
+      { code: "pl", name: "Poland" },
+      { code: "pr", name: "Puerto Rico" },
+      { code: "ps", name: "Palestine" },
+      { code: "pt", name: "Portugal" },
+      { code: "pw", name: "Palau" },
+      { code: "py", name: "Paraguay" },
+      { code: "qa", name: "Qatar" },
+      { code: "ro", name: "Romania" },
+      { code: "ru", name: "Russia" },
+      { code: "rw", name: "Rwanda" },
+      { code: "sa", name: "Saudi Arabia" },
+      { code: "sb", name: "Solomon Islands" },
+      { code: "sc", name: "Seychelles" },
+      { code: "sd", name: "Sudan" },
+      { code: "se", name: "Sweden" },
+      { code: "sg", name: "Singapore" },
+      { code: "si", name: "Slovenia" },
+      { code: "sk", name: "Slovakia" },
+      { code: "sl", name: "Sierra Leone" },
+      { code: "sm", name: "San Marino" },
+      { code: "sn", name: "Senegal" },
+      { code: "so", name: "Somalia" },
+      { code: "sr", name: "Suriname" },
+      { code: "st", name: "Sao Tome and Principe" },
+      { code: "sv", name: "El Salvador" },
+      { code: "sy", name: "Syria" },
+      { code: "sz", name: "Eswatini" },
+      { code: "tc", name: "Turks and Caicos Islands" },
+      { code: "td", name: "Chad" },
+      { code: "tg", name: "Togo" },
+      { code: "th", name: "Thailand" },
+      { code: "tj", name: "Tajikistan" },
+      { code: "tk", name: "Tokelau" },
+      { code: "tl", name: "East Timor" },
+      { code: "tm", name: "Turkmenistan" },
+      { code: "tn", name: "Tunisia" },
+      { code: "to", name: "Tonga" },
+      { code: "tr", name: "Turkey" },
+      { code: "tt", name: "Trinidad and Tobago" },
+      { code: "tv", name: "Tuvalu" },
+      { code: "tw", name: "Taiwan" },
+      { code: "tz", name: "Tanzania" },
+      { code: "ua", name: "Ukraine" },
+      { code: "ug", name: "Uganda" },
+      { code: "us", name: "United States" },
+      { code: "uy", name: "Uruguay" },
+      { code: "uz", name: "Uzbekistan" },
+      { code: "va", name: "Vatican City" },
+      { code: "vc", name: "Saint Vincent and the Grenadines" },
+      { code: "ve", name: "Venezuela" },
+      { code: "vn", name: "Vietnam" },
+      { code: "vu", name: "Vanuatu" },
+      { code: "ws", name: "Samoa" },
+      { code: "ye", name: "Yemen" },
+      { code: "za", name: "South Africa" },
+      { code: "zm", name: "Zambia" },
+      { code: "zw", name: "Zimbabwe" },
     ];
 
     this.activeItem = null;
+    this.type = "new";
   }
 
   /* 
@@ -233,6 +233,7 @@ export default class {
     this.itemContainer = this.view.el("#flag-edit-item-container", this.parent);
 
     this.displayHorizontalCheck = this.view.el("#flag-display-horizontal-check", this.parent);
+    this.useNewFlagSwitch = this.view.el("#switch-flag-style-icons-fe", this.parent);
   }
 
   _target() {
@@ -246,6 +247,13 @@ export default class {
   ========================================= 
   */
 
+  buildSrc(type, code) {
+    const path = type === "old" ? "./assets/countries/" : "./assets/countries/new/";
+    const prefix = type === "old" ? ".gif" : ".svg";
+
+    return path + code + prefix;
+  }
+
   getCountries(query) {
     this.view.html(this.autoCompleteContainer, "");
 
@@ -255,11 +263,11 @@ export default class {
     }
 
     filteredCountries.forEach((country, index) => {
-      const { img, name } = country;
+      const { code, name } = country;
 
       const skeleton = `
-    <div class="_item p-2" tabindex="${index + 1}" data-code="${img.substring(0, 2)}" data-name="${name}">
-      <img class="pe-none" src="./assets/countries/${img}" alt="${name}" />
+    <div class="_item p-2" tabindex="${index + 1}" data-code="${code}" data-name="${name}">
+      <img class="pe-none" src="${this.buildSrc(this.type, code)}" alt="${name}" />
       <span class="pe-none">${name}</span>
     </div>
     `;
@@ -272,6 +280,13 @@ export default class {
     this.usernameInput.value = name;
     this.countryNameInput.value = country;
     this.view.disable(boolean, this.usernameInput, this.countryNameInput);
+  }
+
+  updateRenderedFlag(itemSelector, parent, type) {
+    this.view.els(itemSelector, parent).forEach((el) => {
+      const img = this.view.el("img", el);
+      img.src = this.buildSrc(type, el.dataset.code);
+    });
   }
 
   /* 
@@ -300,7 +315,7 @@ export default class {
     });
 
     this.view.on(this.addFlagButton, "click", (e) => {
-      this.view.append(this.itemContainer, this.view.generateFlagItem("rezzvy", "id", "Indonesia"));
+      this.view.append(this.itemContainer, this.view.generateFlagItem("rezzvy", "id", "Indonesia", this.buildSrc(this.type, "id")));
 
       this.view.disable(false, "#modal-edit-save");
       this.view.toggle(this.itemContainer, "ph", false);
@@ -319,7 +334,7 @@ export default class {
         this.activeItem.dataset.countryName = name;
 
         const img = this.activeItem.firstElementChild;
-        img.src = `./assets/countries/${e.target.dataset.code}.gif`;
+        img.src = this.buildSrc(this.type, e.target.dataset.code);
       }
 
       this.view.val(this.countryNameInput, name);
@@ -339,6 +354,16 @@ export default class {
 
       this.activeItem.dataset.username = e.target.value;
       this.view.text(this.activeItem.lastElementChild, e.target.value);
+    });
+
+    this.view.on(this.useNewFlagSwitch, "input", (e) => {
+      this.type = e.target.checked === true ? "new" : "old";
+      this.updateRenderedFlag(".flag-item-content", this.itemContainer, this.type);
+
+      this.view.toggle(this.activeItem, "active", false);
+      this.clear(true);
+
+      this.activeItem = null;
     });
   }
 
@@ -411,7 +436,7 @@ export default class {
 
       for (const item of items) {
         const { username, code, countryName } = item.dataset;
-        fragment.appendChild(this.view.generateFlagItem(username, code, countryName));
+        fragment.appendChild(this.view.generateFlagItem(username, code, countryName, this.buildSrc(this.type, code)));
       }
 
       this.view.append(this.itemContainer, fragment);
