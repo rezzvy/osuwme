@@ -24,14 +24,6 @@
     "handlerPath": "../../../src/handler/handler_list.js",
     "editable": true
   },
-  "heading": {
-    "tooltipTitle": "Heading",
-    "icon": "fa-header",
-    "modalPath": "./src/modal/modal_heading.html",
-    "skeletonPath": "./src/skeleton/skeleton_heading.html",
-    "handlerPath": "../../../src/handler/handler_heading.js",
-    "editable": true
-  },
   "text": {
     "tooltipTitle": "Text",
     "icon": "fa-paragraph",
@@ -49,7 +41,7 @@
     "editable": true
   },
   "image": {
-    "tooltipTitle": "Block Image",
+    "tooltipTitle": "Image Block",
     "icon": "fa-picture-o",
     "modalPath": "./src/modal/modal_image.html",
     "skeletonPath": "./src/skeleton/skeleton_image.html",

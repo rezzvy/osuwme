@@ -4,6 +4,7 @@
     {
       "date": "Anniversary Update (Dec 2025/Jan 2026)",
       "changes": [
+        "Removed 'Heading' element and moved it to the text editor (Any existing heading element will be converted to text).",
         "Added new flag-style icons for assets and the flag wrapper (same icons as on osu! web)",
         "Added Define Costum Font Size feature (from 50 to 200)",
         "Added BBCode Output Compression feature",

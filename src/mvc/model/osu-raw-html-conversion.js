@@ -31,26 +31,9 @@ export default function (controller) {
   });
 
   controller.model.registerClonedBBCodeConversion("h2", (api) => {
-    const { node, content } = api;
+    const style = api.node.getAttribute("style") || "";
 
-    if (node.children.length === 0) {
-      const html = `<div class='heading'>${content}</div>`;
-      return generateClonedItem("heading", "true", html).outerHTML;
-    }
-
-    const hasCustomSize = node.querySelector('[style*="font-size"]:not(.h2-fs)');
-    const color = node.style.color;
-
-    const cssClasses = ["heading", "costum"];
-    if (!hasCustomSize) cssClasses.push("h2-fs");
-
-    const inlineStyles = [];
-    if (color) inlineStyles.push(`color:${color}`);
-
-    const styleAttr = inlineStyles.length > 0 ? `style="${inlineStyles.join(";")}"` : "";
-
-    const finalHtml = `<h2 class="${cssClasses.join(" ")}" ${styleAttr}>${content}</h2>`;
-    return generateClonedItem("text", "true", finalHtml).outerHTML;
+    return generateClonedItem("text", "true", `<h2 style="${style}">${api.content}</h2>`).outerHTML;
   });
 
   controller.model.registerClonedBBCodeConversion("ol", (api) => {

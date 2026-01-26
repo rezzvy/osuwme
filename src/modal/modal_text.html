@@ -12,8 +12,8 @@
 <div id="text-editor-toolbar" class="ql-toolbar">
   <p class="alert alert-primary py-1 px-2 mb-2">
     <i class="fa fa-info-circle"></i>
-    If you want to add color or a gradient to a link, add the link first. And To apply a font style, select the text first, then choose a font style.
-    Also any opacity below 1 will be converted to 1 in the BBCode output.
+    To apply a format, select the text and click the format button. To clear formatting, either select text and click the trash icon, or just click it
+    directly (any text typed after that will be plain/raw).
   </p>
 
   <div id="text-editor-toolbar" class="position-sticky top-0 z-3">
@@ -98,19 +98,24 @@
           <button class="ql-strike btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Strikethrough">
             <i class="fa fa-strikethrough fa-fw"></i>
           </button>
+
           <button class="ql-underline btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Underline">
             <i class="fa fa-underline fa-fw"></i>
+          </button>
+
+          <button class="ql-header btn btn-outline-light btn-sm p-1" value="2" data-bs-toggle="tooltip" data-bs-title="Heading">
+            <i class="fa fa-header fa-fw"></i>
           </button>
 
           <button class="ql-link btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Link">
             <i class="fa fa-link fa-fw"></i>
           </button>
 
-          <button class="ql-profile btn btn-outline-light btn-sm p-1 me-md-2" data-bs-toggle="tooltip" data-bs-title="Profile Link">
+          <button class="ql-profile btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Profile Link">
             <i class="fa fa-user fa-fw"></i>
           </button>
 
-          <button class="ql-image btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Inline Image">
+          <button class="ql-image btn btn-outline-light btn-sm p-1" data-bs-toggle="tooltip" data-bs-title="Image Inline">
             <i class="fa fa-picture-o fa-fw"></i>
           </button>
 
@@ -147,15 +152,6 @@
           <button id="text-editor-color-picker"></button>
 
           <select class="ql-size form-select form-select-sm ms-2 me-1" style="max-width: 94px"></select>
-
-          <button
-            id="define-costum-font-size-modal-btn"
-            class="btn btn-outline-light fw-semibold btn-sm px-1"
-            data-bs-toggle="tooltip"
-            data-bs-title="Define Costum Font Size"
-          >
-            <i class="fa fa-font fa-fw"></i>
-          </button>
         </div>
       </div>
     </div>
@@ -163,14 +159,24 @@
 
   <div id="text-editor" class="osu-style modal-box rounded-2 mt-2 text-white"></div>
 
-  <div class="input-group input-group-sm gap-1" style="max-width: max-content">
-    <div class="input-group-text"><span class="badge text-bg-dark">Font Style</span></div>
-    <select class="ql-fancyfont form-select">
-      <option value="">Normal</option>
-      <option value="boldscript">Bold Script (𝓐)</option>
-      <option value="double">Double (𝔸)</option>
-      <option value="circles">Circles (ⓐ)</option>
-      <option value="squares">Squares (🄰)</option>
-    </select>
+  <div class="d-flex justify-content-between align-items-center flex-wrap">
+    <div class="input-group input-group-sm gap-1" style="max-width: max-content">
+      <select class="ql-fancyfont form-select">
+        <option value="">Normal</option>
+        <option value="boldscript">Bold Script (𝓐)</option>
+        <option value="double">Double (𝔸)</option>
+        <option value="circles">Circles (ⓐ)</option>
+        <option value="squares">Squares (🄰)</option>
+      </select>
+    </div>
+
+    <button
+      id="define-costum-font-size-modal-btn"
+      class="btn btn-outline-light fw-semibold btn-sm px-1"
+      data-bs-toggle="tooltip"
+      data-bs-title="Define Costum Font Size"
+    >
+      <i class="fa fa-font fa-fw"></i>
+    </button>
   </div>
 </div>

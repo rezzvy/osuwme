@@ -261,6 +261,10 @@ p > u[style*="color"]:has(a) a {
   font-weight: initial;
 }
 
+h2 > * {
+  font-weight: inherit !important;
+}
+
 .osu-style details summary:not(:has(*)),
 .osu-style details summary p:not(:has(strong)) {
   color: rgb(217, 166, 189);
@@ -381,7 +385,8 @@ p > u[style*="color"]:has(a) a {
   list-style: decimal;
 }
 
-.osu-style .heading {
+.osu-style .heading,
+h2 {
   color: rgb(224, 184, 202);
   font-size: 1.5em;
   font-weight: 700;

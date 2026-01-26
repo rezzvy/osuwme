@@ -19,6 +19,19 @@ export default (controller) => {
       el.textContent = " ";
     });
 
+    // legacy support
+    view.els("._content > .heading").forEach((el) => {
+      const value = el.textContent;
+      const canvasItem = el.closest(".canvas-item");
+
+      const newCanvasItem = controller.renderToCanvas("text", "true", controller.model.uniqueID, false);
+
+      const content = controller.view.el("._content", newCanvasItem);
+      view.html(content, `<h2>${value}</h2>`);
+
+      canvasItem.replaceWith(newCanvasItem);
+    });
+
     view.els("code").forEach((el) => {
       if (el.classList.contains("inline") || !el.dataset.raw) return;
 

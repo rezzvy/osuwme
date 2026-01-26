@@ -103,7 +103,7 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion("img", (api) => {
-    const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S", "LI"];
+    const inline = ["A", "P", "EM", "STRONG", "U", "SPAN", "CODE", "S", "LI", "H2"];
     const source = api.node.dataset.originalSrc || api.node.src;
 
     if (inline.includes(api.node.parentElement.tagName)) {
@@ -117,11 +117,7 @@ export default function (controller) {
     return `${api.content}%NL%`;
   });
 
-  model.registerBBCodeConversion(".heading", (api) => {
-    if (api.node.style.color) {
-      return api.content;
-    }
-
+  model.registerBBCodeConversion(".heading, h2", (api) => {
     return `[heading]${api.content}[/heading]%NL%`;
   });
 

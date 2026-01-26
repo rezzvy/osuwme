@@ -212,7 +212,9 @@ em-emoji-picker {
    ========================================= */
 #element-list-section {
   --menu-pinned-spacing: 16px;
-  transition: padding 0.25s ease-in-out, 0.15s ease-out;
+  transition:
+    padding 0.25s ease-in-out,
+    0.15s ease-out;
 }
 
 #element-list-section.pinned {
@@ -374,10 +376,6 @@ body.auto-hide-canvas-menu .pinned:hover {
   #canvas-element-list {
     overflow: hidden !important;
   }
-
-  #faq-text::after {
-    content: "FAQ" !important;
-  }
 }
 
 /* =========================================
@@ -450,5 +448,5 @@ a {
 }
 
 #faq-text::after {
-  content: "Frequently Asked Questions";
+  content: "FAQ";
 }
