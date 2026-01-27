@@ -207,8 +207,8 @@ export default (controller) => {
   `;
   };
 
-  view.generateModalEditSection = (key, content) => {
-    return `<div data-edit="${key}" class="d-none">${content}</div>`;
+  view.generateModalEditSection = (key, content, tutorial) => {
+    return `<div data-tutorial="${tutorial}" data-edit="${key}" class="d-none">${content}</div>`;
   };
 
   view.generateListItem = (title, content, uniqueID) => {

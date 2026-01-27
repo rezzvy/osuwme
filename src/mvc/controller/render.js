@@ -79,13 +79,13 @@ export default (controller) => {
 
     for (const key in data) {
       const currentIndex = buttonIndex;
-      const { modalPath, skeletonPath, handlerPath } = data[key];
+      const { modalPath, skeletonPath, handlerPath, tutorial } = data[key];
 
       temp.button += view.generateCanvasElementListButton(key, data[key], currentIndex);
 
       if (modalPath) {
         const promise = model.asyncFetchData(modalPath, "text", (res) => {
-          return view.generateModalEditSection(key, res, currentIndex);
+          return view.generateModalEditSection(key, res, tutorial);
         });
         temp.modal.push(promise);
       }

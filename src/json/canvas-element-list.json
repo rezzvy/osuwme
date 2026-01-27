@@ -5,7 +5,8 @@
     "modalPath": "./src/modal/modal_quote.html",
     "skeletonPath": "./src/skeleton/skeleton_quote.html",
     "handlerPath": "../../../src/handler/handler_quote.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/Kg7zWpWyXH8"
   },
 
   "imgmap": {
@@ -14,7 +15,8 @@
     "modalPath": "./src/modal/modal_imgmap.html",
     "skeletonPath": "./src/skeleton/skeleton_imgmap.html",
     "handlerPath": "../../../src/handler/handler_imgmap.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/O2B1qdCbRns"
   },
   "list": {
     "tooltipTitle": "Droppable List",
@@ -22,7 +24,8 @@
     "modalPath": "./src/modal/modal_list.html",
     "skeletonPath": "./src/skeleton/skeleton_list.html",
     "handlerPath": "../../../src/handler/handler_list.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/BTsxlTeKWp0"
   },
   "text": {
     "tooltipTitle": "Text",
@@ -30,7 +33,8 @@
     "modalPath": "./src/modal/modal_text.html",
     "skeletonPath": "./src/skeleton/skeleton_text.html",
     "handlerPath": "../../../src/handler/handler_text.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/E-82G4tPkOc"
   },
   "flags": {
     "tooltipTitle": "Flag Wrapper",
@@ -38,7 +42,8 @@
     "modalPath": "./src/modal/modal_flag.html",
     "skeletonPath": "./src/skeleton/skeleton_flag.html",
     "handlerPath": "../../../src/handler/handler_flag.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/SAYyaC-CuA4"
   },
   "image": {
     "tooltipTitle": "Image Block",
@@ -46,7 +51,8 @@
     "modalPath": "./src/modal/modal_image.html",
     "skeletonPath": "./src/skeleton/skeleton_image.html",
     "handlerPath": "../../../src/handler/handler_image.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/d1XD5gBMgm4"
   },
   "audio": {
     "tooltipTitle": "Audio",
@@ -54,7 +60,8 @@
     "modalPath": "./src/modal/modal_audio.html",
     "skeletonPath": "./src/skeleton/skeleton_audio.html",
     "handlerPath": "../../../src/handler/handler_audio.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/d1XD5gBMgm4"
   },
   "youtube": {
     "tooltipTitle": "Video",
@@ -62,7 +69,8 @@
     "modalPath": "./src/modal/modal_youtube.html",
     "skeletonPath": "./src/skeleton/skeleton_youtube.html",
     "handlerPath": "../../../src/handler/handler_youtube.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/d1XD5gBMgm4"
   },
   "notice": {
     "tooltipTitle": "Notice",
@@ -88,7 +96,8 @@
     "modalPath": "./src/modal/modal_spoilerbox.html",
     "skeletonPath": "./src/skeleton/skeleton_spoilerbox.html",
     "handlerPath": "../../../src/handler/handler_spoilerbox.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/nIl3WAeWjSE"
   },
   "codeblock": {
     "tooltipTitle": "Code Block",
@@ -96,7 +105,8 @@
     "modalPath": "./src/modal/modal_codeblock.html",
     "skeletonPath": "./src/skeleton/skeleton_codeblock.html",
     "handlerPath": "../../../src/handler/handler_codeblock.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/5uv5IGrGWDo"
   },
   "spacing": {
     "tooltipTitle": "Spacing",
@@ -104,6 +114,7 @@
     "modalPath": "./src/modal/modal_spacing.html",
     "skeletonPath": "./src/skeleton/skeleton_spacing.html",
     "handlerPath": "../../../src/handler/handler_spacing.js",
-    "editable": true
+    "editable": true,
+    "tutorial": "https://youtu.be/pBZpe5YT6wE"
   }
 }

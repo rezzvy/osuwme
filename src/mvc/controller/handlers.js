@@ -128,6 +128,7 @@ export default (controller) => {
     const canvasItem = e.closest(".canvas-item");
     const canvasItemContent = view.el("._content", canvasItem);
     const modal = view.el(`[data-edit="${e.dataset.key}"]`);
+    view.el("#how-to-use-editor-anchor").href = modal.dataset.tutorial;
 
     model.setCurrentEdit(e.dataset.key, canvasItemContent, modal);
     view.modalEdit.show();
