@@ -14,8 +14,22 @@ export default (controller) => {
     flagElements(container);
     cleanDomContainer(container);
 
+    unwrapElements(container, "p.bb-single-content a > audio", "p.bb-single-content");
+    unwrapElements(container, "p.bb-single-content a > iframe", "p.bb-single-content");
     controller.cleanupRedundantTags(container);
   };
+
+  function unwrapElements(container, selector, wrapper) {
+    const audios = container.querySelectorAll(selector);
+
+    audios.forEach((audio) => {
+      const container = audio.closest(wrapper);
+
+      if (container && container.contains(audio)) {
+        container.replaceWith(audio);
+      }
+    });
+  }
 
   function unwrapNestedBreaks(container) {
     const selector = "strong, em, del, u, a, code, span";

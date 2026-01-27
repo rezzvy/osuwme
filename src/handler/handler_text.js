@@ -365,7 +365,7 @@ export default class {
   save() {
     const editorContent = this.editorContainer.firstElementChild;
 
-    this.view.els("p, ol > li", editorContent).forEach((paragraph) => {
+    this.view.els("p, ol > li, h2", editorContent).forEach((paragraph) => {
       paragraph.innerHTML = paragraph.innerHTML
         .replace(/\&nbsp;/g, " ") // Normalize all &nbsp; to regular space
         .replace(/\s+/g, " ") // Normalize multiple spaces
