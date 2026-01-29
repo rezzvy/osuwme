@@ -4,6 +4,16 @@
     "des": "Example Template",
     "templatePath": "./src/templates/simple_tournament.html"
   },
+  "osuwme_personal": {
+    "title": "OSUWME Personal",
+    "des": "Example Template",
+    "templatePath": "./src/templates/osuwme_personal.html"
+  },
+  "osuwme_beatmap": {
+    "title": "OSUWME Beatmap Description",
+    "des": "Example Template",
+    "templatePath": "./src/templates/osuwme_beatmap.html"
+  },
   "example_2": {
     "title": "Simple Personal #1",
     "des": "Example Template",
