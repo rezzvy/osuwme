@@ -1,6 +1,6 @@
 {
   "example_1": {
-    "title": "Simple Tournament",
+    "title": "OSUWME Tournament",
     "des": "Example Template",
     "templatePath": "./src/templates/simple_tournament.html"
   },

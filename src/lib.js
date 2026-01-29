@@ -690,7 +690,7 @@ export default function initLibraries(controller) {
   // Divider
 
   model.optimizer = new Normalizer({
-    targetSelector: "._content > p, ._content > ol > li",
+    targetSelector: "._content > p, ._content > ol > li, ._content > h2",
     tagsToMerge: ["strong", "em", "s", "u", "span", "code"],
     stylesToHoist: ["font-size"],
     stylesToPushDown: ["color"],
