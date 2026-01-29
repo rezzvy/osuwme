@@ -372,9 +372,16 @@ export default class {
         .replace(/(?<=>)(\s|&nbsp;)+(?=<)/g, '<span class="inline-splitter"> </span>')
         .replace(/<br\s*\/?>/gi, '<br data-spacing="%SPCITM%">');
 
-      this.view.els(`[data-spacing-color][style*="color"], .ql-cursor`, paragraph).forEach((el) => {
+      this.view.els(`[data-spacing-color][style*="color"], .ql-cursor, .inline-splitter`, paragraph).forEach((el) => {
         if (el.matches(".ql-cursor")) {
           el.remove();
+          return;
+        }
+
+        if (el.matches(".inline-splitter")) {
+          if (el.parentElement !== paragraph) {
+            el.parentElement.after(el);
+          }
           return;
         }
 
