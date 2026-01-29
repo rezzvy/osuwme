@@ -10,17 +10,16 @@ export default (controller) => {
     }
 
     const content = match[1].trim();
-
     const lines = content
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line);
 
     const imageUrl = lines.shift();
-
     const areas = [];
+
     for (const line of lines) {
-      const areaRegex = /^([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+(\S+)\s+(.+)$/;
+      const areaRegex = /^([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+(\S+)(?:\s+(.+))?$/;
       const areaMatch = line.match(areaRegex);
 
       if (!areaMatch) {
@@ -29,7 +28,14 @@ export default (controller) => {
 
       const [, x, y, width, height, href, alt] = areaMatch;
 
-      areas.push({ x: parseFloat(x), y: parseFloat(y), width: parseFloat(width), height: parseFloat(height), href, alt });
+      areas.push({
+        x: parseFloat(x),
+        y: parseFloat(y),
+        width: parseFloat(width),
+        height: parseFloat(height),
+        href,
+        alt: alt || "",
+      });
     }
 
     if (areas.length === 0) return { status: false, message: `No image map item found!` };
