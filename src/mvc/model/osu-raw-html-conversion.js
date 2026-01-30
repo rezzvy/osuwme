@@ -218,9 +218,10 @@ export default function (controller) {
 
     const el = generateClonedItem("spacing", "true");
     const item = controller.view.el(".spacing-item", el);
+    const dataLevel = parseInt(api.node.dataset.level) || 1;
 
-    controller.view.dataset(item, "spacingLevel", 1);
-    item.style.setProperty("--spacing-level", "1");
+    controller.view.dataset(item, "spacingLevel", dataLevel);
+    item.style.setProperty("--spacing-level", dataLevel);
     return el.outerHTML;
   });
 

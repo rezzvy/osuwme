@@ -157,6 +157,10 @@ body.on-grabbing [data-action="move"] {
   font-weight: 700;
 }
 
+.osu-style details summary:not(:has(*)) {
+  min-height: 21px;
+}
+
 ol[data-type] li::after {
   all: unset !important;
 }
@@ -390,6 +394,7 @@ h2 {
   color: rgb(224, 184, 202);
   font-size: 1.5em;
   font-weight: 700;
+  margin: 10px 0 0;
 }
 
 .osu-style .heading > * {

@@ -236,21 +236,32 @@ export default (controller) => {
 
         let brCount = 1;
         let j = i + 1;
+
         while (j < children.length && children[j].tagName === "BR") {
           brCount++;
           j++;
         }
 
-        let brToKeep = brCount;
-
+        let finalLevel = brCount;
         if (config.enableBrCleaning && lastWasParagraph) {
-          brToKeep = brCount - 1;
+          finalLevel = brCount > 0 ? brCount - 1 : 0;
         }
 
-        if (brToKeep < 0) brToKeep = 0;
+        if (finalLevel > 0) {
+          let remaining = finalLevel;
+          const MAX_PER_TAG = 100;
 
-        for (let k = 0; k < brToKeep; k++) {
-          fragment.appendChild(document.createElement("br"));
+          while (remaining > 0) {
+            const currentChunk = Math.min(remaining, MAX_PER_TAG);
+            const mergedBr = document.createElement("br");
+
+            if (currentChunk > 1) {
+              mergedBr.setAttribute("data-level", currentChunk);
+            }
+
+            fragment.appendChild(mergedBr);
+            remaining -= currentChunk;
+          }
         }
 
         lastWasParagraph = false;
