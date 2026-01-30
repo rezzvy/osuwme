@@ -163,6 +163,7 @@ export default class Model {
       .replace(/^\s+/gm, "") // Removes leading whitespace from lines
       .replace(/^[\s]*\r?\n/gm, "") // Removes empty lines
       .replace(/%SPCITM%\s*/g, "\n") // Replaces placeholder with newline
+      .replace(/@CODEWS@/g, " ")
       .trim();
   }
 

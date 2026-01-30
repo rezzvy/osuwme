@@ -63,7 +63,11 @@ export default function (controller) {
     if (api.node.classList.contains("inline")) {
       return `[c]${api.content}[/c]`;
     }
-    return `[code]${api.node.dataset.raw ? api.node.dataset.raw : api.content}[/code]%NL%`;
+
+    const raw = api.node.dataset.raw ? api.node.dataset.raw : api.content;
+    const safe = raw.replace(/\u00A0/g, "@CODEWS@");
+
+    return `[code]${safe}[/code]%NL%`;
   });
 
   model.registerBBCodeConversion("details", (api) => {

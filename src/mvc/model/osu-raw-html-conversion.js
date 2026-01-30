@@ -157,6 +157,7 @@ export default function (controller) {
     const el = generateClonedItem("codeblock", "true");
     const code = controller.view.el("code", el);
     code.textContent = api.node.textContent;
+    code.dataset.raw = controller.model.replaceTextAreaSpacing(true, api.node.textContent);
 
     return el.outerHTML;
   });
