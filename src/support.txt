@@ -1,47 +1,47 @@
 FAQ (Frequently Asked Questions)
-= = = = = = = = = = = = = = = = =
-
-Q: How can I support OSUWME?
-A: By telling a friend to use this tool >.< or simply using it yourself for your BBCode needs. And if you find a bug, please post a comment on the forum!
 
 = = = = = = = = = = = = = = = = =
 
-Q: Where can I contact you if I have ideas for improvement or find bugs?
-A: For bug reports, you can post a comment on the OSUWME forum thread. If you use GitHub, feel free to open an issue there. Or, if you prefer to chat with me personally, just DM me on Discord @rezzvy.
+Q: How can I support osuwme?
+A: By using osuwme, you are already supporting it. You can also help by spreading the word, telling your friends, or recommending it to anyone who needs help with BBCode.
 
 = = = = = = = = = = = = = = = = =
 
-Q: If I log in, will you be able to hack me or steal my personal information?
-A: Nopee, not a chance qmq... When you log in, OSUWME just asks the osu! server for a "key". I then use that key to interact with the osu! server on your behalf. This key is very limited and can only access publicly available information. I can't read your private details, and I definitely can't see or steal your password >.<
+Q: I found a bug. What should I do?
+A: Please post a reply in the osuwme forum thread describing the bug and the steps to reproduce it. If you prefer not to post publicly, you can email me at rezzvyuwu@gmail.com.
+
+Forum thread:
+https://osu.ppy.sh/community/forums/topics/2029947
 
 = = = = = = = = = = = = = = = = =
 
-Q: Why was I logged out suddenly?
-A: This happens because the key stored in your browser has expired. When OSUWME tries to use it, the osu! server refuses it, so you get logged out and need to log in again to get a new key :3 (Actually... this is just my skill issue LOL. I still don't fully understand how to implement the 'auto-refresh key' feature yet qmq)
+Q: If I log in, can you steal my password or hack my account?
+A: No. That is not possible. When you log in, osuwme only requests a key (token) from the osu! API to interact with the osu! servers. This token is very limited and can only be used to read public information.
+
+= = = = = = = = = = = = = = = = =
+
+Q: Why was I suddenly logged out?
+A: Currently, there is no feature to automatically renew the token, as I am still learning the full inner workings of the osu! API. Because of this limitation, the token expires and acts as an automatic logout mechanism, which also helps improve security.
 
 = = = = = = = = = = = = = = = = =
 
 Q: Do you collect my data?
-A: Nothing is collected when you are not logged in. When using the clone/sync feature (which requires you to log in), only minimal, non-sensitive data is processed by the server after authentication. Nothing beyond that is collected. Please read the details below.
+A: When you are not logged in, no data is collected.
 
-Here is the breakdown of what is collected and why:
+When you are logged in, some non-sensitive data is processed by the server for functional purposes, as explained below.
 
-[To prevent abuse/spam]
-When you request to log in, the OSUWME server generates a unique identifier based on your network IP. This is completely safe because it is hashed (converted into an unreadable string), meaning that once it is hashed, there is no way to see the original value again, so it cannot be used to identify you in any way. I strictly use this to block spam requests and prevent the server from hitting the osu! API limits if someone tries to abuse the clone/sync feature (please don't qmq… spare me >.<).
+[Preventing abuse and spam]
+Since osuwme is integrated with the osu! API, the server needs to prevent spam to avoid hitting API limits. To do this, a unique identifier is generated based on your network IP. This identifier is hashed, making it unreadable and cannot be used to directly identify you. It is only used for spam prevention.
 
-[To find bugs and improve the OSUWME Clone/Sync feature]
-When you are logged in, the server stores your public username and user ID (e.g., username: rezzvy | uid: 8804560). Using this info, I can verify if OSUWME is processing your 'me! page' correctly. If I find a bug specific to your 'me! page', this helps me fix it ASAP!
+[Improving the Clone / Auto-Sync feature]
+When logged in, the server stores your public username and user ID for diagnostic purposes (for example: rezzvy | 8804560). This allows me to verify that osuwme renders your me! page correctly and to fix issues more efficiently.
 
-[IMPORTANT]
-If you are not comfortable with this, please feel free to use the app without logging in. The core functionality works exactly the same whether you are logged in or not. 
+[Important note]
+If you are uncomfortable with this, you can use osuwme without logging in. The app works the same either way.
 
-[NOTE]
-Send me an email at "rezzvyuwu@gmail.com" if you want me to delete your data from my database. No hard feelings!
-
-[LAST BUT NOT LEAST]
-Thanks if you're cool with this! Honestly, the data collected is minimal. I'm just trying to be honest and transparent about privacy stuff because I'd feel way too guilty if I didn't tell you >.<
+If you have further questions, or if you would like me to manually delete your stored username and user ID, feel free to email me at rezzvyuwu@gmail.com.
 
 = = = = = = = = = = = = = = = = =
 
-– Rezzvy (Jan 4, 2026)
-(Edited once - see the previous version here: https://raw.githubusercontent.com/rezzvy/osuwme/4573506c779e6ada2eb765e0f3641aed2e9edf35/src/support.txt)
+Rezzvy
+Feb 3, 2026
