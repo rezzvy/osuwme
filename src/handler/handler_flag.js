@@ -465,7 +465,7 @@ export default class {
         ? `${spacing}`
         : `${spacing === "" ? "" : lineBreak}${spacing}${item !== lastItemElement ? lineBreak : ""}`;
 
-      content += `<span data-country-name="${countryName}" data-code="${code}" data-username="${username.textContent}"><img src="${img.src}">&nbsp;<a target="_blank" href="https://osu.ppy.sh/users/${username.textContent}">${username.textContent}</a></span>${endOfLine}`;
+      content += `<span data-country-name="${countryName}" data-code="${code}" data-username="${username.textContent}"><img src="${img.src}">&nbsp;<a target="_blank" href="https://osu.ppy.sh/users/${username.textContent}?isProfileLink=true">${username.textContent}</a></span>${endOfLine}`;
     }
     content += "</p>";
 

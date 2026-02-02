@@ -229,6 +229,16 @@ export default function (controller) {
     let content = api.content;
     let link = decodeURI(api.node.href);
 
+    if (link.includes("isProfileLink=true")) {
+      try {
+        const url = new URL(link);
+        url.searchParams.delete("isProfileLink");
+        link = url.toString();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
     if (api.node.parentElement.classList.contains("imgmap-container")) {
       link = model.isValidURL(api.node.dataset.link) ? encodeURI(api.node.dataset.link) : "https://google.com";
       const { width, height, top, left } = api.node.style;

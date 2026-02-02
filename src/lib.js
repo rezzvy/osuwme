@@ -232,10 +232,20 @@ export default function initLibraries(controller) {
 
     if (color && !Array.isArray(color) && model.isInsideTextEditor && !formats["spacing-color"]) model.pickr.setColor(color);
 
-    const link = formats.link;
+    let link = formats.link;
     view.toggle(".link-form", "d-none", !link);
 
     if (!link) return;
+
+    if (link.includes("isProfileLink=true")) {
+      try {
+        const url = new URL(link);
+        url.searchParams.delete("isProfileLink");
+        link = url.toString();
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
     view.val(".link-form input", link);
   };
@@ -301,7 +311,7 @@ export default function initLibraries(controller) {
                 {
                   insert: username,
                   attributes: {
-                    link: `https://osu.ppy.sh/users/${username}`,
+                    link: `https://osu.ppy.sh/users/${username}?isProfileLink=true`,
                   },
                 },
               ]);
@@ -388,7 +398,20 @@ export default function initLibraries(controller) {
     const range = model.quill.getSelection() || model.latestSelection;
     if (!range) return;
 
-    const newLink = view.val(".link-form input");
+    const inputValue = view.val(".link-form input");
+    let url;
+
+    try {
+      url = new URL(inputValue);
+
+      if (model.isOsuProfileLink(inputValue)) {
+        url.searchParams.append("isProfileLink", "true");
+      }
+    } catch (e) {
+      url = inputValue;
+    }
+
+    const newLink = url instanceof URL ? url.toString() : url;
 
     if (range.length === 0) {
       const blot = getLinkBlotAt(range.index);

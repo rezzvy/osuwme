@@ -244,8 +244,10 @@ export default class Model {
     }
   }
 
+  // /users/all_number = invalid.
+  // /users/number+string = valid.
   isOsuProfileLink(link) {
-    return /https:\/\/osu\.ppy\.sh\/users\/[A-Za-z_\-\[\]][A-Za-z0-9_\-\[\]\s%]*\/?$/.test(link);
+    return /https:\/\/osu\.ppy\.sh\/users\/(?!\d+\/?$)[A-Za-z0-9_\-\[\]\s%]+\/?$/.test(link);
   }
 
   createBlob(blobType, content) {
