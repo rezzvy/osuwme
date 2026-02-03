@@ -495,6 +495,8 @@ export default function initLibraries(controller) {
       if (el.tagName === "EM") obj.italic = true;
       if (el.tagName === "U") obj.underline = true;
       if (el.tagName === "S") obj.strike = true;
+      if (el.tagName === "CODE") obj.inlinecode = true;
+      if (el.tagName === "SPAN" && el.classList.contains("spoiler")) obj.spoiler = true;
       if (el.tagName === "A") obj.link = el.getAttribute("href");
       if (el.style.fontSize) obj.size = el.style.fontSize;
       if (el.style.color) obj.color = el.style.color;

@@ -22,7 +22,7 @@ img {
   max-width: 100%;
 }
 
-p {
+p,h2 {
   overflow-wrap: break-word;
 }
 
