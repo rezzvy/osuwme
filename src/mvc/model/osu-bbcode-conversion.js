@@ -122,6 +122,13 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion(".heading, h2", (api) => {
+    const hasColour = api.node.style.color
+
+    if (hasColour) {
+      api.node.dataset.colored = "true"
+      return `[heading][color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color][/heading]`;
+    }
+
     return `[heading]${api.content}[/heading]%NL%`;
   });
 
@@ -172,10 +179,7 @@ export default function (controller) {
 
   model.registerBBCodeConversion('[style*="color:"]', (api) => {
     if (api.node.matches("a") && model.isOsuProfileLink(api.node.href)) return api.content;
-
-    if (api.node.matches("h2") && api.node.style.color) {
-      return `[heading][color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color][/heading]`;
-    }
+    if (api.node.dataset.colored === "true") return api.content;
 
     return `[color=${model.rgbToHex(api.node.style.color)}]${api.content}[/color]`;
   });
