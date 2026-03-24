@@ -29,11 +29,6 @@
     "des": "Example Template",
     "templatePath": "./src/templates/simple_personal_3.html"
   },
-  "random_1": {
-    "title": "Random #1",
-    "des": "I wanna die so please notice me uwu",
-    "templatePath": "./src/templates/random_1.html"
-  },
   "rezzvy": {
     "title": "rezzvy",
     "des": "Personal BBCode made by <a href='https://osu.ppy.sh/users/8804560' class='text-decoration-underline'>rezzvy</a>",
