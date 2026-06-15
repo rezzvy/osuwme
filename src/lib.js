@@ -267,8 +267,20 @@ export default function initLibraries(controller) {
     className: "spoiler",
   });
 
+  const inlineVideoBlot = model.createInlineEmbedBlot({
+    blotName: "inlineVideo",
+    tagName: "iframe",
+    className: "ql-inline-video",
+    valueAttr: "src",
+    attributes: {
+      frameborder: "0",
+      allowfullscreen: "true",
+    },
+  });
+
   Quill.register(inlineCodeBlot);
   Quill.register(spoilerBlot);
+  Quill.register(inlineVideoBlot, true);
   Quill.register(FontSize, true);
 
   const Parchment = Quill.import("parchment");
@@ -293,10 +305,16 @@ export default function initLibraries(controller) {
 
                 const range = model.getSmartSelection();
 
-                model.quill.updateContents({
-                  ops: [{ retain: range.index }, { insert: { video: url } }],
-                });
-                model.quill.setSelection(range.index + 1);
+                model.quill.updateContents(
+                  new model.Delta()
+                    .retain(range.index)
+                    .insert({ inlineVideo: url })
+                    .insert(" "),
+                  "user",
+                );
+
+                model.quill.setSelection(range.index + 2, 0, "silent");
+                model.latestSelection = { index: range.index + 2, length: 0 };
               } else {
                 alert("Invalid youtube link!");
               }

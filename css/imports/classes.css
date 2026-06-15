@@ -453,6 +453,12 @@ h2 {
   width: 100%;
 }
 
+.osu-style p > iframe,
+.ql-inline-video {
+  display: inline-block !important;
+  width: 49% !important;
+}
+
 body.view-mode .osu-style .spacing-item {
   display: block !important;
   height: calc(var(--spacing-level) * 17px);

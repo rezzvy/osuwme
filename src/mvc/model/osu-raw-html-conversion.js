@@ -73,8 +73,19 @@ export default function (controller) {
     return el.outerHTML;
   });
 
+  controller.model.registerClonedBBCodeConversion(".iframe-group", (api) => {
+    const el = generateClonedItem("text", "true", `<p>${api.content}</p>`);
+
+    return el.outerHTML
+  })
+
   controller.model.registerClonedBBCodeConversion("iframe", (api) => {
     const videoId = controller.model.getYoutubeVideoId(api.node.src);
+
+    if (api.node.parentElement?.matches('.iframe-group')) {
+      return `<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/${videoId}?feature=oembed"></iframe>`
+    }
+
 
     const el = generateClonedItem("youtube", "true");
     if (!videoId) return el.outerHTML;
@@ -172,8 +183,8 @@ export default function (controller) {
     return el.outerHTML;
   });
 
-  controller.model.registerClonedBBCodeConversion("center", (api) => {
-    if (api.node.parentElement?.closest("center")) {
+  controller.model.registerClonedBBCodeConversion(".bbcode__align-centre", (api) => {
+    if (api.node.parentElement?.closest(".bbcode__align-centre")) {
       return api.content;
     }
 

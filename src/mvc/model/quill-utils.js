@@ -25,6 +25,7 @@ export default (controller) => {
     return null;
   };
 
+
   model.createInlineBlot = ({ blotName, tagName, className }) => {
     const Inline = Quill.import("blots/inline");
 
@@ -39,6 +40,44 @@ export default (controller) => {
 
       static formats(node) {
         return className ? node.classList.contains(className) : false;
+      }
+    };
+
+    BlotClass.blotName = blotName;
+    BlotClass.tagName = tagName;
+    BlotClass.className = className;
+
+    return BlotClass;
+  };
+
+  model.createInlineEmbedBlot = ({ blotName, tagName, className, valueAttr = "src", attributes = {} }) => {
+    const Embed = Quill.import("blots/embed");
+
+    const BlotClass = class extends Embed {
+      static create(value) {
+        const node = super.create();
+
+        const finalValue = typeof value === "string" ? value : value?.[valueAttr] || value?.url;
+
+        if (className) {
+          node.classList.add(className);
+        }
+
+        if (valueAttr && finalValue) {
+          node.setAttribute(valueAttr, finalValue);
+        }
+
+        Object.entries(attributes).forEach(([key, attrValue]) => {
+          node.setAttribute(key, attrValue);
+        });
+
+        node.setAttribute("contenteditable", "false");
+
+        return node;
+      }
+
+      static value(node) {
+        return node.getAttribute(valueAttr);
       }
     };
 

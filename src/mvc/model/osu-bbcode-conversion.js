@@ -97,7 +97,12 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion("iframe", (api) => {
-    return `[youtube]${api.node.dataset.videoId ?? model.getYoutubeVideoId(api.node.src)}[/youtube]`;
+    let misterImSad = ""
+    if (!api.node.parentElement?.matches('p')) {
+      misterImSad = "%NL%"
+    }
+
+    return `[youtube]${api.node.dataset.videoId ?? model.getYoutubeVideoId(api.node.src)}[/youtube]${misterImSad}`;
   });
 
   model.registerBBCodeConversion(".play-audio-btn", (api) => {
@@ -122,6 +127,10 @@ export default function (controller) {
   });
 
   model.registerBBCodeConversion(".heading, h2", (api) => {
+    if (api.node.firstElementChild?.matches('br')) {
+      return "%SPCITM%"
+    }
+
     const hasColour = api.node.style.color
 
     if (hasColour) {

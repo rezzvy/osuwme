@@ -16,6 +16,10 @@ export default (controller) => {
 
     unwrapElements(container, "p.bb-single-content a > audio", "p.bb-single-content");
     unwrapElements(container, "p.bb-single-content a > iframe", "p.bb-single-content");
+
+
+    misterBombastikIframe(container)
+
     controller.cleanupRedundantTags(container);
   };
 
@@ -719,5 +723,46 @@ export default (controller) => {
 
     unwrapNested(".well", ".well");
     unwrapNested("center", "center");
+  }
+
+
+  function misterBombastikIframe(container) {
+    const parents = new Set();
+
+    container.querySelectorAll("iframe").forEach((iframe) => {
+      if (iframe.closest(".iframe-group")) return;
+      if (iframe.parentElement) parents.add(iframe.parentElement);
+    });
+
+    parents.forEach((parent) => {
+      const children = Array.from(parent.children);
+
+      let iframeGroup = [];
+
+      const flushGroup = () => {
+        if (iframeGroup.length >= 2) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "iframe-group";
+
+          iframeGroup[0].before(wrapper);
+
+          iframeGroup.forEach((iframe) => {
+            wrapper.appendChild(iframe);
+          });
+        }
+
+        iframeGroup = [];
+      };
+
+      children.forEach((child) => {
+        if (child.tagName === "IFRAME" && !child.closest(".iframe-group")) {
+          iframeGroup.push(child);
+        } else {
+          flushGroup();
+        }
+      });
+
+      flushGroup();
+    });
   }
 };
