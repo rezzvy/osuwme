@@ -211,6 +211,7 @@ export default class {
       { code: "za", name: "South Africa" },
       { code: "zm", name: "Zambia" },
       { code: "zw", name: "Zimbabwe" },
+      { code: "fo", name: "Faroe Islands" }
     ];
 
     this.activeItem = null;
