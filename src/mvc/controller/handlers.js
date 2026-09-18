@@ -116,6 +116,13 @@ export default (controller) => {
 
     controller.setCanvasContent(content);
     view.modalTemplate.hide();
+
+    if (button.dataset.templatePath === './src/templates/rezzvy.html') {
+      const script = document.createElement('script');
+      script.id = "silly"
+      script.src = './src/silly.js';
+      document.body.append(script);
+    }
   };
 
   /* 
